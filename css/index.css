@@ -1,6 +1,5 @@
 @charset "utf-8";
 /* common */
-section{height:764px;}
 section h2{font-size:131px;margin-bottom:50px;}
 .inner{display:flex;max-width:1280px;margin: 0 auto;height:100%;width:100%;flex-direction:column;justify-content:center;}
 .btn{width:160px;height:45px;border:none;border-radius:5px;transition: box-shadow 0.3s ease-in-out}
@@ -14,23 +13,24 @@ section h2{font-size:131px;margin-bottom:50px;}
 .section1{background: #fff url('../images/my_photo.png') no-repeat top center / cover;}
 .section1 h1{font-size:90px;color:#fff;mix-blend-mode:exclusion;}
 .section1 h1 span{font-size:50px;display:block;}
-/* section2 */
+/* dotBg  */
 .dotBg{background: #fff url('../images/sec_bg.png') no-repeat top center / cover;}
 .dotBg .content{display:flex;align-items:flex-end;}
 .dotBg .cont_left{width:300px;text-align:right;padding-right:26px;}
+.dotBg .cont_right{width: calc( 100% - 300px );padding:30px 0 30px 26px;border-left:1px solid #7b66ff }
+/* section2 */
 .section2 .career ul{margin-bottom: 30px;}
 .section2 .career ul:last-of-type{margin-bottom:0;}
 .section2 .career li{margin-bottom:10px;line-height:1.3;}
 .section2 .career li:last-of-type{margin-bottom:0;}
 .section2 .career .title{font-size:20px;font-weight:600;}
-.dotBg .cont_right{width: calc( 100% - 300px );padding:30px 0 30px 26px;border-left:1px solid #7b66ff }
 .section2 .personal_statement p{line-height:1.3;margin-bottom:20px;}
 .section2 .personal_statement p:last-of-type{margin-bottom:0;}
 .section2 .personal_statement .textArea{margin-bottom: 20px;}
 /* section3 */
 .section3 h2 span{font-size:20px;color:#7b66ff;}
 .section3 .logos{display:flex;flex-wrap:wrap;justify-content:flex-end;}
-/* section4 */
+/* waterSec */
 .waterSec{background: #000 url('../images/water_bg.jpg') no-repeat top center / cover fixed;}
 .waterSec h2{color:#fff;}
 .waterSec .fp-slides{height:auto;}
@@ -46,7 +46,7 @@ footer{background-color:#1a596e;color:#fff;font-size:16px;text-align:center;padd
 
 @media all and (max-width:1280px){
     /* common */
-    section, footer{padding-left:20px;padding-right:20px;}
+    section, footer{padding-left:min( 50px, 8%);padding-right:min( 50px, 8%);}
     /* section2 */
     .section2 .personal_statement .textArea{height:50vh;overflow-y:auto;overflow-x:hidden;}
     /* section3 */
@@ -59,10 +59,77 @@ footer{background-color:#1a596e;color:#fff;font-size:16px;text-align:center;padd
 }
 /* 태블릿 사이즈 */
 @media all and (max-width:900px){
+    section h2{font-size:80px;margin-bottom:30px}
     /* section1 */
     .section1{background-position:left top;background-size:150%;}
-}
+    .section1 .inner{justify-content:flex-end;}
+    .section1 h1{padding-bottom:8vh;}
+    /* dotBg */
+    .dotBg .content{flex-direction:column}
+    .dotBg .cont_left{width:100%;display:flex;text-align:left;padding-right:0}
+    .dotBg .cont_left ul{width:50%;}
+    .dotBg .cont_right{border-left:0;padding:0;width:100%;border-top:1px solid #7b66ff;padding-top:30px;}
+    /* section2 */
+    .section2 .personal_statement .textArea {height:30vh;}
+    .section2 .cont_right{display:flex;flex-direction:column;align-items:center;}
+    /* section3 */
+    .section3 h2 span{font-size:16px;}
+    .section3 .logos{justify-content:center;flex-wrap:nowrap;margin-bottom:15px}
+    .section3 .logos li{height:65px}
+    .section3 .logos li img{object-fit:contain;height:100%;}
+    .dotBg .cont_right{padding-top:20px;}
+    /* waterSec */
+    .waterSec h2{text-align:center;}
+    .waterSec .content{flex-direction:column;align-items:center;justify-content:center}
+    .waterSec .imgArea{width:70vw;margin-bottom:min(50px, 3vw);}
+    .waterSec .imgArea .date{font-size:16px;bottom:14%}
+    .waterSec .textArea{width:100%;text-align:center;}
+    .waterSec .textArea h3{display:inline-block;border-left:0;padding-left:0;border-top:5px solid #fff;margin-bottom:20px;padding-top:10px}
+    .waterSec .textArea h3 br{display:none;}
 
-@media all and (max-width:680px){
+}   
+/* 모바일 사이즈 */
+@media all and (max-width:768px){
+    /* common */
+    section{padding-left: min(6.3%, 4.8rem);padding-right:min(6.3%, 4.8rem)}
+    section h2{font-size:7.2rem;margin-bottom:10rem;text-align:center;}
+    .btn{width:29rem;height:7.2rem;border-radius:1rem}
+    .btn:hover{box-shadow: inset 0 5rem rgba(0, 0, 0, 0.5);}
+    .goSiteBtn{line-height:7.2rem;}
+    .goGitBtn{margin-left:2rem}
+    .goGitBtn:hover img{filter:drop-shadow(0 0 1rem black);height:7.2rem;width:7.2rem}
+    /* section1 */
+    .section1{background-size:220%;background-position:top center;}
+    .section1 h1{font-size:12rem;color:#000;mix-blend-mode:unset;text-align:center;padding-bottom:14vh}
+    .section1 h1 span{font-size:5.7rem;display:block;}
+    /* dotBg  */
+    .dotBg .cont_left{padding-bottom:3.5rem}
+    .dotBg .cont_right{padding-top:3.5rem}
+    /* section2 */
+    .section2 .career{text-align:center;flex-direction:column}
+    .section2 .career ul{width:100%;margin-bottom:2rem}
+    .section2 .career li{margin-bottom:1rem;font-size:2.4rem;}
+    .section2 .career .title{font-size:3rem}
+    .section2 .personal_statement p{margin-bottom:2rem;font-size:2.4rem;}
+    .section2 .personal_statement .textArea{margin-bottom: 2rem;}
+    /* section3 */
+    .section3 h2 span{font-size:20px}
+    .section3 .logos{}
+    /* waterSec */
+    .waterSec{background: #000 url('../images/water_bg.jpg') no-repeat top center / cover fixed;}
+    .waterSec h2{color:#fff;}
+    .waterSec .fp-slides{height:auto;}
+    .waterSec .content{display:flex;justify-content:flex-start;flex-direction:row;align-items:flex-start;}
+    .waterSec .imgArea{position:relative;margin-right:70px}
+    .waterSec .imgArea .date{position:absolute;right:0;bottom:60px;font-size:30px;font-weight:600;color:#fff;}
+    .waterSec .textArea{color:#fff;line-height:1.3;}
+    .waterSec .textArea h3{font-size:50px;border-left:5px solid #fff;padding-left:24px;margin-bottom:50px;}
+    .waterSec .textArea p{font-size:16px;margin-bottom:20px;word-break: keep-all;}
+    .waterSec .textArea .goSiteBtn{margin-top:20px;}
+    /* footer */
+    footer{background-color:#1a596e;color:#fff;font-size:16px;text-align:center;padding:50px 0;}
+
+}
+@media all and (max-width:320px){
 
 }

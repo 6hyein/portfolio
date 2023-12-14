@@ -43,7 +43,7 @@ var myChart = new Chart(chartArea, {
         scales: {
             x: {
                 grid: {
-                display: false,
+                    display: false,
                 }
             }
         }
