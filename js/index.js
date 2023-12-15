@@ -54,3 +54,33 @@ new fullpage('#fullpage', {
     // licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
     scrollOverflow:false
 });
+/* 마우스 효과 */
+const circle = document.getElementById("circle_pointer");
+let mouseX = 0
+let mouseY = 0
+let circleX = 0
+let circleY = 0
+let speed = 0.06
+
+const animate = () => {
+    let distX = mouseX - circleX
+    let distY = mouseY - circleY
+    let translatedValue = `translate3d(${circleX}px, ${circleY}px, 0 )`;
+    
+    circleX = circleX + (distX * speed)
+    circleY = circleY + (distY * speed)    
+    
+    circle.style.transform = translatedValue;
+    
+    requestAnimationFrame(animate)
+  }
+  
+  animate();
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX - circle.offsetWidth / 4;
+    mouseY = e.clientY - circle.offsetHeight / 4;
+  }
+);
+
+// https://mu08.tistory.com/139 - 배경 움직이는 효과

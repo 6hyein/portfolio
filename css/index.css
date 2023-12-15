@@ -12,6 +12,8 @@ section h2{font-size:131px;margin-bottom:50px;}
 .goGitBtn:hover img{filter:drop-shadow(0 0 5px black);}
 .fp-arrow.fp-prev{border-width: 4rem 4rem 4rem 0;}
 .fp-arrow.fp-next{border-width: 4rem 0 4rem 4rem;}
+/* mouse effect */
+#circle_pointer{width:14vmin;height:14vmin;background:#b994ff;border-radius:50%;position: absolute;top:0; left:0;mix-blend-mode: difference;will-change: transform;}
 /* section1 */
 .section1{background: #fff url('../images/my_photo.png') no-repeat top center / cover;}
 .section1 h1{font-size:90px;color:#fff;mix-blend-mode:exclusion;}
