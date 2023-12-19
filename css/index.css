@@ -12,10 +12,28 @@ section h2{font-size:131px;margin-bottom:50px;}
 .goGitBtn:hover img{filter:drop-shadow(0 0 5px black);}
 .fp-arrow.fp-prev{border-width: 4rem 4rem 4rem 0;}
 .fp-arrow.fp-next{border-width: 4rem 0 4rem 4rem;}
-/* mouse effect */
-#circle_pointer{width:14vmin;height:14vmin;background:#b994ff;border-radius:50%;position: absolute;top:0; left:0;mix-blend-mode: difference;will-change: transform;}
+/* 마우스 효과 */
+#circle_pointer{position: relative;}
+#circle_pointer .wave {opacity: 0.4;position: absolute;top: 50%;left: 50%;background: #0af;width: 100vh;margin-left:-30vh;margin-top:-30vh;height: 100vh;transform-origin: 50% 48%;border-radius: 43%;
+-webkit-animation: drift 3000ms infinite alternate;
+        animation: drift 3000ms infinite alternate;}
+#circle_pointer .wave.-three {
+margin-left:-15vh;margin-top:-15vh;background:#7b66ff;
+-webkit-animation: drift 5000ms infinite alternate;
+        animation: drift 5000ms infinite alternate;}
+#circle_pointer .wave.-two {margin-left:0;margin-top:0;opacity: 0.4;background:orange;
+-webkit-animation: drift 7000ms infinite alternate;
+        animation: drift 7000ms infinite alternate;}
+@-webkit-keyframes drift {
+    to {transform: scale(0.2) rotate(0deg);}
+    from {transform: scale(1) rotate(360deg);}
+}
+@keyframes drift {
+    to {transform: scale(0.2) rotate(0deg);}
+    from {transform: scale(1) rotate(360deg);}
+}
 /* section1 */
-.section1{background: #fff url('../images/my_photo.png') no-repeat top center / cover;}
+.section1{position:relative;background: #fff url('../images/my_photo.png') no-repeat top center / cover;}
 .section1 h1{font-size:90px;color:#fff;mix-blend-mode:exclusion;}
 .section1 h1 span{font-size:50px;display:block;}
 /* dotBg  */

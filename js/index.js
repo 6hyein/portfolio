@@ -60,27 +60,36 @@ let mouseX = 0
 let mouseY = 0
 let circleX = 0
 let circleY = 0
+let deg = 0
 let speed = 0.06
 
 const animate = () => {
     let distX = mouseX - circleX
     let distY = mouseY - circleY
-    let translatedValue = `translate3d(${circleX}px, ${circleY}px, 0 )`;
-    
+    let translatedValue = `translate3d(${circleX}px, ${circleY}px, 0 ) rotate(${deg}deg)`;
+
     circleX = circleX + (distX * speed)
     circleY = circleY + (distY * speed)    
-    
+    deg = deg < 360 ? deg + 1 : 0;
+
     circle.style.transform = translatedValue;
-    
+
     requestAnimationFrame(animate)
-  }
-  
-  animate();
-  
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX - circle.offsetWidth / 4;
-    mouseY = e.clientY - circle.offsetHeight / 4;
-  }
+}
+
+animate();
+// 마우스 움직일 때
+document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX - circle.offsetWidth / 4;
+        mouseY = e.clientY - circle.offsetHeight / 4;
+    }
+);
+// 터치할 때
+document.addEventListener('touchmove', (e) => {
+        mouseX = e.originalEvent.touches[0].pageX - circle.offsetWidth / 4;
+        mouseY = e.originalEvent.touches[0].pageY - circle.offsetHeight / 4;
+    }
 );
 
-// https://mu08.tistory.com/139 - 배경 움직이는 효과
+
+// http://rwdb.kr/interactionbg-2/ - 배경 움직이는 효과
