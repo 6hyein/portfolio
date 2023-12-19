@@ -86,10 +86,22 @@ document.addEventListener('mousemove', (e) => {
 );
 // 터치할 때
 document.addEventListener('touchmove', (e) => {
-        mouseX = e.originalEvent.touches[0].pageX - circle.offsetWidth / 4;
-        mouseY = e.originalEvent.touches[0].pageY - circle.offsetHeight / 4;
+        mouseX = e.touches[0].pageX - circle.offsetWidth / 4;
+        mouseY = e.touches[0].pageY - circle.offsetHeight / 4;
     }
 );
 
-
+// 버튼 클릭시 링크 이동
+let btn = document.querySelectorAll(".btn");
+btn.forEach((element) => {
+    // 버튼인 경우만
+    if(element.tagName === "BUTTON"){
+        element.onclick = () => {
+            // 해당 링크로 페이지 이동
+            let btnHref = element.getAttribute('href');
+            window.location.href = btnHref;
+        }
+    }
+});
+// 
 // http://rwdb.kr/interactionbg-2/ - 배경 움직이는 효과
