@@ -14,7 +14,7 @@ ol,ul,li{list-style:none}
 input,select,button,img{vertical-align:middle;font-size:14px}
 select, textarea{font-family:sans-serif;outline:none}
 i,em,address{font-style:normal}
-button{margin:0;padding:0;cursor:pointer}
+button{margin:0;padding:0;cursor:pointer;border:0;outline:0;}
 a{color:#343434}
 a:link,a:visited{text-decoration:none;}
 a:hover{text-decoration:none}

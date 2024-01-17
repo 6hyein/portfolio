@@ -1,0 +1,46 @@
+body,section{background:#222a35;}
+.inner{max-width:1260px;margin:0 auto;position:relative;}
+/* nav */
+nav{padding-top:85px;position:fixed;left:0;top:0;width:100%;z-index:999;}
+.menuBtn{position:relative;display:inline-block;width:30px;height:30px;background:transparent;display:flex;justify-content:space-between;flex-direction:column}
+.menuBtn span{display:inline-block;width:100%;height:3px;background:#fff;transition: transform .3s ease-in;}
+.menuList{display:flex;display:none;backdrop-filter: blur(3px);background:rgba(255,255,255,0.3);position:absolute;left:0;top:0;height:50px;width:100%;}
+.menuList li{width:33.33%;text-align:center;font-size:16px;height:100%; }
+.menuList li a{color:#fff;display:inline-flex;justify-content:center;align-items:center;font-weight:800;flex-direction:row;width:100%;height:100%;position: relative;}
+.menuList li a::after{content:"";background:#f79d02;display:inline-block;height:5px;width:0;position:absolute;left:50%;bottom:0;transform:translateX(-50%);transition: width .3s ease-in }
+.menuList li:hover a{color:#f79d02;}
+.menuList li:hover a::after{width:100%;}
+/* 클릭했을 때 효과 */
+.menuBtn:hover .line1{transform: translateY(400%) rotate(45deg);}
+.menuBtn:hover .line2{display:none;}
+.menuBtn:hover .line3{transform: translateY(-400%) rotate(-45deg);}
+
+/* section1 */
+.section1 h1{color:#fff;font-size:40px;font-weight:800;}
+.section1 h1 span{font-size:14px;display:block;font-weight:100;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
