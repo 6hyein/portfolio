@@ -6,15 +6,16 @@ section h2{color:#fff;font-size:100px;padding-left:140px;padding-bottom:50px}
 .btn{position: relative;display:inline-block;overflow:hidden;border:1px solid #fff;width:225px;height:50px;line-height:50px;text-align:center;font-size:12px;font-weight:600;color:#fff;background:transparent;border-radius:5px;}
 .btn::after{content:"";display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;width:30px;height:30px;border-radius:50%;opacity:0;mix-blend-mode:difference;}
 .btn:hover::after{width:230px;height:230px;opacity:1;transition:all .3s ease-in;}
+.chart{width:100%;height:100%;}
 /* nav */
 nav{position:relative;padding-top:85px;left:0;top:0;width:100%;z-index:999;}
 .menuBtn{z-index:99;position:relative;display:inline-block;width:20px;height:20px;background:transparent;display:flex;justify-content:space-between;flex-direction:column}
 .menuBtn span{display:inline-block;width:100%;height:3px;background:#fff;transition: transform .3s ease-in;}
-.menuList{display:none;backdrop-filter: blur(3px);background:rgba(255,255,255,0.3);position:absolute;left:0;top:0;height:50px;width:100%;}
+.menuList{display:none;backdrop-filter: blur(3px);background:rgba(255,255,255,0.3);position:absolute;left:0;top:50%;transform:translateY(-50%); height:50px;width:100%;}
 .menuList li{width:33.33%;text-align:center;font-size:16px;height:100%;}
-.menuList li a{color:#fff;display:inline-flex;justify-content:center;align-items:center;font-weight:800;flex-direction:row;width:100%;height:100%;position: relative;}
-.menuList li a::after{content:"";background:#f79d02;display:inline-block;height:5px;width:0;position:absolute;left:50%;bottom:0;transform:translateX(-50%);transition: width .3s ease-in }
-.menuList li:hover a{color:#f79d02;}
+.menuList li a{color:#fff;display:inline-flex;justify-content:center;align-items:center;font-weight:800;flex-direction:row;width:100%;height:100%;position: relative;text-shadow: 0 0 5px #000;}
+.menuList li a::after{content:"";background:#f79d02;display:inline-block;height:5px;width:0;position:absolute;left:50%;bottom:0;transform:translateX(-50%);transition: width .3s ease-in;box-shadow: 0 0 5px #000;border-radius:50%;}
+.menuList li:hover a{color:#f79d02;text-shadow: 0 0 5px #000;}
 .menuList li:hover a::after{width:100%;}
 /* 클릭했을 때 효과 */
 .menuClick .line1{transform:translateY(300%) rotate(45deg)}
@@ -71,3 +72,148 @@ section .contRight{width:67%;border-left: 1px solid #fff;padding:60px 0 60px 50p
 .section4 .projectList li{display:flex;justify-content:space-between;padding-bottom:100px}
 /* footer */
 footer{color:#fff;text-align:center;padding:60px 0}
+@media all and (max-width:1280px){
+    .sec{padding-left:20px;padding-right:20px}
+    .menuBtn{left:20px}
+    /* section1 */
+    .section1 h1{font-size:65px;}
+    .section1 h1 span{font-size:22px;letter-spacing:12px;}
+    .section1 .imgBox{top:0}
+    /* section2 */
+    .section2{padding-top:350px;padding-bottom:100px}
+    /* two part */
+    section .contRight{margin-left:20px;padding-left:20px}
+    /* section3 */
+    .section3{padding:100px 0}
+    .section3 .content{align-items:stretch;}
+    /* section4 */
+    .section4 .content p{font-size:14px;}
+    .section4 .projectList li{align-items:center;}
+    .section4 .imgArea{width:50%}
+    .section4 .imgArea img{width:100%}
+    .section4 .imgArea .date{font-size:20px;right:8%;bottom:10%}
+    .section4 .textArea{width:45%;margin-left:0}
+    .section4 .textArea h3{font-size:50px;}
+    .section4 .textArea p{font-size:14px;}
+    .section4 .textArea .btnArea{position:static;margin-top:30px}
+}
+/* 태블릿 사이즈 */
+@media all and (max-width:900px){
+    nav{padding-top:30px}
+    section h2{font-size:75px;padding-left:10%}
+    /* section1 */
+    .section1 h1{font-size:55px;}
+    .section1 h1 span{font-size:16px;}
+    .section1 .imgBox{top:15vh}
+    /* section2 */
+    .section2{padding-top:250px}
+    .section2 .career li{font-size:14px;}
+    .section2 .career .title{font-size:16px;}
+    .section2 .personal p{font-size:14px;}
+    /* two part */
+    section .contRight{padding-top:30px;padding-bottom:30px}
+    
+}
+/* 모바일 사이즈 */
+@media all and ( max-width:768px ){
+    .sec{padding:0}
+    .inner{width:90%;}
+    .btn{width:30rem;height:8rem;line-height:8rem;font-size:2.4rem;border-radius:1rem}
+    .btn img{width:100%;}
+    .btn::after{width:5rem;height:5rem;}
+    .btn:hover::after{width:32rem;height:32rem}
+    /* nav */
+    nav{padding-top:6vw}
+    .menuBtn{width:5rem;height:5rem;left:0}
+    .menuBtn span{height:0.5rem}
+    .menuList{width:100vw;left:-5vw;transform:translateY(0);top:-6vw;height:initial;flex-direction:column;align-items:center;padding:7rem 0 5rem}
+    .menuList li{font-size:2.4rem;height:8rem;line-height:8rem;width:80%;}
+    .menuList li a::after{height:0.5rem}
+    /* 클릭했을 때 효과 */
+    .menuClick .line1{transform:translateY(2.2rem) rotate(45deg)}
+    .menuClick .line3{transform: translateY(-2.2rem) rotate(-45deg);}
+    /* section1 */
+    .section1{height:initial;padding-top:5rem}
+    .section1 .inner{flex-direction:column;justify-content:space-between;align-items:center;}
+    .section1 h1{text-align:center;font-size:10rem;padding-bottom:5rem}
+    .section1 h1 span{font-size:3rem;letter-spacing:2rem;}
+    .section1 .summary{width: 100%;border-left:0;border-top:1px dashed #fff;padding:0;padding-top:5rem;text-align:center;}
+    .section1 .summary p{font-size:2.4rem;line-height:3rem}
+    .section1 .imgBox{width:100%;transform:translateX(0);position:static;}
+    .section1 .imgBox img{width:100%;}
+    .section1 .lineSumary{padding-top:5rem;margin-bottom:5rem}
+    .section1 .lineSumary li{font-size:2.6rem;line-height:3.4rem;}
+    /* two part */
+    section h2{text-align:center;font-size:10rem;padding-left:0;padding-bottom:5rem}
+    section .content{align-items:center;justify-content:initial;flex-direction:column;}
+    section .contLeft{width:100%;text-align:center;}
+    section .contRight{width:100%;text-align:center;border-left:0;border-top:1px solid #eee;padding:0;margin-left:0;padding-top:5rem;margin-top:5rem}
+    /* section2 */
+    .section2{margin-top:-50rem;padding:60rem 0 10rem}
+    .section2 .career ul{margin-bottom:5rem}
+    .section2 .career li{font-size:2.4rem;margin-bottom:2rem;}
+    .section2 .career .icon{font-size:5rem}
+    .section2 .career .title{font-size:3rem}
+    .section2 .personal .textArea{margin-bottom:5rem}
+    .section2 .personal p{margin-bottom:2rem;font-size:2.4rem;}
+    /* section3 */
+    .section3{padding: 10rem 0 16rem}
+    .section3 .logos{justify-content:center;}
+    .section3 .logos li{width:20%}
+    .section3 .logos img{width:100%;}
+    .section3 .contRight{height:50rem;}
+    /* section4 */
+    .section4 h2{transform:translateY(-50%);padding-bottom:5rem}
+    .section4 .content{padding-bottom:5rem}
+    .section4 .content p{font-weight:200;font-size:16px;line-height:1.3;}
+    .section4 .contRight{margin-top:0;padding-top:0;border-bottom:1px dashed #eee;border-top:0;padding-bottom:5rem;}
+    .section4 .projectList li{padding-bottom:5rem;padding-top:5rem;border-bottom:1px dashed #666;flex-direction:column;}
+    .section4 .projectList .goGitBtn{margin-left:2rem;margin-top:1rem;}
+    .section4 .imgArea{width:100%;margin-bottom:5rem}
+    .section4 .imgArea .date{bottom:4rem;right:4rem;font-size:3rem;}
+    .section4 .textArea{width:100%;margin-left:0}
+    .section4 .textArea h3{text-align:center;font-size:6rem;padding-bottom:5rem}
+    .section4 .textArea p{font-size:2.4rem}
+    .section4 .textArea .btnArea{margin-top:5rem;text-align:center;}
+    /* footer */
+footer{padding:10rem 0}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

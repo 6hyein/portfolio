@@ -47,7 +47,8 @@ $(document).ready(function(){
             }]
         },
         options: {
-            // responsive: false,
+            responsive: false, // 크기 조정 
+            maintainAspectRatio: false, // 가로 세로 종횡비 유지
             indexAxis: 'y',
             plugins:{
                 legend: {
@@ -65,7 +66,9 @@ $(document).ready(function(){
                 },
                 y: {
                     ticks:{
-                        color: '#fff'
+                        color: '#fff',
+                        categoryPercentage: 0.7,
+                        maxBarThickness: 20,
                     }
                 }
             }
