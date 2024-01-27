@@ -36,7 +36,6 @@ nav{position:relative;padding-top:85px;left:0;top:0;width:100%;z-index:999;}
 .section1 .lineSumary span{font-weight:100;display:block;}
 .section1 .lineSumary li:nth-of-type(2){text-align:center;}
 .section1 .lineSumary li:last-of-type{text-align:right;}
-
 /* two part */
 section .content{display:flex;align-items:flex-end;justify-content:center;color:#fff;}
 section .contLeft{text-align:right;width:33%}
@@ -55,7 +54,16 @@ section .contRight{width:67%;border-left: 1px solid #fff;padding:60px 0 60px 50p
 /* section3 */
 .section3{padding: 160px 0}
 .section3 .content{align-items:center;}
-.section3 .logos{display:flex;flex-wrap:wrap;justify-content: flex-end;}
+.section3 .logos{display:flex;flex-wrap:wrap;justify-content: flex-end;align-items:flex-end;}
+.section3 .contRight{height: 400px;}
+.chart{display:flex;flex-direction:column;justify-content:space-between;}
+.chart .bar{position:relative;width:0;transition: width .5s ease-in; border: 3px solid rgb(241,101,40);border-left:0; background-color:rgba(241,101,40,0.7);height:10%;border-radius: 0 10px 10px 0; }
+.chart .bar span{position:absolute;left:5px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:600;}
+.chart .bar:nth-of-type(2){transition-delay:.1s; background-color:rgba(46,170,222,0.7);border-color:rgb(46,170,222);}
+.chart .bar:nth-of-type(3){transition-delay:.2s;background-color:rgba(8,104,171,0.7);border-color:rgb(8,104,171);}
+.chart .bar:nth-of-type(4){transition-delay:.3s;background-color:rgba(255,214,34,0.7);border-color:rgb(255,214,34);}
+.chart .bar:nth-of-type(5){transition-delay:.4s;background-color:rgba(119,123,179,0.7);border-color:rgb(119,123,179);}
+.chart .bar:nth-of-type(6){transition-delay:.5s;background-color:rgba(226,132,0,0.7);border-color:rgb(226,132,0);}
 /* section4 */
 .section4 h2{transform:translateY(-50%);padding-bottom:20px}
 .section4 .content{padding-bottom:60px}
@@ -110,9 +118,10 @@ footer{color:#fff;text-align:center;padding:60px 0}
     .section2 .career li{font-size:14px;}
     .section2 .career .title{font-size:16px;}
     .section2 .personal p{font-size:14px;}
+    /* section3 */
+    .section3 .contRight{height:initial;}
     /* two part */
     section .contRight{padding-top:30px;padding-bottom:30px}
-    
 }
 /* 모바일 사이즈 */
 @media all and ( max-width:768px ){
@@ -148,6 +157,8 @@ footer{color:#fff;text-align:center;padding:60px 0}
     section .content{align-items:center;justify-content:initial;flex-direction:column;}
     section .contLeft{width:100%;text-align:center;}
     section .contRight{width:100%;text-align:center;border-left:0;border-top:1px solid #eee;padding:0;margin-left:0;padding-top:5rem;margin-top:5rem}
+    .chart .bar{border-width:0.5rem;border-radius: 0 1rem 1rem 0; }
+    .chart .bar span{left:1rem;font-size:2.4rem}
     /* section2 */
     .section2{margin-top:-50rem;padding:60rem 0 10rem}
     .section2 .career ul{margin-bottom:5rem}
@@ -176,7 +187,7 @@ footer{color:#fff;text-align:center;padding:60px 0}
     .section4 .textArea p{font-size:2.4rem}
     .section4 .textArea .btnArea{margin-top:5rem;text-align:center;}
     /* footer */
-footer{padding:10rem 0}
+    footer{padding:10rem 0}
 }
 
 
