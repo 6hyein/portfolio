@@ -21,7 +21,8 @@ nav{position:relative;padding-top:85px;left:0;top:0;width:100%;z-index:999;}
 .menuClick .line1{transform:translateY(300%) rotate(45deg)}
 .menuClick .line2{display:none;}
 .menuClick .line3{transform: translateY(-300%) rotate(-45deg);}
-
+/* 메뉴 교정 */
+.positionFix{position:fixed;padding-top:20px}
 /* section1 */
 .section1{height:480px;background:#222a35;}
 .section1 .inner{display:flex;justify-content:space-between;align-items:center;}
@@ -125,6 +126,7 @@ footer{color:#fff;text-align:center;padding:60px 0}
 }
 /* 모바일 사이즈 */
 @media all and ( max-width:768px ){
+    .wrapper{width:100%;overflow:hidden;}
     .sec{padding:0}
     .inner{width:90%;}
     .btn{width:30rem;height:8rem;line-height:8rem;font-size:2.4rem;border-radius:1rem}
@@ -141,6 +143,8 @@ footer{color:#fff;text-align:center;padding:60px 0}
     /* 클릭했을 때 효과 */
     .menuClick .line1{transform:translateY(2.2rem) rotate(45deg)}
     .menuClick .line3{transform: translateY(-2.2rem) rotate(-45deg);}
+    /* 메뉴 교정 */
+    .positionFix{padding-top:6vw}
     /* section1 */
     .section1{height:initial;padding-top:5rem}
     .section1 .inner{flex-direction:column;justify-content:space-between;align-items:center;}

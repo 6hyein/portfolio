@@ -19,8 +19,9 @@ $(document).ready(function(){
      // 스킬바
     const skillsTop = $("#skills").offset().top-300;
     const projectsTop = $("#projects").offset().top;
-    let scrollEvn = () => {
-        let scrollTop = $(document).scrollTop();
+    let scrollTop = $(document).scrollTop();
+    let scrollEvn = (newTop) => {
+        scrollTop = newTop ? newTop : scrollTop;
         if(skillsTop <= scrollTop && projectsTop >= scrollTop){
             $(".bar").each((idx,item)=>{                
                 let barWidth = $(item).attr("bar-width");
@@ -31,8 +32,23 @@ $(document).ready(function(){
         }
     }
     scrollEvn();
+
+    // 메뉴 고정
+    const menuTop = $(".section1").offset().top;
+    let menuEvn = (newTop) => {
+        console.log(scrollTop,menuTop);
+        scrollTop = newTop ? newTop : scrollTop;
+        if(scrollTop >= menuTop){
+            $("#menuFix").addClass("positionFix");
+        }else{
+            $("#menuFix").removeClass("positionFix");
+        }
+    }
+    menuEvn();
     $(document).scroll(function(){
-        scrollEvn();
+        let newTop = $(document).scrollTop();
+        scrollEvn(newTop); // 스킬바
+        menuEvn(newTop); // 메뉴고정
     });
  
 });
