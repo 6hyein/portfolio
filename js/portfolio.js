@@ -36,7 +36,6 @@ $(document).ready(function(){
     // 메뉴 고정
     const menuTop = $(".section1").offset().top;
     let menuEvn = (newTop) => {
-        console.log(scrollTop,menuTop);
         scrollTop = newTop ? newTop : scrollTop;
         if(scrollTop >= menuTop){
             $("#menuFix").addClass("positionFix");
