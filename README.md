@@ -28,6 +28,7 @@
   <li>mySQL<li>
   <li>JAVA</li>
   <li>vue</li>
+  <li>phthon</li>
 </ul>
 <h2 id="4">My Project</h2>
 <h2 id="5">자기소개서</h2>
