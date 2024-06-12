@@ -33,16 +33,20 @@
   <li>vue</li>
   <li>phthon</li>
 </ul>
+
 <h2 id="4">My Project</h2>
+
 <h3>마이패스</h3>
 <ol>
   <li><a href="https://www.dokgong.com/">전체 사이트 반응형으로 변환</a><span class="date">21.02.22~21.03.05</span></li>
   <li><a href="https://job.dokgong.com/webtest/sample">웹테스트, OMR, 채점</a><span class="date">21.06.01~22.04.18</span></li>
   <li><a href="https://sobang.dokgong.com/professor">교수님 소개 페이지</a><span class="date">21.04.09~21.06.03</span></li>
 </ol>
+
 <h3>팀 프로젝트</h3>
-<li><a href="https://fruitmbti.pages.dev">과일 MBTI 테스트</a><span class="date">22.11.13~22.12.15</span></li>
-<a href="https://www.dokgong.com/"></a>
+<ol>
+  <li><a href="https://fruitmbti.pages.dev">과일 MBTI 테스트</a><span class="date">22.11.13~22.12.15</span><a herf="https://github.com/donggu1105/FRUIT-MBTI">깃허브 방문</a></li>
+</ol>
 
 <h2 id="5">자기소개서</h2>
 <p><strong>정해진 마감 안에 작업을 끝낼 수 있도록 노력합니다.</strong> 어릴 때부터 시간 약속을 중요시하시는 부모님 곁에서 자라서 약속한 시각을 중요하게 여깁니다. 혹시라도 개인적인 역량이 부족해 시간 안에 일을 해결 수 없는 경우엔 검색이나 강의들을 참고해 조사했습니다. 이른 시일 내 해결할 수 없을 것 같은 경우 미리 상황을 보고드려 함께 해결책, 대안을 찾아 해결했습니다. 업무 과다로 마감 안에 끝낼 수 없을 것 같은 경우엔 미리 현 상황을 보고드리고 중요한 순서대로 업무를 먼저 처리해 회사일정에 지장이 없도록 노력했습니다.</p>
