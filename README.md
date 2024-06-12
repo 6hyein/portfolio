@@ -45,7 +45,7 @@
 
 <h3>팀 프로젝트</h3>
 <ol>
-  <li><a href="https://fruitmbti.pages.dev">과일 MBTI 테스트</a><span class="date">22.11.13~22.12.15</span><a herf="https://github.com/donggu1105/FRUIT-MBTI">깃허브 방문</a></li>
+  <li><a href="https://fruitmbti.pages.dev">과일 MBTI 테스트</a><span class="date">22.11.13~22.12.15</span><a href="https://github.com/donggu1105/FRUIT-MBTI">깃허브 방문</a></li>
 </ol>
 
 <h2 id="5">자기소개서</h2>
