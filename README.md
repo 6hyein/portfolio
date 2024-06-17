@@ -50,7 +50,7 @@
   <li><a href="https://tnjtaboola.co.kr/intro/121710306671/">암보험1억-피플라이프</a> 24.03.04~24.03.13</li>
   <li><a href="https://kiwoomdb.co.kr/intro/61710740684">롯데88플러스</a> 24.03.13~24.03.18</li>
   <li><a href="https://kiwoomdb.co.kr/intro/81710993753/">한화 암보험</a> 24.03.19~24.03.21</li>
-  <li><a href="https://kiwoomdb.co.kr/intro/91711093679/">삼성화재56암</a> 24.03.11~24.03.22</li>
+  <li><a href="https://tnjbiz1.co.kr/intro/6541711093739/">삼성화재56암</a> 24.03.11~24.03.22</li>
   <li><a href="https://kiwoomdb.co.kr/intro/121715311548/">암보험모아1</a> 24.05.07~24.05.10</li>
   <li><a href="https://kiwoomdb.co.kr/intro/131715584355/">암보험모아2</a> 24.05.13~24.05.13</li>
 
