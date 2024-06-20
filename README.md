@@ -54,6 +54,8 @@
   <li><a href="https://kiwoomdb.co.kr/intro/121715311548/">암보험모아1</a> 24.05.07~24.05.10</li>
   <li><a href="https://kiwoomdb.co.kr/intro/131715584355/">암보험모아2</a> 24.05.13~24.05.13</li>
 
+  <li><a href="https://kiwoomdb.co.kr/intro/91711093679/">삼성 내돈내삼</a> 24.06.17~24.06.19</li>
+
   <li><a href="https://tnjviral1.co.kr/intro/151715155359/">티앤제이애드 랜딩페이지</a> 24.04.23~24.05.08</li>
 
   <li>자사 홈페이지 리뉴얼 - 리스트업 => PLAY.D 주참고 24.04.08~24.04.11</li>
