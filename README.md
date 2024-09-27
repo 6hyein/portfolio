@@ -54,8 +54,9 @@
   <li><a href="https://kiwoomdb.co.kr/intro/121715311548/">암보험모아1</a> 24.05.07~24.05.10</li>
   <li><a href="https://kiwoomdb.co.kr/intro/131715584355/">암보험모아2</a> 24.05.13~24.05.13</li>
   <li><a href="https://kiwoomdb.co.kr/intro/151718944836/">암보험모아3</a> 24.06.21~24.06.21</li>
-
   <li><a href="https://kiwoomdb.co.kr/intro/91711093679/">삼성 내돈내삼</a> 24.06.17~24.06.19</li>
+  <li><a href="http://ins-leaders.co.kr/intro/7391727316520/">사업자 정책자금</a> 24.09.25 ~ 24.09.27</li>
+  
 
   <li><a href="https://tnjviral1.co.kr/intro/151715155359/">티앤제이애드 랜딩페이지</a> 24.04.23~24.05.08</li>
 
@@ -63,6 +64,7 @@
   <li><a href="https://tnjbiz1.co.kr/intro/6551713319587/">자사 홈페이지 리뉴얼-main</a> 24.04.11~24.04.17</li>
   <li><a href="">자사 홈페이지 리뉴얼-회사소개(미완)</a>24.05.22~</li>
 <li><a href="">자사 홈페이지 리뉴얼-사업영역(미완)</a>24.05.24~</li>
+
 </ol>
 
 <h3>마이패스</h3>
