@@ -51,6 +51,7 @@
   <li><a href="https://kiwoomdb.co.kr/intro/61710740684">롯데88플러스</a> 24.03.13~24.03.18</li>
   <li><a href="https://kiwoomdb.co.kr/intro/81710993753/">한화 암보험</a> 24.03.19~24.03.21</li>
   <li><a href="https://tnjbiz1.co.kr/intro/6541711093739/">삼성화재56암</a> 24.03.11~24.03.22</li>
+  <li><a href="https://tnjviral1.co.kr/intro/151715155359/">티앤제이애드 랜딩페이지</a> 24.04.23~24.05.08</li>
   <li><a href="https://kiwoomdb.co.kr/intro/121715311548/">암보험모아1</a> 24.05.07~24.05.10</li>
   <li><a href="https://kiwoomdb.co.kr/intro/131715584355/">암보험모아2</a> 24.05.13~24.05.13</li>
   <li><a href="https://kiwoomdb.co.kr/intro/151718944836/">암보험모아3</a> 24.06.21~24.06.21</li>
@@ -58,10 +59,8 @@
   <li><a href="http://ins-leaders.co.kr/intro/7391727316520/">사업자 정책자금</a> 24.09.25 ~ 24.09.27</li>
   <li><a href="http://www.tnjt.co.kr/">티앤제이티 사이트 수정 및 번역</a> 24.10.07 ~ 24.10.17</li>
   <li><a href="https://tnjtaboola.co.kr/intro/301731398476/">키움암보험특약</a> 24.11.12 ~ 24.11.14</li>
+  
 
-  <li><a href="https://tnjviral1.co.kr/intro/151715155359/">티앤제이애드 랜딩페이지</a> 24.04.23~24.05.08</li>
-
-  <li>자사 홈페이지 리뉴얼 - 리스트업 => PLAY.D 주참고 24.04.08~24.04.11</li>
   <li><a href="https://tnjbiz1.co.kr/intro/6551713319587/">자사 홈페이지 리뉴얼-main</a> 24.04.11~24.04.17</li>
   <li><a href="">자사 홈페이지 리뉴얼-회사소개(미완)</a>24.05.22~</li>
 <li><a href="">자사 홈페이지 리뉴얼-사업영역(미완)</a>24.05.24~</li>
