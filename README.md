@@ -56,7 +56,8 @@
   <li><a href="https://kiwoomdb.co.kr/intro/151718944836/">암보험모아3</a> 24.06.21~24.06.21</li>
   <li><a href="https://kiwoomdb.co.kr/intro/91711093679/">삼성 내돈내삼</a> 24.06.17~24.06.19</li>
   <li><a href="http://ins-leaders.co.kr/intro/7391727316520/">사업자 정책자금</a> 24.09.25 ~ 24.09.27</li>
-  
+  <li><a href="http://www.tnjt.co.kr/">티앤제이티 사이트 수정 및 번역</a> 24.10.07 ~ 24.10.17</li>
+  <li><a href="https://tnjtaboola.co.kr/intro/301731398476/">키움암보험특약</a> 24.11.12 ~ 24.11.14</li>
 
   <li><a href="https://tnjviral1.co.kr/intro/151715155359/">티앤제이애드 랜딩페이지</a> 24.04.23~24.05.08</li>
 
