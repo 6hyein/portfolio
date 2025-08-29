@@ -60,7 +60,7 @@
   <li><a href="https://www.hankyungbiz.co.kr/">한경비즈</a> 25.04.09 ~ 25.04.21</li>
   <li><a href="http://www.tnjbiz.co.kr/">T&J biz 홈페이지</a> 24.04.11 ~ 24.05.24, 25.04.22 ~ 25.05.27</li>
   <li><a href="https://tnjtaboola.co.kr/intro/451755584031/">모모성형외과서울점_남성모발이식1</a> 25.08.21 ~ 25.08.25</li>  
-  <li><a href="http://ins-leaders.co.kr/intro/7961756361750/">모모성형외과서울점_남성모발이식3</a> 25.08.29 ~ 25.08.29</li>
+  <li><a href="http://ins-leaders.co.kr/intro/7961756361750/">모모성형외과서울점_남성모발이식2</a> 25.08.29 ~ 25.08.29</li>
 
 </ol>
 
