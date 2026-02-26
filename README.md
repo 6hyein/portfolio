@@ -67,6 +67,8 @@
   <li><a href="http://ins-leaders.co.kr/intro/8551765159065/">정책자금 대출</a> 25.12.03 ~ 25.12.09</li>
   <li><a href="http://ins-leaders.co.kr/intro/8571765514911/">정부 정책자금</a> 25.12.10 ~ 25.12.12</li>
   <li><a href="http://ins-leaders.co.kr/intro/8631766376733/">소상공인 정책자금</a>25.12.17 ~ 25.12.22</li>
+  <li><a href="https://www.ins-leaders.co.kr/intro/8651766968312/">정책자금 진단여부</a>25.12.23 ~ 25.12.29</li>
+  <li><a href="https://www.ins-leaders.co.kr/intro/8691767836995/">소상공인 정책자금 변형</a>26.01.05 ~ 26.01.08</li>
   
 
 </ol>
