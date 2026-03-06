@@ -54,21 +54,11 @@
 </head>
 <body class="antialiased selection:bg-amber-200 selection:text-amber-900">
 
-    <!-- Chosen Palette: Warm Neutrals with Amber/Stone accents for a calm, professional harmony -->
-    <!-- Application Structure Plan: The SPA uses a single-page scrolling dashboard layout. It begins with a hero section summarizing the identity, followed by interactive tabs for the Cover Letter to save space and group themes. The Skills section uses a Chart.js radar chart for visual balancing of technical abilities. The Experience section uses an interactive master-detail view to prevent long scrolling, and Projects utilize a dynamic filtering grid to allow users to focus on specific work categories. This structure prioritizes ease of exploration and synthesizes the standard linear resume into an engaging interactive experience. -->
-    <!-- Visualization & Content Choices: 
-         1. Cover Letter -> Goal: Organize text -> Method: Tabbed Interface -> Interaction: Click tabs to swap content -> Justification: Prevents text fatigue, groups by soft skills/motivation -> Method: HTML/JS.
-         2. Skills -> Goal: Compare -> Method: Radar Chart -> Interaction: Hover for tooltips -> Justification: Shows the multi-disciplinary nature (Frontend, Backend, Design) at a glance -> Method: Chart.js (Canvas).
-         3. Experience -> Goal: Inform/Organize -> Method: Master-Detail List -> Interaction: Click company name to view details -> Justification: Keeps layout compact and focuses user attention on one role at a time -> Method: HTML/JS.
-         4. Projects -> Goal: Organize/Filter -> Method: Filterable Grid -> Interaction: Click category buttons to filter -> Justification: Allows quick finding of relevant portfolio items -> Method: HTML/JS. 
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <nav class="sticky top-0 z-50 bg-stone-100/90 backdrop-blur shadow-sm border-b border-stone-200">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex-shrink-0 font-bold text-xl tracking-tight text-amber-800">
-                    👨‍💻 [이름을 입력하세요]
+                    👨‍💻 육혜인
                 </div>
                 <div class="hidden md:flex space-x-8">
                     <a href="#about" class="text-stone-600 hover:text-amber-700 transition font-medium">자기소개</a>
@@ -85,7 +75,7 @@
         <section id="hero" class="text-center py-16 md:py-24 animate-fade-in-up">
             <div class="inline-block p-4 rounded-full bg-amber-100 mb-6 text-4xl">🌟</div>
             <h1 class="text-4xl md:text-6xl font-extrabold text-stone-900 tracking-tight mb-4">
-                [이름을 입력하세요]
+                육혜인
             </h1>
             <p class="text-xl md:text-2xl text-stone-600 font-light">
                 협업을 즐기는 <span class="font-semibold text-amber-700">Web Developer & Publisher</span>
@@ -291,7 +281,7 @@
     </main>
 
     <footer class="bg-stone-900 text-stone-400 py-8 text-center">
-        <p>© 2026 [이름을 입력하세요]. Interactive Resume created from Source Report.</p>
+        <p>© 2026 육혜인. Interactive Resume created from Source Report.</p>
     </footer>
 
     <script>
@@ -366,10 +356,10 @@
                                 font: { size: 14, family: "'Noto Sans KR', sans-serif", weight: 'bold' },
                                 color: '#292524'
                             },
-                            ticks: {
-                                display: false,
-                                min: 0,
-                                max: 100
+                            suggestedMin : 50,
+                            suggestedMax : 100,
+                            ticks :{
+                                stepSize : 10
                             }
                         }
                     },
