@@ -70,6 +70,8 @@
   <li><a href="https://www.ins-leaders.co.kr/intro/8651766968312/">정책자금 진단여부</a>25.12.23 ~ 25.12.29</li>
   <li><a href="https://www.ins-leaders.co.kr/intro/8691767836995/">소상공인 정책자금 변형</a>26.01.05 ~ 26.01.08</li>
   
+  <li><a href="https://thedbpro.co.kr/intro/7121773033695/">피플라이프 암보험</a></li>
+  
 
 </ol>
 
