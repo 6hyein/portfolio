@@ -6,51 +6,8 @@
     <title>육혜인 | Web Developer & Publisher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-        
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #fafaf9; 
-            color: #292524; 
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 40vh;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        
-        .tab-btn.active {
-            border-bottom: 2px solid #b45309; 
-            color: #b45309;
-            font-weight: 700;
-        }
-
-        .exp-btn.active {
-            background-color: #fef3c7; 
-            border-left: 4px solid #b45309;
-            font-weight: 700;
-        }
-
-        .filter-btn.active {
-            background-color: #292524;
-            color: #fafaf9;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
+    <script src="./js/script.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="antialiased selection:bg-amber-200 selection:text-amber-900">
 
@@ -65,6 +22,7 @@
                     <a href="#skills" class="text-stone-600 hover:text-amber-700 transition font-medium">기술 스택</a>
                     <a href="#experience" class="text-stone-600 hover:text-amber-700 transition font-medium">경력사항</a>
                     <a href="#projects" class="text-stone-600 hover:text-amber-700 transition font-medium">프로젝트</a>
+                    <a href="#banners" class="text-stone-600 hover:text-amber-700 transition font-medium">배너디자인</a>
                 </div>
             </div>
         </div>
@@ -288,254 +246,41 @@
                 
             </div>
         </section>
+        <section id="banners" class="scroll-mt-20 pb-20">
+            <div class="border-b border-stone-300 pb-2 mb-6 flex justify-between items-end">
+                <h2 class="text-3xl font-bold text-stone-800">🖼️ 배너 디자인 (Banner)</h2>
+                <button id="btn-open-modal" class="px-4 py-2 bg-stone-800 text-white text-sm font-medium rounded-lg hover:bg-stone-700 transition">
+                    전체 배너 한눈에 보기 👆
+                </button>
+            </div>
+            
+            <div class="relative w-full overflow-hidden bg-white py-6 border border-stone-200 rounded-2xl shadow-sm">
+                <div id="marquee-container" class="animate-marquee gap-4 px-2"></div>
+            </div>
+        </section>
     </main>
+    <!-- 배너 전체 보기 팝업 -->
+    <div id="banner-modal" class="hidden fixed inset-0 z-[100] bg-black/80 flex justify-center items-center p-4 sm:p-10 backdrop-blur-sm">
+        <div class="relative bg-white w-full max-w-6xl h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+            
+            <div class="p-6 sm:p-8 border-b border-stone-200 flex justify-between items-center shrink-0">
+                <h2 class="text-2xl font-bold text-stone-800">모든 배너 한눈에 보기 <span id="banner-count" class="ml-2 text-lg font-medium text-amber-700"></span></h2>
+                <button id="btn-close-modal" class="text-4xl text-stone-500 hover:text-stone-900 leading-none">&times;</button>
+            </div>
+            
+            <div class="p-6 sm:p-8 overflow-y-auto flex-1 bg-stone-50">
+                <div id="modal-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="image-viewer-modal" class="hidden fixed inset-0 z-[110] bg-black/95 flex justify-center items-center p-4 sm:p-10 backdrop-blur-md cursor-zoom-out">
+        <button id="btn-close-viewer" class="absolute top-4 right-6 text-white text-5xl hover:text-stone-300 transition leading-none">&times;</button>
+        <img id="viewer-image" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" alt="확대된 배너">
+    </div>
 
     <footer class="bg-stone-900 text-stone-400 py-8 text-center">
         <p>© 2026 YookHyein. Interactive Resume created from Source Report.</p>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    tabContents.forEach(c => {
-                        c.classList.remove('block');
-                        c.classList.add('hidden');
-                    });
-
-                    btn.classList.add('active');
-                    const targetId = btn.getAttribute('data-target');
-                    const targetContent = document.getElementById(targetId);
-                    targetContent.classList.remove('hidden');
-                    targetContent.classList.add('block');
-                });
-            });
-
-            
-            const expBtns = document.querySelectorAll('.exp-btn');
-            const expDetails = document.querySelectorAll('.exp-detail');
-
-            expBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    expBtns.forEach(b => b.classList.remove('active', 'border-l-4', 'border-b45309', 'bg-fef3c7'));
-                    
-                    btn.classList.add('active');
-
-                    expDetails.forEach(d => {
-                        d.classList.remove('block');
-                        d.classList.add('hidden');
-                    });
-
-                    const targetId = btn.getAttribute('data-target');
-                    const targetDetail = document.getElementById(targetId);
-                    targetDetail.classList.remove('hidden');
-                    targetDetail.classList.add('block');
-                });
-            });
-
-            
-            const ctx = document.getElementById('skillsChart').getContext('2d');
-            const skillsChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Frontend', 'Backend', 'Design', 'Tools & DevOps'],
-                    datasets: [{
-                        label: 'Skill Level',
-                        data: [95, 65, 85, 75], 
-                        backgroundColor: 'rgba(180, 83, 9, 0.2)', 
-                        borderColor: 'rgba(180, 83, 9, 1)', 
-                        pointBackgroundColor: 'rgba(180, 83, 9, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(180, 83, 9, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                            pointLabels: {
-                                font: { size: 14, family: "'Noto Sans KR', sans-serif", weight: 'bold' },
-                                color: '#292524'
-                            },
-                            suggestedMin : 50,
-                            suggestedMax : 100,
-                            ticks :{
-                                stepSize : 10
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '역량 평가: ' + context.raw + '/100';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // 1. 데이터
-            const projectData = [                
-                {
-                    category: 't&j biz', title: '정책자금 대출 랜딩(8)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
-                    subList: [
-                        { title: '소상공인 정책자금 변형', period: '26.01.05~26.01.08', url:'https://www.ins-leaders.co.kr/intro/8691767836995/' },
-                        { title: '정책자금 진단여부', period: '25.12.23~25.12.29', url:'https://www.ins-leaders.co.kr/intro/8651766968312/' },
-                        { title: '소상공인 정책자금', period: '25.12.17~25.12.22', url:'http://ins-leaders.co.kr/intro/8631766376733/' },
-                        { title: '정부 정책자금', period: '25.12.10~25.12.12', url:'http://ins-leaders.co.kr/intro/8571765514911/' },
-                        { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'http://ins-leaders.co.kr/intro/8551765159065/' },
-                        { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'http://ins-leaders.co.kr/intro/8561765164738/' },
-                        { title: '사업자정책자금', period: '24.09.25~24.09.27', url:'http://ins-leaders.co.kr/intro/7391727316520/' },
-                        { title: '사업자정책자금', period: '24.02.15~24.02.20', url:'http://ins-leaders.co.kr/intro/6891708410582/' },
-                    ]
-                },
-                {
-                    category: 't&j biz', title: '자사, 파트너 사이트(4)', desc: '자사 랜딩/사이트 구축, 유지보수, 수정, 번역', detail: '시스템 관리',
-                    subList: [
-                        { title: 'T&J biz 홈페이지', period: '24.04.11~25.05.27', url:'http://www.tnjbiz.co.kr/' },
-                        { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'https://tnjbiz1.co.kr/intro/6811772779117/' },
-                        { title: '한경비즈', period: '25.04.09~25.04.21', url:'https://www.hankyungbiz.co.kr/' },
-                        { title: 'T&JT 사이트 수정/번역', period: '24.10.07~24.10.17', url:'http://www.tnjt.co.kr/' },
-                    ]
-                },
-                {
-                    category: 't&j biz', title: '모모성형외과 랜딩(5)', desc: '서울점 남성모발이식 랜딩페이지 시리즈 제작', detail: '디자인 & 퍼블리싱',
-                    subList: [
-                        { title: '남성모발이식5', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8001756872362/' },
-                        { title: '남성모발이식4', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8011756872376/' },
-                        { title: '남성모발이식3', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/7991756872343/' },
-                        { title: '남성모발이식2', period: '25.08.29~25.08.29', url:'http://ins-leaders.co.kr/intro/7961756361750/' },
-                        { title: '남성모발이식1', period: '25.08.21~25.08.25', url:'https://tnjtaboola.co.kr/intro/451755584031/' },
-                    ]
-                },
-                { 
-                    category: 't&j biz', title: '암보험 랜딩 페이지(10)', desc: '암 광고 랜딩페이지', detail: '디자인 & 퍼블리싱',
-                    subList: [
-                        { title: '피플 암보험', period: '26.03.09~26.03.10', url:'https://thedbpro.co.kr/intro/7121773033695/' },
-                        { title: '키움암보험특약(3)', period: '24.11.12~24.11.20', url:'https://tnjtaboola.co.kr/intro/301731398476/' },
-                        { title: '암보험모아3', period: '24.06.21~24.06.21', url:'https://kiwoomdb.co.kr/intro/151718944836/' },
-                        { title: '삼성 내돈내삼', period: '24.06.17~24.06.19', url:'https://kiwoomdb.co.kr/intro/91711093679/' },
-                        { title: '암보험모아2', period: '24.05.13~24.05.13', url:'https://kiwoomdb.co.kr/intro/131715584355/' },
-                        { title: '암보험모아1', period: '24.05.07~24.05.10', url:'https://kiwoomdb.co.kr/intro/121715311548/' },
-                        { title: '한화 암보험', period: '24.03.19~24.03.21', url:'https://kiwoomdb.co.kr/intro/81710993753/' },
-                        { title: '롯데88플러스', period: '24.03.13~24.03.18', url:'https://kiwoomdb.co.kr/intro/61710740684' },
-                        { title: '삼성화재56암', period: '24.03.11~24.03.22', url:'https://tnjbiz1.co.kr/intro/6541711093739/' },
-                        { title: '암보험1억-피플라이프', period: '24.03.04~24.03.13', url:'https://tnjtaboola.co.kr/intro/121710306671/' },
-                       
-                    ]
-                },
-                { 
-                    category: 't&j biz', title: '상조 랜딩 페이지(4)', desc: '상조 광고 랜딩페이지', detail: '디자인 & 퍼블리싱',
-                    subList: [
-                        { title: '상조랜딩페이지4', period: '24.06.07~24.06.11', url:'https://thedbpro.co.kr/intro/6791718077783/' },
-                        { title: '상조랜딩페이지3', period: '24.05.28~24.06.05', url:'https://thedbpro.co.kr/intro/6771716867573/' },
-                        { title: '상조랜딩페이지2', period: '24.05.16~24.05.17', url:'https://thedbpro.co.kr/intro/6751715845637/' },
-                        { title: '상조랜딩페이지1', period: '24.02.20~24.02.29', url:'https://thedbpro.co.kr/intro/6741715845618/' },
-                    ]
-                },
-                // 팀
-                { category: 'team', title: '과일 MBTI 테스트', desc: '개발자/디자이너 4인 협업 프로젝트. GitHub 활용 프론트엔드 개발 담당', detail: '웹 프론트엔드 협업', url: 'https://fruitmbti.pages.dev/', period: '22.11.13~22.12.15' },
-                // 마이패스
-                { category: 'mypass', title: '웹테스트, OMR, 채점', desc: 'HTML, CSS, jQuery 이용해 퍼블리싱 php, MySql 이용해 OMR 채점 및 결과표 산출 문제와 답을 등록할 수 있는 관리자 페이지', detail: '웹 시스템 개발', url:'https://job.dokgong.com/webtest/sample', period: '21.06.01~22.04.18' },
-                { category: 'mypass', title: '교수님 소개 페이지', desc: 'HTML, CSS, jQuery 이용해 퍼블리싱 php, MySql 사용해 카테고리에 맞는 데이터 출력', detail: '데이터 구현', url:'https://sobang.dokgong.com/professor', period: '21.04.09~21.06.03' },
-                { category: 'mypass', title: '전체 사이트 반응형 리뉴얼', desc: '기존 데스크탑 위주의 사이트를 모바일 친화적 반응형으로 전면 개편, 메인 배너 S3 주소 연결', detail: '프론트엔드 퍼블리싱', url : 'https://www.dokgong.com/', period: '21.02.22~21.03.05' }
-            ];
-
-            // 2. DOM 요소 선택 (여기서 filterBtns를 정의합니다!)
-            const projectGrid = document.getElementById('project-grid');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-
-            // 3. 카드 렌더링 함수
-            function renderProjects(filterValue) {
-                projectGrid.innerHTML = '';
-                const filtered = filterValue === 'all' ? projectData : projectData.filter(p => p.category === filterValue);
-                
-                filtered.forEach((p, index) => {
-                    let catColor = p.category === 't&j biz' ? 'bg-amber-100 text-amber-800' : 
-                                p.category === 'mypass' ? 'bg-indigo-100 text-indigo-800' : 'bg-emerald-100 text-emerald-800';
-                    let catName = p.category === 't&j biz' ? 'T&J biz' : p.category === 'mypass' ? '마이패스' : '팀 프로젝트';
-
-                    let periodHtml = '';
-                    if (p.subList) {
-                        let listItems = p.subList.map(sub => {
-                            // url이 있으면 클릭 이벤트와 마우스오버 효과 추가
-                            const clickAction = sub.url ? `onclick="window.open('${sub.url}', '_blank'); event.stopPropagation();"` : '';
-                            const hoverStyle = sub.url ? 'cursor-pointer hover:bg-stone-200 hover:text-stone-800' : '';
-                            
-                            return `
-                            <li class="flex justify-between items-center py-1.5 px-1 border-b border-stone-100 last:border-0 rounded transition ${hoverStyle}" ${clickAction}>
-                                <span class="text-stone-600 truncate mr-2 font-medium">${sub.title}</span>
-                                <span class="text-stone-400 shrink-0">${sub.period}</span>
-                            </li>
-                            `;
-                        }).join('');
-                        periodHtml = `<ul class="mt-3 max-h-32 overflow-y-auto text-xs font-mono pr-2 custom-scrollbar bg-stone-50 p-2 rounded border border-stone-100">${listItems}</ul>`;
-                    } else if (p.period) {
-                        periodHtml = `<p class="text-stone-400 text-xs mt-2 font-mono">${p.period}</p>`;
-                    }
-
-                    const card = document.createElement('div');
-                    card.className = 'bg-white p-6 rounded-2xl shadow-sm border border-stone-200 hover:shadow-md transition duration-300 flex flex-col animate-fade-in-up cursor-pointer';
-                    
-                    if(p.url) {
-                        card.onclick = () => window.open(p.url, '_blank');
-                    }
-
-                    card.style.animationDelay = `${index * 50}ms`;
-                    card.innerHTML = `
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="px-2 py-1 rounded text-xs font-bold ${catColor}">${catName}</span>
-                                <span class="text-stone-400 text-sm">💡 ${p.detail}</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-stone-800 mb-1">${p.title}</h3>
-                            <p class="text-stone-600 text-sm leading-relaxed">${p.desc}</p>
-                            ${periodHtml}
-                        </div>
-                    `;
-                    projectGrid.appendChild(card);
-                });
-            }
-
-            // 4. 필터 버튼 클릭 이벤트
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    // e.currentTarget 사용!
-                    const targetBtn = e.currentTarget; 
-                    const filterValue = targetBtn.getAttribute('data-filter');
-
-                    // 기존 버튼 스타일 초기화
-                    filterBtns.forEach(b => {
-                        // 클래스명은 HTML에 맞춰 조정했습니다 (active 클래스 제어)
-                        b.classList.remove('active', 'bg-stone-800', 'text-white');
-                        b.classList.add('text-stone-600', 'hover:bg-stone-200');
-                    });
-                    
-                    // 클릭된 버튼 스타일 적용
-                    targetBtn.classList.add('active', 'bg-stone-800', 'text-white');
-                    targetBtn.classList.remove('text-stone-600', 'hover:bg-stone-200');
-                    
-                    renderProjects(filterValue);
-                });
-            });
-
-            // 5. 초기 렌더링
-            renderProjects('all');
-
-        });
-        
-    </script>
 </body>
 </html>
