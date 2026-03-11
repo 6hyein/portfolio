@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 5. 이미지 크게 보기 (Lightbox) 로직 추가
+    // 이미지 크게 보기 (Lightbox) 로직 추가
     // ==========================================
     const imageViewerModal = document.getElementById('image-viewer-modal');
     const viewerImage = document.getElementById('viewer-image');
@@ -558,4 +558,12 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerModal.addEventListener('click', (e) => {
         if(e.target === bannerModal) closeModal(); // 배경 클릭 시 닫기
     });
+
+    // ==========================================
+    // 불펌 방지 (우클릭, 복사, 드래그 차단)
+    // ==========================================
+    document.addEventListener('contextmenu', e => e.preventDefault()); // 마우스 우클릭 방지
+    document.addEventListener('dragstart', e => e.preventDefault()); // 이미지 꾹 눌러서 끌어당기기 방지
+    document.addEventListener('selectstart', e => e.preventDefault()); // 텍스트 드래그 선택 방지
+    document.addEventListener('copy', e => e.preventDefault()); // Ctrl+C 복사 방지
 });
