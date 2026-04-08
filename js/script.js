@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             category: 't&j biz', title: '정책자금 대출 랜딩(8)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
             subList: [
+                { title: '기업 맞춤형AI 정책자금', period: '26.04.07~26.04.07', url:'https://www.ins-leaders.co.kr/intro/8861775540900/' },
                 { title: '소상공인 정책자금 변형', period: '26.01.05~26.01.08', url:'https://www.ins-leaders.co.kr/intro/8691767836995/' },
                 { title: '정책자금 진단여부', period: '25.12.23~25.12.29', url:'https://www.ins-leaders.co.kr/intro/8651766968312/' },
                 { title: '소상공인 정책자금', period: '25.12.17~25.12.22', url:'http://ins-leaders.co.kr/intro/8631766376733/' },
