@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-            
+    const { animate, stagger } = anime;
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const card = document.createElement('div');
-            card.className = 'bg-white p-6 rounded-2xl shadow-sm border border-stone-200 hover:shadow-md transition duration-300 flex flex-col animate-fade-in-up cursor-pointer';
+            card.className = 'bg-white p-6 rounded-2xl shadow-sm border border-stone-200 hover:shadow-md transition duration-300 flex flex-col cursor-pointer';
             
             if(p.url) {
                 card.onclick = () => window.open(p.url, '_blank');
@@ -210,6 +210,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             projectGrid.appendChild(card);
+        });
+        // 애니메이션
+        animate('#project-grid > div', {
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: stagger(60),
+            ease: 'outQuart'
         });
     }
 
@@ -567,4 +574,45 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('dragstart', e => e.preventDefault()); // 이미지 꾹 눌러서 끌어당기기 방지
     document.addEventListener('selectstart', e => e.preventDefault()); // 텍스트 드래그 선택 방지
     document.addEventListener('copy', e => e.preventDefault()); // Ctrl+C 복사 방지
+
+    // ==========================================
+    // 애니메이션
+    // ==========================================
+
+    // 1. 히어로 섹션 타이틀 애니메이션
+    animate('#hero h1', {
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 1000,
+        ease: 'outExpo'
+    });
+
+    // 2. 히어로 하단 설명 문구 순차적으로 등장 (Stagger)
+    animate('#hero p', {
+        opacity: [0, 1],
+        translateY: [20, 0],
+        delay: stagger(200, { start: 500 }), // 0.5초 뒤에 0.2초 간격으로
+        ease: 'outQuad'
+    });
+
+    // 섹션별 등장 애니메이션 함수들
+    const sectionAnims = {
+        about: () => animate('#about', { opacity: [0, 1], translateY: [40, 0], duration: 1000 }),
+        skills: () => animate('#skills span', { scale: [0, 1], delay: stagger(50), ease: 'outBack' }),
+        experience: () => animate('.exp-btn', { translateX: [-30, 0], opacity: [0, 1], delay: stagger(100) }),
+    };
+
+    // 감시자 설정
+    const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+        const id = entry.target.id;
+        if (sectionAnims[id]) sectionAnims[id](); // 해당 섹션 함수 실행
+        observer.unobserve(entry.target); // 실행 후 감시 종료
+        }
+    });
+    }, { threshold: 0.2 });
+
+    // 모든 섹션 감시 시작
+    document.querySelectorAll('section').forEach(sec => observer.observe(sec));
 });
