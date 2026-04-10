@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const { animate, stagger } = anime;
+    const { createTimeline, animate, stagger } = anime;
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const targetId = btn.getAttribute('data-target');
             const targetDetail = document.getElementById(targetId);
+
+            // 클릭할 때마다 상세 내용이 오른쪽에서 슥- 등장
+            animate(targetDetail, {
+                translateX: [30, 0],
+                opacity: [0, 1],
+                duration: 600,
+                ease: 'outQuart'
+            });
+            
             targetDetail.classList.remove('hidden');
             targetDetail.classList.add('block');
         });
@@ -191,7 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const card = document.createElement('div');
-            card.className = 'bg-white p-6 rounded-2xl shadow-sm border border-stone-200 hover:shadow-md transition duration-300 flex flex-col cursor-pointer';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.className = 'bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex flex-col cursor-pointer';
             
             if(p.url) {
                 card.onclick = () => window.open(p.url, '_blank');
@@ -210,13 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             projectGrid.appendChild(card);
-        });
-        // 애니메이션
-        animate('#project-grid > div', {
-            opacity: [0, 1],
-            translateY: [20, 0],
-            delay: stagger(60),
-            ease: 'outQuart'
         });
     }
 
@@ -599,7 +603,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionAnims = {
         about: () => animate('#about', { opacity: [0, 1], translateY: [40, 0], duration: 1000 }),
         skills: () => animate('#skills span', { scale: [0, 1], delay: stagger(50), ease: 'outBack' }),
-        experience: () => animate('.exp-btn', { translateX: [-30, 0], opacity: [0, 1], delay: stagger(100) }),
+        experience: () => {
+            // 1. 타임라인 생성
+            const tl = createTimeline({
+                defaults: {
+                    duration: 1000,
+                    ease: 'outExpo' // 시원하게 뻗는 느낌
+                }
+            });
+
+            // 2. 제목 & 설명: 위에서 아래로
+            tl.add('#experience .border-b, #experience > p', {
+                translateY: [-50, 0],
+                opacity: [0, 1],
+                delay: stagger(100)
+            })
+            // 3. 왼쪽 탭 리스트: 왼쪽에서 오른쪽으로 (-=800은 이전 애니메이션 끝나기 0.8초 전에 시작하라는 뜻)
+            .add('#exp-list', {
+                translateX: [-100, 0],
+                opacity: [0, 1]
+            }, '-=800')
+            // 4. 오른쪽 상세 내용 박스: 오른쪽에서 왼쪽으로
+            .add('#exp-info', {
+                translateX: [100, 0],
+                opacity: [0, 1]
+            }, '-=800')
+            // 5. 하단 자격증 박스: 아래에서 위로 슥-
+            .add('#exp-certi', {
+                translateY: [40, 0],
+                opacity: [0, 1]
+            }, '-=600');
+        }
     };
 
     // 감시자 설정
@@ -611,7 +645,39 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.unobserve(entry.target); // 실행 후 감시 종료
         }
     });
-    }, { threshold: 0.2 });
+    }, { rootMargin: '0px 0px -150px 0px', threshold: 0.4 });
+
+    // 프로젝트 카드
+    function playProjectAnimation() {
+        animate('#project-grid > div', {
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: stagger(40),
+            duration: 500,
+            ease: 'outExpo'
+        });
+    }
+
+    const projectObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // 프로젝트 섹션이 화면에 30% 이상 들어왔을 때 실행
+            if (entry.isIntersecting) {
+                playProjectAnimation();
+                projectObserver.unobserve(entry.target); // 한 번만 실행
+            }
+        });
+    }, {rootMargin: '0px 0px -150px 0px', threshold: 0.4 });
+
+    projectObserver.observe(document.getElementById('projects'));
+
+    // 필터 버튼 클릭 이벤트 리스너 내부
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const filterValue = e.currentTarget.getAttribute('data-filter');
+            renderProjects(filterValue);
+            playProjectAnimation(); // 필터 클릭 시에는 즉시 실행!
+        });
+    });
 
     // 모든 섹션 감시 시작
     document.querySelectorAll('section').forEach(sec => observer.observe(sec));

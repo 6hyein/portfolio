@@ -60,3 +60,19 @@ html {
     object-fit: cover;
     border-radius: 0.5rem;
 }
+/* 애니메이션이 적용되는 주요 요소들에 추가 */
+#hero h1, #hero p, 
+#about, #skills span, 
+.exp-btn, #project-grid > div {
+    will-change: transform, opacity;
+    backface-visibility: hidden; /* 미세한 떨림 방지 */
+}
+/* 초기 상태 숨기기 */
+#experience .border-b, 
+#experience > p,
+#exp-list,
+#exp-info,
+#exp-certi {
+    opacity: 0;
+    will-change: transform, opacity;
+}
