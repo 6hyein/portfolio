@@ -15,6 +15,16 @@ body {
     height: 40vh;
     max-height: 400px;
 }
+#clouds-group {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* 💡 약간의 여유를 위해 1.1~1.2배 정도로 기본 스케일을 잡아둡니다 */
+    transform: scale(1.2); 
+    overflow: hidden;
+}
 @media (min-width: 768px) {
     .chart-container {
         height: 350px;
@@ -38,9 +48,7 @@ body {
     color: #fafaf9;
 }
 
-html {
-    scroll-behavior: smooth;
-}
+
 /* 배너 무한 스크롤 애니메이션 */
 @keyframes marquee {
     0% { transform: translateX(0); }

@@ -1,7 +1,80 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
     const { createTimeline, animate, stagger } = anime;
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    let isAnimFinished = false;
+    let heroStarted = false; 
+    // 1. 애니메이션 설정 (autoplay: false로 스크롤에 제어권을 넘깁니다)
+    const animations = {
+        colud1: animate('#colud1', { translateX: ['-11%', '-11%'], translateY: ['-29%', '-150%'], opacity: [1, 0], autoplay: false, ease: 'outQuart' }),
+        colud4: animate('#colud4', { translateX: ['0%', '0%'], translateY: ['28%', '150%'], opacity: [1, 0], autoplay: false, ease: 'outQuart' }),
+        colud5: animate('#colud5', { translateX: ['-15%', '-150%'], translateY: ['0%', '0%'], opacity: [1, 0], autoplay: false, ease: 'outQuart' }),
+        colud3: animate('#colud3', { translateX: ['18%', '150%'], translateY: ['8%', '8%'], opacity: [1, 0], autoplay: false, ease: 'outQuart' }),
+        colud2: animate('#colud2', { translateX: ['7%', '150%'], translateY: ['-3%', '-3%'], opacity: [1, 0], autoplay: false, ease: 'outQuart' }),
+        container: animate('#colud-container', { scale: [1, 2.5], opacity: [1, 0], autoplay: false, ease: 'inOutQuart' }),
+        moon: animate('#moon', { scale: [1, 30], filter: ['brightness(1)', 'brightness(5)'], autoplay: false, ease: 'inQuart' })
+    };
+
+    // 2. 스크롤 이벤트 연동
+   window.addEventListener('scroll', () => {
+        if (isAnimFinished) return;
+
+        const scrollY = window.scrollY;
+        const vh = window.innerHeight;
+        const scrollRange = vh * 5; 
+        let progress = Math.min(scrollY / scrollRange, 1);
+
+        // [0% ~ 70%] 구름 연출 (스크롤 비례)
+        let cloudProgress = Math.min(progress / 0.7, 1);
+        Object.values(animations).forEach(anim => anim.seek(cloudProgress * 1000));
+
+        // [💡 70% 지점] 히어로 애니메이션 "한 번만" 트리거
+        if (progress > 0.7 && !heroStarted) {
+            heroStarted = true;
+            const heroEl = document.getElementById('hero');
+            
+            heroEl.classList.remove('opacity-0'); // 투명도 락 해제
+            heroEl.style.opacity = "1";           // 판 깔기
+            
+            playHeroAnimation(); // 대장님이 좋아하시는 그 엇박자 함수 실행!
+        }
+
+        // [100% 도달 시] 연출 종료 및 본문 연결
+        if (progress >= 1) {
+            isAnimFinished = true;
+            animate('#scroll-indicator', {
+                opacity: 0,
+                duration: 300,
+                easing: 'linear'
+            });
+            animate('#landing-scene', {
+                opacity: 0,
+                duration: 400,
+                complete: () => {
+                    document.getElementById('landing-scene').style.display = 'none';
+                    document.getElementById('hero-spacer').style.display = 'none';
+                    
+                    const hero = document.getElementById('hero');
+                    hero.classList.remove('fixed', 'inset-0', 'pointer-events-none','z-[60]');
+                    hero.classList.add('relative', 'z-10');
+                    
+                    window.scrollTo(0, 0);
+                    startSectionObservers(); 
+                }
+            });
+        }
+    });
+
+    // 페이지 로드 시 맨 위로 강제 이동 (새로고침 시 꼬임 방지)
+    window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+    };
+
+
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -496,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { url: '240211_5.png', year: '2024.02.11' },        
     ];
     document.getElementById('banner-count').textContent = `(${bannerData.length}개)`;
+    
     // 2. 무한 스크롤(Marquee)에 삽입 (div로 감싸서 이미지+연도 출력)
     const shuffledData = [...bannerData].sort(() => Math.random() - 0.5);
     const doubleData = [...shuffledData, ...shuffledData]; 
@@ -547,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const imageViewerModal = document.getElementById('image-viewer-modal');
     const viewerImage = document.getElementById('viewer-image');
+    
 
     // 모달 내부의 그리드에서 클릭 이벤트 감지 (이벤트 위임)
     modalGrid.addEventListener('click', (e) => {
@@ -582,22 +657,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 애니메이션
     // ==========================================
+    function playHeroAnimation() {
+        // 1. 이름 (H1) 등장
+       animate('#hero h1', {
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 1000,
+            easing: 'outExpo'
+        });
 
-    // 1. 히어로 섹션 타이틀 애니메이션
-    animate('#hero h1', {
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 1000,
-        ease: 'outExpo'
-    });
+        // 2. 설명 문구 (P)
+        animate('#hero p', {
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: 500, // 이름 나오고 0.5초 뒤
+            easing: 'outQuad'
+        });
 
-    // 2. 히어로 하단 설명 문구 순차적으로 등장 (Stagger)
-    animate('#hero p', {
-        opacity: [0, 1],
-        translateY: [20, 0],
-        delay: stagger(200, { start: 500 }), // 0.5초 뒤에 0.2초 간격으로
-        ease: 'outQuad'
-    });
+        // 3. 💡 스크롤 아이콘 (마지막에 슬쩍)
+        animate('#scroll-indicator', {
+            opacity: [0, 1],
+            translateY: [10, 0],
+            delay: 1000, // 설명 문구까지 나오고 나서 0.5초 더 뒤 (총 1초)
+            easing: 'outQuad'
+        });
+    }
+    function startSectionObservers() {
+        // 모든 섹션 감시 시작
+        document.querySelectorAll('section').forEach(sec => observer.observe(sec));
+        // 프로젝트 섹션 별도 감시
+        const projectSection = document.getElementById('projects');
+        if (projectSection) projectObserver.observe(projectSection);
+    }
 
     // 섹션별 등장 애니메이션 함수들
     const sectionAnims = {
@@ -678,7 +769,4 @@ document.addEventListener('DOMContentLoaded', () => {
             playProjectAnimation(); // 필터 클릭 시에는 즉시 실행!
         });
     });
-
-    // 모든 섹션 감시 시작
-    document.querySelectorAll('section').forEach(sec => observer.observe(sec));
 });
