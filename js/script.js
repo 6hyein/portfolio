@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const scrollY = window.scrollY;
         const vh = window.innerHeight;
-        const scrollRange = vh * 5; 
+        const isMobile = window.innerWidth < 768;
+        const scrollRange = isMobile ? vh * 3 : vh * 5; // 모바일 
         let progress = Math.min(scrollY / scrollRange, 1);
 
         // [0% ~ 70%] 구름 연출 (스크롤 비례)
@@ -682,12 +683,30 @@ document.addEventListener('DOMContentLoaded', () => {
             easing: 'outQuad'
         });
     }
+    // 개별 카드용 감시자 설정
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 💡 화면에 들어온 그 "카드"만 애니메이션 실행!
+                animate(entry.target, {
+                    opacity: [0, 1],
+                    translateY: [30, 0],
+                    duration: 600,
+                    easing: 'outExpo'
+                });
+                cardObserver.unobserve(entry.target); // 한 번 보이면 감시 종료
+            }
+        });
+    }, { 
+        rootMargin: '0px 0px -50px 0px', // 약간 미리 올라오게 설정
+        threshold: 0.1 
+    });
     function startSectionObservers() {
         // 모든 섹션 감시 시작
         document.querySelectorAll('section').forEach(sec => observer.observe(sec));
-        // 프로젝트 섹션 별도 감시
-        const projectSection = document.getElementById('projects');
-        if (projectSection) projectObserver.observe(projectSection);
+        document.querySelectorAll('#project-grid > div').forEach(card => {
+            cardObserver.observe(card);
+        });
     }
 
     // 섹션별 등장 애니메이션 함수들
@@ -731,12 +750,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-        const id = entry.target.id;
-        if (sectionAnims[id]) sectionAnims[id](); // 해당 섹션 함수 실행
-        observer.unobserve(entry.target); // 실행 후 감시 종료
+            const id = entry.target.id;
+            if (sectionAnims[id]) sectionAnims[id](); // 해당 섹션 함수 실행
+            observer.unobserve(entry.target); // 실행 후 감시 종료
         }
     });
-    }, { rootMargin: '0px 0px -150px 0px', threshold: 0.4 });
+    }, { rootMargin: '0px 0px -150px 0px', threshold: 0.3 });
 
     // 프로젝트 카드
     function playProjectAnimation() {
