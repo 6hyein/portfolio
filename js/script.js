@@ -301,22 +301,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. 필터 버튼 클릭 이벤트
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            // e.currentTarget 사용!
             const targetBtn = e.currentTarget; 
             const filterValue = targetBtn.getAttribute('data-filter');
 
-            // 기존 버튼 스타일 초기화
+            // [기존 스타일 초기화/적용 로직 동일]
             filterBtns.forEach(b => {
-                // 클래스명은 HTML에 맞춰 조정했습니다 (active 클래스 제어)
                 b.classList.remove('active', 'bg-stone-800', 'text-white');
                 b.classList.add('text-stone-600', 'hover:bg-stone-200');
             });
-            
-            // 클릭된 버튼 스타일 적용
             targetBtn.classList.add('active', 'bg-stone-800', 'text-white');
             targetBtn.classList.remove('text-stone-600', 'hover:bg-stone-200');
             
+            // 1. 새 카드 렌더링
             renderProjects(filterValue);
+
+            // 💡 2. [추가] 새로 태어난 카드들을 다시 감시하기
+            document.querySelectorAll('#project-grid > div').forEach(card => {
+                cardObserver.observe(card);
+            });
         });
     });
 
