@@ -22,7 +22,7 @@
         <div id="moon" class="absolute z-10 w-[300px] md:w-[400px] will-change-transform">
             <img src="./images/landing/moon.png" alt="달" class="w-full h-auto">
         </div>
-        <div id="clouds-group" class="absolute inset-0 z-20">
+        <div id="clouds-group" class="absolute inset-0 z-20 ">
             <div id="colud1" class="absolute z-50 inset-0 flex items-center justify-center ">
                 <img src="./images/landing/cloud1.png" alt="구름1" class="max-w-none">
             </div>
@@ -74,7 +74,7 @@
                 육혜인
             </h1>
             <p class="text-xl md:text-2xl text-stone-600 font-light">
-                협업을 즐기는 <span class="font-semibold text-amber-700">Web Developer & Publisher</span>
+                협업을 즐기는 <span class="font-semibold text-amber-700">5년 차 Web Developer & Publisher</span>
             </p>
             <p class="mt-4 max-w-2xl mx-auto text-stone-500">
                 디자인부터 백엔드 기초까지, 다양한 기술 환경에 두려움 없이 도전하며 스스로 문제를 해결하는 능력을 갖추고 있습니다. <br/>
@@ -271,26 +271,41 @@
 
         <section id="projects" class="scroll-mt-20 pb-20">
             <div class="border-b border-stone-300 pb-2 mb-6">
-                <h2 class="text-3xl font-bold text-stone-800">🚀 주요 프로젝트 (My Project)</h2>
+                <h2 class="text-3xl font-bold text-stone-800">🚀 주요 프로젝트 (Best Picks)</h2>
             </div>
-            <p class="text-stone-600 mb-8 leading-relaxed">
-                한 줄의 코드보다 더 중요한 것은 사용자가 느끼는 최적의 경험이라고 믿습니다. <br/>
-                그동안 다양한 도메인에서 쌓아온 30개 이상의 프로젝트 결과물들을 한눈에 확인하실 수 있도록 정리했습니다. <br/>
-                상단 필터링 기능을 활용해 제가 걸어온 업무 스펙트럼을 자유롭게 살펴보세요. <br/>
-                각 프로젝트 카드는 해당 사이트로 연결되어 있습니다. <br/>
-                <b>궁금하신 프로젝트를 클릭하여 실제 서비스 환경에서 어떻게 동작하고 보여지는지 확인해 보세요.</b> <br/>
-                단순한 포트폴리오를 넘어, 저의 실무 감각과 문제 해결 과정을 공유하는 공간이 되길 바랍니다.
+            
+            <p class="text-stone-600 mb-12 leading-relaxed max-w-3xl">
+                수많은 프로젝트 중 가장 도전적이었고 큰 성과를 냈던 **Best 3**를 먼저 소개합니다. <br/>
+                나머지 30여 개의 프로젝트는 하단 아카이브 리스트에서 확인하실 수 있습니다.
             </p>
 
-            <div class="flex flex-wrap gap-2 mb-8" id="project-filters">
-                <button class="filter-btn active px-4 py-2 rounded-full border border-stone-300 text-sm font-medium transition" data-filter="all">전체보기</button>
-                <button class="filter-btn px-4 py-2 rounded-full border border-stone-300 text-sm font-medium text-stone-600 hover:bg-stone-200 transition" data-filter="t&j biz">T&J biz</button>
-                <button class="filter-btn px-4 py-2 rounded-full border border-stone-300 text-sm font-medium text-stone-600 hover:bg-stone-200 transition" data-filter="mypass">마이패스</button>
-                <button class="filter-btn px-4 py-2 rounded-full border border-stone-300 text-sm font-medium text-stone-600 hover:bg-stone-200 transition" data-filter="team">팀 프로젝트</button>
+            <!-- Best 3 Featured (Horizontal Cards) -->
+            <div id="featured-projects" class="space-y-16 mb-24">
+                <!-- JS에서 렌더링 -->
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="project-grid">
-                
+            <!-- Archive Section -->
+            <div class="bg-stone-100 rounded-[2rem] p-8 md:p-12 border border-stone-200 shadow-inner">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-stone-800 mb-1">📁 전체 프로젝트 아카이브</h3>
+                        <p class="text-stone-500 text-sm">지금까지 걸어온 30+ 프로젝트의 기록입니다.</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2" id="project-filters">
+                        <button class="filter-btn active px-5 py-2 rounded-full border border-stone-300 text-xs font-bold transition shadow-sm" data-filter="all">전체보기</button>
+                        <button class="filter-btn px-5 py-2 rounded-full border border-stone-300 text-xs font-medium text-stone-600 bg-white hover:bg-stone-200 transition" data-filter="t&j biz">T&J biz</button>
+                        <button class="filter-btn px-5 py-2 rounded-full border border-stone-300 text-xs font-medium text-stone-600 bg-white hover:bg-stone-200 transition" data-filter="mypass">마이패스</button>
+                        <button class="filter-btn px-5 py-2 rounded-full border border-stone-300 text-xs font-medium text-stone-600 bg-white hover:bg-stone-200 transition" data-filter="team">팀 프로젝트</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="project-grid">
+                    <!-- JS에서 나머지 리스트 렌더링 -->
+                </div>
+                <!-- Pagination Buttons Container -->
+                <div id="pagination" class="flex justify-center items-center gap-2 mt-12">
+                    <!-- JS에서 버튼 생성 -->
+                </div>
             </div>
         </section>
         <section id="banners" class="scroll-mt-20 pb-20">

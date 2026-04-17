@@ -173,7 +173,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 1. 데이터
-    const projectData = [                
+    const projectData = [           
+        {
+            category: 't&j biz', title: 'T&J AD 랜딩페이지', desc: '사내 디자이너와 협업하여 광고 랜딩 페이지 퍼블리싱을 전담했습니다. 스크롤 위치에 반응하는 동적인 인터랙션 애니메이션을 구현하여 사용자 몰입도를 높였습니다.', detail: '퍼블리싱', url:'https://tnjbiz1.co.kr/intro/6811772779117/', period: '24.04.23~24.05.08', isBest: true,
+            image: '../images/preview_tnjad.png',
+            tech: ['HTML5', 'CSS3', 'jQuery', 'Scroll Animation']
+        },{
+            category: 'mypass', title: '독한공무원 전체 사이트 반응형 리뉴얼', desc: '기존 데스크탑 위주의 사이트를 모바일 친화적 반응형으로 전면 개편했습니다. 메인 배너의 S3 연결 및 로딩 최적화를 진행했습니다.', detail: '프론트엔드 퍼블리싱', url : 'https://www.dokgong.com/', period: '21.02.22~21.03.05', isBest: true,
+            image: '../images/preview_main.png',
+            tech: ['HTML5', 'CSS3', 'jQuery', 'Responsive']
+        },
+        {
+            category: 'team', title: '과일 MBTI 테스트 (팀 프로젝트)', desc: '개발자/디자이너 4인 협업 프로젝트입니다. GitHub를 활용한 협업 프로세스를 경험했으며 메인 프론트엔드 개발을 담당했습니다.', detail: '프론트엔드 협업', url: 'https://fruitmbti.pages.dev/', period: '22.11.13~22.12.15', isBest: true,
+            image: '../images/preview_mbti.png',
+            tech: ['HTML5', 'CSS3', 'JavaScript','GitHub', 'Collaboration']
+        },             
         {
             category: 't&j biz', title: '정책자금 대출 랜딩(8)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
             subList: [
@@ -241,15 +255,64 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // 2. DOM 요소 선택 (여기서 filterBtns를 정의합니다!)
-    const projectGrid = document.getElementById('project-grid');
     const filterBtns = document.querySelectorAll('.filter-btn');
 
     // 3. 카드 렌더링 함수
+    function renderFeatured() {
+        const container = document.getElementById('featured-projects');
+        if(!container) return;
+        const bestOnes = projectData.filter(p => p.isBest);
+        container.innerHTML = bestOnes.map((p, i) => `
+            <div class="featured-card group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-stone-200 flex flex-col ${i % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'}">
+                <div class="md:w-1/2 bg-stone-100 overflow-hidden h-72 md:h-auto relative">
+                    <img src="${p.image}" alt="${p.title}" class="project-image w-full h-full object-cover transition-transform duration-1000">
+                    <div class="absolute top-6 left-6 bg-amber-800 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Best Work 0${i+1}</div>
+                </div>
+                <div class="p-10 md:w-1/2 flex flex-col justify-center">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-mono text-amber-700 font-bold">${p.period}</span>
+                        <span class="text-stone-300">|</span>
+                        <span class="text-xs text-stone-400 font-medium">${p.detail}</span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-stone-900 mb-5 leading-tight">${p.title}</h3>
+                    <p class="text-stone-600 mb-8 text-base leading-relaxed italic">"${p.desc}"</p>
+                    <div class="flex flex-wrap gap-2 mb-10">
+                        ${p.tech.map(t => `<span class="px-3 py-1 bg-stone-100 text-stone-600 rounded-lg text-xs font-semibold">#${t}</span>`).join('')}
+                    </div>
+                    <a href="${p.url}" target="_blank" class="group/btn inline-flex items-center text-amber-900 font-bold border-b-2 border-amber-900 pb-1 self-start hover:text-amber-600 hover:border-amber-600 transition">
+                        사이트 바로가기 
+                        <svg class="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    }
+    // --- 페이징 설정 ---
+    let currentFilter = 'all';
+    let currentPage = 1;
+    const itemsPerPage = 3; // 보여줄 카드 수
+
     function renderProjects(filterValue) {
-        projectGrid.innerHTML = '';
-        const filtered = filterValue === 'all' ? projectData : projectData.filter(p => p.category === filterValue);
+        // 1. 넘어온 필터값이 있으면 전역 변수 업데이트
+        if (filterValue) currentFilter = filterValue;
         
-        filtered.forEach((p, index) => {
+        const grid = document.getElementById('project-grid');
+        const paginationContainer = document.getElementById('pagination');
+        
+        // 2. 🚨 가장 중요: 화면을 그리기 전에 기존 카드 싹 지우기
+        grid.innerHTML = '';
+
+        const filtered = currentFilter === 'all' 
+            ? projectData.filter(p => !p.isBest) 
+            : projectData.filter(p => p.category === currentFilter && !p.isBest);
+
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
+        
+        // 3. 🚨 수정: filtered가 아닌 3개씩 자른 'paginatedData'를 순회!
+        paginatedData.forEach((p, index) => {
             let catColor = p.category === 't&j biz' ? 'bg-amber-100 text-amber-800' : 
                         p.category === 'mypass' ? 'bg-indigo-100 text-indigo-800' : 'bg-emerald-100 text-emerald-800';
             let catName = p.category === 't&j biz' ? 'T&J biz' : p.category === 'mypass' ? '마이패스' : '팀 프로젝트';
@@ -257,10 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let periodHtml = '';
             if (p.subList) {
                 let listItems = p.subList.map(sub => {
-                    // url이 있으면 클릭 이벤트와 마우스오버 효과 추가
                     const clickAction = sub.url ? `onclick="window.open('${sub.url}', '_blank'); event.stopPropagation();"` : '';
                     const hoverStyle = sub.url ? 'cursor-pointer hover:bg-stone-200 hover:text-stone-800' : '';
-                    
                     return `
                     <li class="flex justify-between items-center py-1.5 px-1 border-b border-stone-100 last:border-0 rounded transition ${hoverStyle}" ${clickAction}>
                         <span class="text-stone-600 truncate mr-2 font-medium">${sub.title}</span>
@@ -294,35 +355,50 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${periodHtml}
                 </div>
             `;
-            projectGrid.appendChild(card);
+            grid.appendChild(card);
         });
+
+        paginationContainer.innerHTML = '';
+        if (totalPages > 1) {
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                // 현재 페이지 버튼 색상 처리 추가
+                btn.className = `page-btn w-8 h-8 rounded-full border border-stone-300 text-xs font-bold transition ${i === currentPage ? 'active bg-stone-800 text-white' : 'bg-white text-stone-600 hover:bg-stone-200'}`;
+                btn.onclick = () => {
+                    currentPage = i;
+                    // 4. 🚨 수정: 없는 함수가 아니라 renderProjects를 다시 호출
+                    renderProjects(currentFilter);
+                    playProjectAnimation(); // 페이지 넘길 때 애니메이션 실행
+                };
+                paginationContainer.appendChild(btn);
+            }
+        }
     }
 
     // 4. 필터 버튼 클릭 이벤트
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const targetBtn = e.currentTarget; 
-            const filterValue = targetBtn.getAttribute('data-filter');
-
-            // [기존 스타일 초기화/적용 로직 동일]
+            const filterValue = e.currentTarget.getAttribute('data-filter');
+            
+            // 버튼 스타일 처리
             filterBtns.forEach(b => {
                 b.classList.remove('active', 'bg-stone-800', 'text-white');
                 b.classList.add('text-stone-600', 'hover:bg-stone-200');
             });
-            targetBtn.classList.add('active', 'bg-stone-800', 'text-white');
-            targetBtn.classList.remove('text-stone-600', 'hover:bg-stone-200');
-            
-            // 1. 새 카드 렌더링
-            renderProjects(filterValue);
+            e.currentTarget.classList.add('active', 'bg-stone-800', 'text-white');
+            e.currentTarget.classList.remove('text-stone-600', 'hover:bg-stone-200');
 
-            // 💡 2. [추가] 새로 태어난 카드들을 다시 감시하기
-            document.querySelectorAll('#project-grid > div').forEach(card => {
-                cardObserver.observe(card);
-            });
+            // 🚨 중요: 필터가 바뀌면 무조건 1페이지로 초기화
+            currentPage = 1; 
+
+            renderProjects(filterValue);
+            playProjectAnimation(); 
         });
     });
 
     // 5. 초기 렌더링
+    renderFeatured();
     renderProjects('all');
 
     // --- 배너 포트폴리오 로직 ---

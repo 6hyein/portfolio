@@ -44,7 +44,9 @@ body {
     border-left: 4px solid #b45309;
     font-weight: 700;
 }
-
+.featured-card:hover .project-image {
+    transform: scale(1.05);
+}
 .filter-btn.active {
     background-color: #292524;
     color: #fafaf9;
