@@ -176,16 +176,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectData = [           
         {
             category: 't&j biz', title: 'T&J AD 랜딩페이지', desc: '사내 디자이너와 협업하여 광고 랜딩 페이지 퍼블리싱을 전담했습니다. 스크롤 위치에 반응하는 동적인 인터랙션 애니메이션을 구현하여 사용자 몰입도를 높였습니다.', detail: '퍼블리싱', url:'https://tnjbiz1.co.kr/intro/6811772779117/', period: '24.04.23~24.05.08', isBest: true,
-            image: '../images/preview_tnjad.png',
+            image: '/portfolio/images/preview_tnjad.png',
             tech: ['HTML5', 'CSS3', 'jQuery', 'Scroll Animation']
         },{
             category: 'mypass', title: '독한공무원 전체 사이트 반응형 리뉴얼', desc: '기존 데스크탑 위주의 사이트를 모바일 친화적 반응형으로 전면 개편했습니다. 메인 배너의 S3 연결 및 로딩 최적화를 진행했습니다.', detail: '프론트엔드 퍼블리싱', url : 'https://www.dokgong.com/', period: '21.02.22~21.03.05', isBest: true,
-            image: '../images/preview_main.png',
+            image: '/portfolio/images/preview_main.png',
             tech: ['HTML5', 'CSS3', 'jQuery', 'Responsive']
         },
         {
             category: 'team', title: '과일 MBTI 테스트 (팀 프로젝트)', desc: '개발자/디자이너 4인 협업 프로젝트입니다. GitHub를 활용한 협업 프로세스를 경험했으며 메인 프론트엔드 개발을 담당했습니다.', detail: '프론트엔드 협업', url: 'https://fruitmbti.pages.dev/', period: '22.11.13~22.12.15', isBest: true,
-            image: '../images/preview_mbti.png',
+            image: '/portfolio/images/preview_mbti.png',
             tech: ['HTML5', 'CSS3', 'JavaScript','GitHub', 'Collaboration']
         },             
         {
