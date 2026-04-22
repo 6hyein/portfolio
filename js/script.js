@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['Frontend', 'Backend', 'Design', 'Tools & DevOps'],
             datasets: [{
                 label: 'Skill Level',
-                data: [95, 65, 85, 75], 
+                data: [95, 75, 85, 65], 
                 backgroundColor: 'rgba(180, 83, 9, 0.2)', 
                 borderColor: 'rgba(180, 83, 9, 1)', 
                 pointBackgroundColor: 'rgba(180, 83, 9, 1)',
@@ -152,10 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         font: { size: 14, family: "'Noto Sans KR', sans-serif", weight: 'bold' },
                         color: '#292524'
                     },
-                    suggestedMin : 50,
+                    suggestedMin : 0,
                     suggestedMax : 100,
                     ticks :{
-                        stepSize : 10
+                        stepSize : 20
                     }
                 }
             },
@@ -211,16 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 { title: 'T&JT 사이트 수정/번역', period: '24.10.07~24.10.17', url:'http://www.tnjt.co.kr/' },
             ]
         },
-        {
-            category: 't&j biz', title: '모모성형외과 랜딩(5)', desc: '서울점 남성모발이식 랜딩페이지 시리즈 제작', detail: '디자인 & 퍼블리싱',
-            subList: [
-                { title: '남성모발이식5', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8001756872362/' },
-                { title: '남성모발이식4', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8011756872376/' },
-                { title: '남성모발이식3', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/7991756872343/' },
-                { title: '남성모발이식2', period: '25.08.29~25.08.29', url:'http://ins-leaders.co.kr/intro/7961756361750/' },
-                { title: '남성모발이식1', period: '25.08.21~25.08.25', url:'https://tnjtaboola.co.kr/intro/451755584031/' },
-            ]
-        },
         { 
             category: 't&j biz', title: '암보험 랜딩 페이지(10)', desc: '암 광고 랜딩페이지', detail: '디자인 & 퍼블리싱',
             subList: [
@@ -251,7 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // 마이패스
         { category: 'mypass', title: '웹테스트, OMR, 채점', desc: 'HTML, CSS, jQuery 이용해 퍼블리싱 php, MySql 이용해 OMR 채점 및 결과표 산출 문제와 답을 등록할 수 있는 관리자 페이지', detail: '웹 시스템 개발', url:'https://job.dokgong.com/webtest/sample', period: '21.06.01~22.04.18' },
         { category: 'mypass', title: '교수님 소개 페이지', desc: 'HTML, CSS, jQuery 이용해 퍼블리싱 php, MySql 사용해 카테고리에 맞는 데이터 출력', detail: '데이터 구현', url:'https://sobang.dokgong.com/professor', period: '21.04.09~21.06.03' },
-        { category: 'mypass', title: '전체 사이트 반응형 리뉴얼', desc: '기존 데스크탑 위주의 사이트를 모바일 친화적 반응형으로 전면 개편, 메인 배너 S3 주소 연결', detail: '프론트엔드 퍼블리싱', url : 'https://www.dokgong.com/', period: '21.02.22~21.03.05' }
+        { category: 'mypass', title: '전체 사이트 반응형 리뉴얼', desc: '기존 데스크탑 위주의 사이트를 모바일 친화적 반응형으로 전면 개편, 메인 배너 S3 주소 연결', detail: '프론트엔드 퍼블리싱', url : 'https://www.dokgong.com/', period: '21.02.22~21.03.05' },
+        {
+            category: 't&j biz', title: '모모성형외과 랜딩(5)', desc: '서울점 남성모발이식 랜딩페이지 시리즈 제작', detail: '디자인 & 퍼블리싱',
+            subList: [
+                { title: '남성모발이식5', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8001756872362/' },
+                { title: '남성모발이식4', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8011756872376/' },
+                { title: '남성모발이식3', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/7991756872343/' },
+                { title: '남성모발이식2', period: '25.08.29~25.08.29', url:'http://ins-leaders.co.kr/intro/7961756361750/' },
+                { title: '남성모발이식1', period: '25.08.21~25.08.25', url:'https://tnjtaboola.co.kr/intro/451755584031/' },
+            ]
+        }
     ];
 
     // 2. DOM 요소 선택 (여기서 filterBtns를 정의합니다!)
