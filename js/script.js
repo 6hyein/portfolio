@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectData = [           
         ,
         {
-            category: 't&j biz', title: '바른비즈 랜딩페이지', desc: '정책자금 상담 신청을 위한 랜딩페이지입니다. PHP SMTP 연동을 통해 운영 효율을 높였으며, 인터랙티브 UI로 사용자 전환을 유도했습니다.', detail: '프론트엔드 개발 & 메일 전송 시스템 구축', url: 'https://bareunbiz.co.kr/', period: '26.04.06~26.04.29', isBest: true,
+            category: 't&j biz', title: '바른비즈 랜딩페이지', desc: '정책자금 상담 신청을 위한 랜딩페이지입니다. PHP SMTP 연동을 통해 운영 효율을 높였으며, 인터랙티브 UI로 사용자 전환을 유도했습니다.', detail: '프론트엔드 개발 & 메일 전송 시스템 구축', url: 'https://bareunbiz.co.kr/basic', period: '26.04.06~26.04.29', isBest: true,
             image: '/portfolio/images/bareunbiz_thumb.jpg',
             tech: ['HTML5', 'Tailwind', 'JavaScript', 'PHP', 'Collaboration']
         },
