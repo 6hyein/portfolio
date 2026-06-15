@@ -71,7 +71,7 @@
   <li><a href="https://www.ins-leaders.co.kr/intro/8691767836995/">소상공인 정책자금 변형</a>26.01.05 ~ 26.01.08</li>
   <li><a href="https://www.ins-leaders.co.kr/intro/8861775540900/">기업 맞춤형AI 정책자금</a>26.04.07~26.04.07</li>
   <li><a href="https://bareunbiz.co.kr/basic">바른비즈 홈페이지</a>26.04.06~26.04.29</li> 
-  <li><a href="brbiz.co.kr">바른비즈 마케팅 페이지</a>26.06.10~26.06.12</li> 
+  <li><a href="brbiz.co.kr">바른비즈 마케팅 페이지</a>26.06.10~26.06.15</li> 
   
 
 </ol>
