@@ -174,11 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. 데이터
     const projectData = [           
-        ,
         {
-            category: 't&j biz', title: '바른비즈 랜딩페이지', desc: '정책자금 상담 신청을 위한 랜딩페이지입니다. PHP SMTP 연동을 통해 운영 효율을 높였으며, 인터랙티브 UI로 사용자 전환을 유도했습니다.', detail: '프론트엔드 개발 & 메일 전송 시스템 구축', url: 'https://bareunbiz.co.kr/basic', period: '26.04.06~26.04.29', isBest: true,
-            image: '/portfolio/images/bareunbiz_thumb.jpg',
-            tech: ['HTML5', 'Tailwind', 'JavaScript', 'PHP', 'Collaboration']
+            category: 't&j biz', 
+            title: '바른비즈 마케팅페이지', 
+            desc: 'fullPage.js를 도입해 몰입감 있는 원페이지 스크롤을 구현했습니다. 애니메이션을 활용해 사용자 이탈을 막고, PHP 메일 연동으로 전송버튼을 구현했습니다. WebP 이미지 최적화로 로딩 속도를 대폭 개선했습니다.', 
+            detail: '기획·디자인 및 프론트엔드 구축', 
+            url: 'http://brbiz.co.kr/', 
+            period: '26.06.10~26.06.15', 
+            isBest: true,
+            image: '/portfolio/images/bpreview_brbiz.png',
+            tech: ['Adobe XD', 'HTML5', 'CSS3', 'jQuery', 'fullPage.js', 'PHP'] 
         },
         {
             category: 't&j biz', title: 'T&J AD 랜딩페이지', desc: '사내 디자이너와 협업하여 광고 랜딩 페이지 퍼블리싱을 전담했습니다. 스크롤 위치에 반응하는 동적인 인터랙션 애니메이션을 구현하여 사용자 몰입도를 높였습니다.', detail: '퍼블리싱', url:'https://tnjbiz1.co.kr/intro/6811772779117/', period: '24.04.23~24.05.08', isBest: true,
@@ -207,10 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             category: 't&j biz', title: '자사, 파트너 사이트(4)', desc: '자사 랜딩/사이트 구축, 유지보수, 수정, 번역', detail: '시스템 관리',
             subList: [
-                { title: 'T&J biz 홈페이지', period: '24.04.11~25.05.27', url:'http://www.tnjbiz.co.kr/' },
-                { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'https://tnjbiz1.co.kr/intro/6811772779117/' },
-                { title: '한경비즈', period: '25.04.09~25.04.21', url:'https://www.hankyungbiz.co.kr/' },
+                { title: '바른비즈 랜딩페이지', period: '26.04.06~26.04.29', url:'https://bareunbiz.co.kr/basic' },
                 { title: 'T&JT 사이트 수정/번역', period: '24.10.07~24.10.17', url:'http://www.tnjt.co.kr/' },
+                { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'https://tnjbiz1.co.kr/intro/6811772779117/' },
+                { title: 'T&J biz 홈페이지', period: '24.04.11~25.05.27', url:'http://www.tnjbiz.co.kr/' },                
+                { title: '한경비즈', period: '25.04.09~25.04.21', url:'https://www.hankyungbiz.co.kr/' },
+                
             ]
         },
         { 
