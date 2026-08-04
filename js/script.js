@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             url: 'http://brbiz.co.kr/', 
             period: '26.06.10~26.06.15', 
             isBest: true,
-            image: '/portfolio/images/bpreview_brbiz.png',
+            image: '/portfolio/images/bareunbiz_marketing_thumb.jpg',
             tech: ['Adobe XD', 'HTML5', 'CSS3', 'jQuery', 'fullPage.js', 'PHP'] 
         },
         {
