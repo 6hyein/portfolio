@@ -1,0 +1,450 @@
+@charset "UTF-8";
+
+/* =========================================
+   Base Layout & Variables
+========================================= */
+:root {
+    --primary-blue: #00a8ff; /* 시안과 동일한 쨍한 블루 */
+    --primary-blue-gradient: linear-gradient(180deg, #0acffe 0%, #495aff 100%);
+    --bg-black: #000000;
+    --bg-dark-gray: #111111;
+    --bg-card-gray: #1a1a1a;
+    --bg-light-gray: #f8f9fa;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --text-gray: #999999;
+    --text-light-gray: #666666;
+}
+
+body {
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    line-height: 1.5;
+}
+
+/* 모바일 화면에서는 꽉 차게, PC에서는 유연하게 넓어짐 */
+.wrapper {
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--bg-black);
+    position: relative;
+    overflow: hidden;
+}
+
+.inner {
+    width: 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* =========================================
+   Header
+========================================= */
+.header {
+    background-color: transparent;
+    position: fixed; /* absolute에서 fixed로 변경하여 화면 상단에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999; /* 모달보다 아래, 다른 요소보다 위에 오도록 설정 */
+    padding: 2rem 0;
+    transition: background-color 0.3s ease, padding 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+/* 자바스크립트로 스크롤 시 추가될 클래스 */
+.header.scrolled {
+    background-color: var(--bg-black);
+    padding: 1.5rem 0; /* 스크롤 시 헤더를 살짝 얇게 만들면 세련돼 보입니다 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+}
+
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 3.2rem; font-weight: 800; color: var(--text-white); }
+.gnb { display: none; }
+.btn-head { background-color: rgba(255, 255, 255, 0.2); color: var(--text-white); padding: 1rem 2rem; border-radius: 3rem; font-size: 2.4rem; font-weight: 600; }
+.pc-text { display: none; } 
+
+/* =========================================
+   Hero Section (디자인 수정 - 시안 100% 일치)
+========================================= */
+.hero-section {
+    background-color: var(--primary-blue); 
+    padding: 12rem 0 0; /* 하단 패딩(여백)을 0으로 만들어 바닥에 붙임 */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-flex { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5rem; /* 텍스트+버튼 그룹과 이미지 사이의 간격 */
+}
+
+.hero-sub { font-size: 2.8rem; font-weight: 500; margin-bottom: 2rem; }
+.hero-title { font-size: 8rem; font-weight: 800; margin-bottom: 3rem; line-height: 1.2; }
+.hero-desc { font-size: 3.4rem; font-weight: 600; margin-bottom: 4rem; line-height: 1.4; }
+
+/* 텍스트 강조 박스 */
+.hero-highlight-box {
+    background-color: #279cf4; 
+    padding: 4rem 2rem;
+    margin-bottom: 4rem;
+    border-radius: 1.5rem;
+    font-size: 3.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--text-white);
+    display: inline-block;
+    width: 100%;
+    max-width: 50rem; 
+}
+.hero-highlight-box p { margin: 0; }
+
+/* 버튼 디자인 (기본 위치 지정 제거) */
+.btn-hero-black {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 2.5rem 6rem;
+    border-radius: 5rem;
+    font-size: 3.2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+.btn-hero-black:hover { background-color: #333; }
+
+/* 이미지 - 다음 검은색 영역에 찰싹 붙도록 설정 */
+.hero-image-wrap { 
+    position: relative; 
+    max-width: 100%; 
+    margin: 0 auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-image-wrap img { 
+    width: 100%; 
+    max-height: 60rem; 
+    object-fit: contain; 
+    border-radius: 3rem 3rem 0 0; /* 위쪽만 둥글게, 바닥은 직각으로 변경 */
+    box-shadow: none !important; 
+    margin-bottom: -1px; /* 미세한 하단 1px 흰선 뜨는 현상 방지 */
+    display: block;
+}
+
+/* =========================================
+   Common Section Styles
+========================================= */
+.intro-section, .stats-section, .feature-section { padding: 8rem 0; text-align: center; }
+
+.point-text { color: var(--primary-blue); font-size: 2.8rem; font-weight: 700; margin-bottom: 2rem; }
+.point-text.left { text-align: left; }
+.section-title { font-size: 5rem; font-weight: 800; line-height: 1.3; margin-bottom: 3rem; word-break: keep-all; }
+.section-title.left { text-align: left; }
+.section-title.text-black { color: var(--text-black); }
+.section-desc { color: var(--text-gray); font-size: 2.2rem; line-height: 1.6; word-break: keep-all; }
+.section-desc.left { text-align: left; margin-bottom: 5rem;}
+
+/* =========================================
+   Stats Section
+========================================= */
+.stats-section { padding-top: 0; }
+.stats-list { display: flex; flex-direction: column; gap: 2.5rem; }
+.stat-card { background-color: var(--bg-card-gray); padding: 4rem 3.5rem; border-radius: 2rem; text-align: left; }
+.stat-card p { font-size: 2.8rem; color: #ccc; margin-bottom: 2rem; line-height: 1.4; }
+.stat-card h3 { font-size: 6.8rem; font-weight: 800; }
+
+/* =========================================
+   Expert CTA Section
+========================================= */
+.expert-cta-section { padding: 6rem 0; text-align: center; }
+
+/* =========================================
+   Feature & Graphics
+========================================= */
+.feature-section { padding-top: 2rem; padding-bottom: 6rem; }
+.feature-wrap { display: flex; flex-direction: column; }
+
+.graphic-box { background-color: var(--bg-card-gray); border-radius: 3rem; padding: 8rem 2rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 5rem; }
+.speech-bubble { background-color: var(--primary-blue); color: #fff; padding: 1.5rem 3rem; border-radius: 4rem; font-size: 2.8rem; font-weight: 700; position: relative; margin-bottom: 3rem; }
+.speech-bubble::after { content: ''; position: absolute; bottom: -1.2rem; left: 50%; transform: translateX(-50%); border-width: 1.2rem 1rem 0; border-style: solid; border-color: var(--primary-blue) transparent transparent transparent; }
+
+.blue-card-large { background: var(--primary-blue-gradient); width: 100%; max-width: 40rem; height: 22rem; border-radius: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+.blue-card-large.light-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.card-line { width: 6rem; height: 0.6rem; background: rgba(255,255,255,0.8); border-radius: 3rem; position: absolute; top: 3rem; }
+.blue-card-large h3 { font-size: 5.6rem; font-weight: 800; margin-top: 2rem; }
+
+.image-placeholder { width: calc(100% + 4rem); background-color: #222; display: flex; align-items: center; justify-content: center; margin-left: -2rem; margin-bottom: 5rem; }
+.image-placeholder p { color: #666; font-size: 2.8rem; }
+.feature-text-box { text-align: left;padding-left:4rem; }
+
+/* =========================================
+   Review Section
+========================================= */
+.review-section { background-color: var(--bg-light-gray); padding: 8rem 0 0; text-align: center; }
+.review-list { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 4rem; }
+.review-card { background-color: #ffffff; border-radius: 2.5rem; padding: 5rem 3rem; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+.review-author { color: var(--primary-blue); font-size: 2.4rem; font-weight: 700; margin-bottom: 2rem; }
+.review-title { color: var(--text-black); font-size: 4.4rem; font-weight: 800; line-height: 1.3; margin-bottom: 3rem; word-break: keep-all; }
+.review-desc { color: var(--text-light-gray); font-size: 2.4rem; line-height: 1.6; }
+.review-desc p { margin-bottom: 0.5rem; }
+
+/* =========================================
+   Contact & Form Section
+========================================= */
+.contact-form-area { background-color: #f4f6f9; padding: 8rem 0 0; }
+
+.form-section {
+    background-color: #ffffff;
+    border-radius: 3rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08); 
+    padding: 6rem 4rem;
+    margin: 0 2rem; 
+    color: #000;
+    border: 1px solid #eaeaea;
+}
+
+.input-group { margin-bottom: 5rem; }
+.input-group label { display: block; font-size: 2.8rem; font-weight: 700; color: #333; margin-bottom: 2rem; text-align: left; }
+.req { color: #ef4444; margin-left: 0.5rem; }
+
+/* 라디오 버튼 */
+.radio-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
+.radio-label { display: flex; align-items: center; gap: 1.2rem; font-size: 2.8rem; color: #333; font-weight: 500 !important; cursor: pointer; }
+.radio-label input[type="radio"] {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    width: 3.2rem; height: 3.2rem; border: 2px solid #ccc; border-radius: 50%;
+    background-color: #fff; position: relative; cursor: pointer; flex-shrink: 0; margin: 0; transition: all 0.2s ease;
+}
+.radio-label input[type="radio"]:checked { border-color: var(--primary-blue); }
+.radio-label input[type="radio"]:checked::after {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 1.6rem; height: 1.6rem; background-color: var(--primary-blue); border-radius: 50%;
+}
+
+/* 텍스트 입력창 */
+.input-group input[type="text"], .input-group textarea {
+    width: 100%; box-sizing: border-box; border: none; border-bottom: 2px solid #ddd; 
+    padding: 1.5rem 0.5rem; font-size: 3.2rem; color: #000; border-radius: 0; transition: border-color 0.3s ease;
+}
+.input-group input[type="text"]:focus, .input-group textarea:focus { border-bottom-color: var(--primary-blue); }
+
+/* 연락처 레이아웃 */
+.phone-inputs { display: flex; align-items: center; gap: 1.5rem; width: 100%; box-sizing: border-box; }
+.phone-inputs input {
+    flex: 1; min-width: 0; width: 100%; border: none; border-bottom: 2px solid #ddd;
+    padding: 1.5rem 0; text-align: center; font-size: 3.2rem; border-radius: 0; transition: border-color 0.3s ease;
+}
+.phone-inputs input:focus { border-bottom-color: var(--primary-blue); }
+.phone-inputs span { font-size: 3.2rem; color: #666; }
+
+/* 개인정보 동의 약관 영역 */
+.terms-group { margin-bottom: 4rem; margin-top: 2rem; }
+.terms-group label { display: block; font-size: 2.8rem; font-weight: 700; color: #333; margin-bottom: 1.5rem; text-align: left; }
+.terms-box {
+    border: 1px solid #ddd; padding: 2.5rem; height: 18rem; overflow-y: auto; font-size: 2.2rem;
+    color: #666; line-height: 1.6; margin-bottom: 2rem; background: #fafafa; text-align: left; word-break: keep-all;
+}
+
+/* 체크박스 디자인 */
+.checkbox-wrap { display: flex; align-items: center; gap: 1.5rem; }
+.checkbox-wrap input[type="checkbox"] {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    width: 3.2rem; height: 3.2rem; border: 2px solid #ccc; border-radius: 0.6rem;
+    background-color: #fff; position: relative; cursor: pointer; flex-shrink: 0; margin: 0; transition: all 0.2s ease;
+}
+.checkbox-wrap input[type="checkbox"]:checked { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+.checkbox-wrap input[type="checkbox"]:checked::after {
+    content: '✔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2.2rem; line-height: 1;
+}
+.checkbox-wrap label { font-size: 2.6rem; color: #333; cursor: pointer; font-weight: 600; margin-bottom: 0; }
+
+/* 제출 버튼 */
+.btn-group-center { display: flex; justify-content: center; margin-top: 6rem; }
+.btn-submit {
+    display: block; width: 100%; max-width: 40rem; padding: 2.5rem; background-color: var(--primary-blue);
+    border: none; border-radius: 5rem; font-size: 3.2rem; font-weight: 800; text-align: center; color: #fff;
+    box-shadow: 0 10px 20px rgba(35, 160, 247, 0.3); transition: all 0.3s; cursor: pointer;
+}
+.btn-submit:hover { background-color: #1a8ce0; transform: translateY(-2px); }
+
+/* =========================================
+   Footer
+========================================= */
+.footer { background-color: #f5f5f5; color: #666; padding: 7rem 0; text-align: center; }
+.footer-info { font-size: 2.4rem; line-height: 1.8; margin-bottom: 3rem; word-break: keep-all; }
+.footer-links { font-size: 2.4rem; font-weight: 600; }
+.footer-links a { color: #666; margin: 0 1rem; }
+/* =========================================
+   Modal (팝업) Styles
+========================================= */
+/* 모달 배경 (어둡게) */
+.modal-overlay {
+    display: none; /* 기본으로 숨김 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 9998;
+}
+
+/* 모달 창 본체 */
+.modal-wrap {
+    display: none; /* 기본으로 숨김 */
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px; /* PC에서도 너무 넓어지지 않게 고정 */
+    background-color: #fff;
+    z-index: 9999;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    color: #333;
+}
+
+/* 모달 상단 (제목 & 닫기 버튼) */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem 3rem;
+    border-bottom: 1px solid #eee;
+}
+.modal-header h2 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+}
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 3rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    line-height: 1;
+    font-weight: 300;
+}
+
+/* 모달 내용 영역 (스크롤 생성 부분) */
+.modal-body {
+    padding: 3rem;
+    max-height: 60vh; /* 창 높이의 60%까지만 커지고 그 이상은 스크롤 */
+    overflow-y: auto;
+    font-size: 2.2rem; 
+    line-height: 1.8;
+    color: #444;
+    text-align: left;
+    word-break: keep-all;
+}
+
+/* 모달이 열렸을 때 뒷배경(본문) 스크롤 방지 */
+body.modal-open {
+    overflow: hidden;
+}
+/* =========================================
+   반응형 PC 레이아웃 (min-width: 812px)
+========================================= */
+@media all and (min-width: 812px) {
+    .inner { max-width: 1200px; padding: 0; }
+
+    /* 헤더 */
+    .header { padding: 3rem 0; }
+    .gnb { display: flex; gap: 5rem; }
+    .gnb a { font-size: 2.4rem; color: var(--text-white); font-weight: 600; }
+    .gnb a:hover { opacity: 0.8; }
+    .btn-head { background-color: var(--text-white); color: var(--primary-blue); border-radius: 4rem; padding: 1.5rem 3.5rem; }
+    .m-text { display: none; }
+    .pc-text { display: inline; }
+    .mo{display: none;}
+
+    /* 히어로 섹션 (PC 좌우 가로 배치 최적화 - 시안 일치) */
+    .hero-section { 
+        padding-top: 14rem; /* 상단의 텅 빈 느낌을 줄이기 위해 컨텐츠를 조금 위로 끌어올림 */
+        padding-bottom: 0; 
+    } 
+    
+    .hero-flex {
+        flex-direction: row; 
+        align-items: stretch; 
+        justify-content: space-between; 
+    }
+    
+    /* 1. 글씨 눌림 현상 해결: 텍스트 영역이 차지하는 비율을 55%로 넉넉하게 넓혀줌 */
+    .hero-text-area {
+        flex: 0 0 55%; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: flex-start; 
+        padding-bottom: 6rem; 
+    }
+    
+    .hero-sub { text-align: left; margin-bottom: 2rem; }
+    .hero-title { font-size: 8rem; margin-bottom: 3rem; text-align: left; }
+    .hero-desc { text-align: left; margin-bottom: 4rem; }
+    
+    /* 글씨가 넓은 공간을 전부 활용하도록 max-width 100%로 변경 */
+    .hero-highlight-box { 
+        max-width: 100%; 
+        margin: 0 0 5rem 0; 
+        text-align: left; 
+    }
+    
+    .btn-hero-black { padding: 2.5rem 5rem; margin-bottom: 0; }
+
+    /* 2. 텅 빈 하늘(초록색 체크 영역) 채우기: 사진 컨테이너 설정 */
+    .hero-image-wrap { 
+        flex: 0 0 45%; /* 나머지 45% 영역 차지 */
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* 무조건 바닥 밀착 */
+        align-items: flex-end; 
+    }
+    
+    /* 핵심 수정: 사진 자체의 가로 크기를 135%로 뻥튀기하고 오른쪽으로 땡겨서, 세로 높이까지 위로 치솟게 만듦 */
+    .hero-image-wrap img { 
+        width: 135%; 
+        max-height: none; 
+        object-fit: contain;
+        object-position: bottom right; 
+        margin-right: -15%; /* 커진 이미지를 우측으로 살짝 빼주어 균형 맞춤 */
+        border-radius: 3rem 3rem 0 0; 
+        margin-bottom: -1px; 
+    }
+    /* 인트로 & 통계 횡렬 배치 */
+    .intro-section { padding-top: 12rem; padding-bottom: 12rem; }
+    .stats-list { flex-direction: row; justify-content: center; gap: 3rem; }
+    .stat-card { flex: 1; padding: 6rem 4rem; }
+
+    /* Feature 영역 */
+    .feature-section { padding: 4rem 0 10rem; }
+    .feature-wrap { flex-direction: row; align-items: center; gap: 8rem; }
+    .feature-wrap.left-text { flex-direction: row-reverse; }
+    .feature-wrap.right-text { flex-direction: row; }
+    .graphic-box, .image-placeholder { flex: 1; margin: 0; width: 100%; }
+    .feature-text-box { flex: 1; }
+    .section-desc.left { margin-bottom: 0; } 
+
+    /* Review 횡렬 배치 */
+    .review-section { padding: 10rem 0; }
+    .review-list { flex-direction: row; gap: 3rem; }
+    .review-card { flex: 1; padding: 6rem 4rem; }
+
+    /* PC 폼 영역 레이아웃 */
+    .contact-form-area { padding: 12rem 0; }
+    .form-flex { display: flex; align-items: flex-start; justify-content: center; gap: 5rem; }
+    .form-section { margin: 0 auto; padding: 8rem 6rem; max-width: 800px; width: 100%; }
+
+    /* PC에서는 업종 선택이 가로로 더 넓게 퍼지도록 3열로 설정 */
+    .radio-group.flex-wrap { grid-template-columns: repeat(3, 1fr); }
+}

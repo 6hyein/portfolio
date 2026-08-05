@@ -1,0 +1,235 @@
+<?
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$INTRO_advertiser_DIR=dirname(__FILE__);
+if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
+@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
+else
+echo "파트너 링크 오류";
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$_SESSION['this_is_csrf_token'] = base64_encode(openssl_random_pseudo_bytes(32));
+
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"
+        />
+        <meta charset="euc-kr" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no"> <!--아이폰 자동 a태그 방지-->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/rem.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript"  src="./js/script.js"></script>  
+    <title>정부 정책자금 - 단군비즈</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="inner">
+                <h1><a href="#formArea"><img src="./img/log.png" alt="단군비즈"></a></h1>
+            </div>
+        </header>
+        <div class="container">
+            <section class="sec sec1">
+                <article class="inner">
+                    <h2>소상공인 사업자 대표님들의 <br/>성장과 성공을 지원합니다.</h2>
+                    <h3><b>소상공인 정책자금</b>신청하세요!</h3>
+                    <div class="btnAre">
+                        <a href="#formArea" class="goBtn">문의하기<img src="./img/gobtn_arrow.png" alt="화살표"></a>
+                    </div>
+                    <div class="infoArea">
+                        <p>"소상공인 정책자금"은 <b>최대 10억원, 최저금리 2% 최장5년</b> 사용가능하며 기업이 직접 대출을 받는 대신 신용보증재단이 보증서를 발급해 은행이 안심하고 대출을 실행할 수 있습니다.</p>
+                    </div>
+                </article>
+            </section>
+            <section class="sec sec2">
+                <article class="inner">
+                    <h3><b>새로운 시작과 성공,</b> <br/>혼자 고민하지 마세요!</h3>
+                    <div class="imgArea">
+                        <img src="./img/icon.png" alt="기술보증기금, 신용보증기금, 중소기업진흥공단, 소상공인시장진흥공단, 서울신용보증재단 로고">
+                    </div>
+                    <div class="infoArea">
+                        <h4>정책자금</h4>
+                        <div class="txtArea">
+                            <ul class="info1">
+                                <li>- 정부재원</li>
+                                <li>- <b>담보력 부족해 자금 조달 어려운 <br/>중소기업, 개인 지원</b></li>
+                                <li>- 고용창출 및 기업 성장을 위해 은행이나 민간금융기관을 통해 <b>저금리</b>로 지원하는 자금</li>
+                                <li>- 중앙부처, 지방단체, 기술보증기금, 신용보증기금, 신용보증재단 등 공공기관을 통해 <b>300여가지가 넘는 다양한 종류의 자금을 지원</b></li>
+                            </ul>
+                            <ul class="icons">
+                                <li>
+                                    <div class="imgArea"><img src="./img/icon1.png" alt="높은 아이콘"></div>
+                                    <div class="txt">높은한도</div>
+                                </li>
+                                <li>
+                                    <div class="imgArea"><img src="./img/icon2.png" alt="낮은 아이콘"></div>
+                                    <div class="txt">낮은이자</div>
+                                </li>
+                                <li>
+                                    <div class="imgArea"><img src="./img/icon3.png" alt="시간 아이콘"></div>
+                                    <div class="txt">긴 상황기간</div>
+                                </li>
+                            </ul>
+                            <p>융자, 출연, 보조, 보증, 출자 등 방식으로 지원 <br/>은행, 금융권 대출보다 <br/>높은한도, 낮은이자, 긴 상환기간 <br/><br/><b>정책자금 확보를 통한 창업자금마련은 가장 좋은 방법 중 하나!</b></p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <section class="sec sec3">
+                <article class="inner">
+                    <ol class="infoArea">
+                        <li class="info1">
+                            <h3><span>01</span>창업자금</h3>
+                            <ul class="txtList">
+                                <li>- 창업시 필요한 각종 자금에 대해 지원하는 자금</li>
+                            </ul>
+                            <div class="imgArea"><img src="./img/sec3_img1.png" alt="자금서류보는 이미지"></div>
+                            <div class="box">
+                                <h4>창업기업지원자금</h4>
+                                <p>사업 개시일로부터 7년 미만 (신청,접수일 기준)인 중소기업 및 창업 준비중인 자</p>
+                            </div>
+                            <div class="box">
+                                <h4>청년전용창업자금</h4>
+                                <p>대표자가 만 39세 이하로 사업 개시일로부터 3년 미만 (신청, 접수일 기준)인 중소기업 및 창업 준비중인 자</p>
+                            </div>                            
+                        </li>
+                        <li class="info2">
+                            <h3><span>02</span>운전자금</h3>
+                            <ul class="txtList">
+                                <li>- 원자재 구매, 생산, 판매활동 등 기업 운영 관련 사항에 소요되는 운전자금 필요시 기업의 금융 비용을 절감시키기 위해 정부에서 저금리로 지원 하는 정책자금</li>
+                                <li>- 일반 시중 은행 대비 저렴한 금리로 금융 비용 절감 가능</li>
+                            </ul>
+                            <div class="imgArea"><img src="./img/sec3_img2.png" alt=""></div>
+                            <ul class="gitaList">
+                                <li>* 기업신용등급에 따라 한도 부여</li>
+                                <li>* 기업신용평가등급에 따라 <br/>연 2.4~3.8% 정도 금리</li>
+                                <li>* 단기 대출 및 장기 대출 상환</li>
+                            </ul>
+                        </li>
+                        <li class="info3">
+                            <h3><span>03</span>시설자금</h3>
+                            <ul class="txtList">
+                                <li>- 기계설비 자금, 공장 설립자금, 토지 구입자금 등 시설자금에 소요되는 자금을 중소기업 육성 차원에서 저금리로 융자하여 지원하는 정책자금</li>
+                                <li>- 일반 시중 은행 대비 저렴한 금리로 금융 비용 절감 가능</li>
+                            </ul>
+                            <div class="imgArea"><img src="./img/sec3_img3.png" alt=""></div>
+                            <ul class="gitaList">
+                                <li>* 기업신용등급에 따라 한도 부여</li>
+                                <li>* 기업신용평가등급에 따라 <br/>연 2.4~3.8% 정도 금리</li>
+                                <li>* 단기 대출 및 장기 대출 상환</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </article>
+            </section>
+
+            <section class="sec formArea" id="formArea" >
+                <article class="inner">
+                    <h3 class="timer">
+                        <span class="hour">02</span>시간 <span class="minte">48</span>분 <span class="sec">33</span>초 남음
+                    </h3>
+                    <h4>개인 신용에 어떠한 영향도 끼치지 않습니다.</h4>
+                    <div class="boxArea"  data-aos="zoom-in-up">
+                        <h5>연체중·직장인·프리랜서·무직자 불가</h5>
+                        <form name="Write_form" class="infoArea"  method="post"  action="/intro/8631766376733/index.html">
+                            <input name="csrf" type="hidden" value="<?=$_SESSION['this_is_csrf_token']?>" />
+                            <input name="Mode_value" type="hidden" value="Write_Now"><!--신청후 팝업 수정 소스(call_alert를 지정네임으로 수정(광고주번호or 특이네임))-->
+                            <input name="alert_type" type="hidden" value="8631766376733">
+                            <input name="sourceUrl" type="hidden" value="<? echo is_null($_POST['sourceUrl'])?$_SERVER['HTTP_REFERER']:$_POST['sourceUrl'] ?>">
+                            <div class="userInfo">
+                                <dl>
+                                    <dt>기본정보</dt>
+                                    <dd>
+                                        <div class="line txtLine"><input type="text" name="M_name" placeholder="성명" onkeyup="cdcheck(this)" onkeydown="cdcheck(this)" oninput="cdcheck(this)" oncontextmenu="return false;"></div>
+                                        <div class="line phoneLine">
+                                            <input name="M_phone1" type="tel" value="010" readonly="">
+                                            <span class="bar"></span>
+                                            <input  name="M_phone2" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                            <span class="bar"></span>
+                                            <input name="M_phone3" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                        </div>  
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>사업자</dt>
+                                    <dd class="check check2">
+                                        <label for="check2_1">개인<input id="check2_1" name="M_data0" type="radio"  value="개인"></label>
+                                        <label for="check2_2">법인<input id="check2_2" name="M_data0" type="radio"  value="법인"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>업종</dt>
+                                    <dd class="check check5">
+                                        <label for="check5_1">요식업<input id = "check5_1" name="M_job"  type="radio" value="요식업"></label>
+                                        <label for="check5_2">제조업<input id="check5_2" name="M_job" type="radio" value="제조업"></label>
+                                        <label for="check5_3">도소매업<input id="check5_3" name="M_job" type="radio" value="도소매업"></label>
+                                        <label for="check5_4">운수업<input id="check5_4" name="M_job" type="radio" value="운수업"></label>
+                                        <label for="check5_5">그 외 업종<input id="check5_5" name="M_job" type="radio" value="그 외 업종"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>그 외 업종</dt>
+                                    <dd class="check check3">
+                                        <label for="check3_1">운전자금<input id="check3_1" name="M_data1" type="radio" value="운전자금"></label>
+                                        <label for="check3_2">시설자금<input id="check3_2" name="M_data1" type="radio" value="시설자금"></label>
+                                        <label for="check3_3">기타자금<input id="check3_3" name="M_data1" type="radio" value="기타자금"></label>
+                                    </dd>
+                                </dl> 
+                            </div>                            
+                            <div class="gif"><img src="./img/self.gif" alt="보안중"></div>
+                            <p class="selfTxt">상담 후 개인정보는 전부 파기됩니다.</p>        
+                            <div class="agreeArea">
+                                <div class="agreeLine">
+                                    <div class="txt">개인정보 처리방침 동의</div>
+                                    <div class="infoArea">
+                                        <input type="checkbox" id="agreeCheck" name="M_agree" value="1" checked="">
+                                        <label for="agreeCheck">동의함</label>
+                                    </div>
+                                </div>
+                                <div class="slideDown">
+<textarea name="" cols="" rows="3" class="agreement" readonly="" style="display: inline-block\;">개인정보취급방침
+
+▶ 개인정보의 수집 및 이용목적
+- 서비스 이용에 따른 본인식별, 실명확인, 가입의사 확인, 연령제한 서비스 이용
+- 고지사항 전달, 불만처리 의사소통 경로 확보
+- 신규 서비스 등 최신정보 안내 및 개인맞춤서비스 제공을 위한 자료
+- 기타 원활한 양질의 서비스 제공 등
+
+▶ 수집하는 개인정보의 항목
+- 이름, 핸드폰번호 그 외 선택항목
+
+▶ 개인정보의 보유 및 이용기간
+- 원칙적으로 개인정보의 수집 또는 제공받은 목적 달성 시 지체 없이 파기합니다.
+- 다만, 원활한 서비스의 상담을 위해 상담 완료 후 내용을 3개월간 보유할 수 있으며 전자상거래에서의 소비자보호에 관한 법률 등 타법률에 의해 보존할 필요가 있는 경우에는 일정기간 보존합니다.
+</textarea>
+                                </div>
+                            </div>     
+                            <div class="btnArea">
+                                <button type="button" onclick="Request_Now_input_check(Write_form);return false;">상담신청</button>
+                            </div>
+                        </form>
+                    </div>                    
+                </article>
+            </section>
+        </div>
+        <footer>
+            <div class="inner">
+                <h3>단군비즈 부천지사</h3>
+                <p>회사명 : 단군비즈 부천지사 <br/>대표자 : 장성훈 <br/>주소지 : 경기도 부천시 원미구 부일로 199번길 31, 501호 <br/>대표번호 : 032-715-6459 Copyright ⓒ tnjbiz All right Reserved</p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        var inputs = document.querySelectorAll("input[type='tel']")
+        for(input of inputs){
+            input.setAttribute("autocomplete", "off");
+        }
+    </script>
+</body>
+</html>

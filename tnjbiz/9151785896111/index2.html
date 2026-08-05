@@ -1,0 +1,57 @@
+<?
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$INTRO_advertiser_DIR=dirname(__FILE__);
+if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
+	@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
+else
+	echo "파트너 링크 오류";
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"/>
+<meta charset="euc-kr" />
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1970518066954161');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1970518066954161&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<!-- NAVER SCRIPT START-->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script language='javascript'>
+if(window.wcs){
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "s_1fb3962e81e";
+var _conv = {};
+	_conv.type = 'lead';
+wcs.trans(_conv);
+}
+</script>
+<!-- NAVER SCRIPT END -->
+<title>상담신청완료</title>
+
+
+</head>
+
+<body style="text-align:center">
+
+<img src="img/pop.png" style="padding-top:80px; width:90%; max-width:500px; text-align:center"/>
+
+</body>
+</html>

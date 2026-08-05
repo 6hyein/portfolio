@@ -1,0 +1,32 @@
+.visual {width: 100%;height: auto; margin-top: 160px;}
+.visual .container {position: relative; display: flex; justify-content: center; width: 100%; height: 100%; background: var(--gt_e5); border-radius: 40px;}
+.visual .img-item {position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: all .7s;}
+.visual .img-item img {width: 30px; height: auto;}
+.visual .img-item.on {opacity: 1; transform: initial; top: auto; left: auto; right: auto; z-index: 1; transition: all .7s;}
+
+.visual .img-item.on:nth-child(1) {animation: mt 5s linear alternate-reverse infinite; top: 0; left: 37px;}
+.visual .img-item.on:nth-child(1) img {width: 425px; height: auto;}
+.visual .img-item.on:nth-child(2) {animation: mt 5s linear alternate-reverse infinite; top: -50.3px; right: 15px;}
+.visual .img-item.on:nth-child(2) img {width: 484px; height: auto;}
+.visual .img-item.on:nth-child(3) {animation: mt2 5s linear alternate-reverse infinite; bottom: -124px; left: 77px;}
+.visual .img-item.on:nth-child(3) img {width: 500px; height: auto;}
+.visual .img-item.on:nth-child(4) {animation: mt2 5s linear alternate-reverse infinite; bottom: -80px; right: -122px;}
+.visual .img-item.on:nth-child(4) img {width: 700px; height: auto;}
+@keyframes mt {
+  0% {margin-top: -50px;}
+  100% {margin-top: 100px;}
+}
+@keyframes mt2 {
+  0% {margin-bottom: -50px;}
+  100% {margin-bottom: 100px;}
+}
+.visual .kv-box {position: relative; padding-top: 119px;}
+.visual .kv-box .tit {font-size:65px;font-weight:800;color:var(--pr); margin: 0 auto 44px;text-align:center; }
+.visual .kv-box .txt {margin-bottom: 15px; font-size: 65px; font-weight: 800; line-height: 1.4; color: var(--black); text-align: center;}
+.visual .kv-box .txt2 {margin-bottom: 15px; font-size: 20px; font-weight: 800; line-height: 1.4; color: var(--black); text-align: center;}
+.visual .kv-box .sub {margin-bottom: 40px; font-size: 18px; font-weight: 300; line-height: 1.17; color: var(--gray_72); text-align: center;}
+.kv-btn {display: flex; align-items: center; justify-content: center; width: 258px; height: 60px; margin: 0 auto 65px; border-radius: 30px; background: var(--pr); font-size: 18px; font-weight: 600; line-height: 1.17; color: var(--wt);}
+.visual .kv-box .img-box {width: 446px; height: auto; margin: 0 auto;}
+.visual .kv-box .img-box img {width: 100%; height: auto;}
+
+.slick-cloned.slick-center {transform:scale(1) !important;}

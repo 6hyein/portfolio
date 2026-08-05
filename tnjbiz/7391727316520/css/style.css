@@ -1,0 +1,473 @@
+/* header */
+header {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 15px 0 35px;
+  box-sizing: border-box;
+  background: var(--pr);
+  border-radius: 40px;
+}
+header .logo {
+  width: 105px;
+  height: auto;
+}
+header .logo img {
+  width: 100%;
+  height: auto;
+}
+header .txt {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--wt);
+}
+header .apply-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 50px;
+  border-radius: 25px;
+  background: var(--pr2);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.17;
+  color: var(--pr);
+}
+/* section */
+.sec1 .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 163px;
+  padding-top: 184px;
+  padding-bottom: 194px;
+  background: var(--gt_f9);
+  box-sizing: border-box;
+}
+.txt-box {
+  white-space: nowrap;
+}
+.txt-box .txt {
+  margin-bottom: 15px;
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--black);
+}
+.txt-box span {
+  color: var(--pr);
+}
+.txt-box .sub {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.17;
+  color: var(--gray_72);
+}
+.txt-box .kv-btn {
+  margin: 40px 0;
+}
+
+/* sec1-slide */
+.sec1-slide {
+  height: 472px;
+  overflow: hidden;
+}
+.sec1-slide .sec1_slick {
+  height: 100%;
+}
+.sec1-slide .sec1_slick .sec1_slick_ul {
+  height: 100%;
+}
+/* .sec1-slide .sec1_slick .sec1_slick_ul .slick-list {height: 100% !important;} */
+
+.sec1-slide .sec1_slick .sec1_slick_ul li img {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.07);
+  border-radius: 20px;
+}
+/* .slick-vertical .slick-slide[data-slick-index="-2"] {opacity: 0.2;} */
+.slick-vertical .slick-slide.ac.on1 {
+  opacity: 0.2;
+  transition: all 0.3s;
+}
+.slick-vertical .slick-slide.ac.on1 .img-box {
+  position: relative;
+  bottom: -53px;
+  transform: scale(0.7);
+  transition: all 0.3s;
+}
+
+.slick-vertical .slick-slide.ac.on2 {
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+.slick-vertical .slick-slide.ac.on2 .img-box {
+  position: relative;
+  bottom: -20px;
+  transform: scale(0.8);
+  transition: all 0.3s;
+}
+
+.slick-vertical .slick-slide.ac.on4 {
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+.slick-vertical .slick-slide.ac.on4 .img-box {
+  position: relative;
+  top: -20px;
+  transform: scale(0.8);
+  transition: all 0.3s;
+}
+
+.slick-vertical .slick-slide.ac.on5 {
+  opacity: 0.2;
+  transition: all 0.3s;
+}
+.slick-vertical .slick-slide.ac.on5 .img-box {
+  position: relative;
+  top: -53px;
+  transform: scale(0.7);
+  transition: all 0.3s;
+}
+
+.slick-vertical .slick-slide:not(.ac) {
+  opacity: 0.2;
+  transition: all 0.3s;
+}
+.slick-vertical .slick-slide:not(.ac) .img-box {
+  position: relative;
+  top: -53px;
+  transform: scale(0.7);
+  transition: all 0.3s;
+}
+
+/* sec2 */
+.sec2 .container {
+  padding-top: 100px;
+  padding-bottom: 70px;
+  background: var(--gt_f2);
+  overflow: hidden;
+}
+.sec2 .txt-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sec2 .txt-box .slide-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sec2 .txt-box .slide-btn button img {
+  width: 45px;
+  height: auto;
+}
+.sec2 .container .kv-btn {margin:65px auto 0 }
+/* review-slide */
+.review-slide {
+  width: 1840px;
+  margin: 0 auto;
+  margin-top: 40px;
+  box-sizing: border-box;
+}
+.review-slide .review_ul {
+  margin: 0 -30px;
+}
+.review-slide .review_ul .slick-slide {
+  position: relative;
+  width: 540px;
+  padding: 0 30px;
+}
+.review-slide .review_ul .slick-slide img {
+  width: 100%;
+  height: auto;
+}
+.review-slide .slick-arrow {
+  display: none !important;
+}
+.review-slide .review_ul .slick-slide a {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  width: 100%;
+  height: 90px;
+}
+
+/* sec3 */
+.sec3 .container {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  gap: 347px;
+  padding-top: 100px;
+  padding-bottom: 70px;
+  background: url(../img/sec3_bg.jpg) no-repeat 50% 50%;
+  background-size: cover;
+  overflow: hidden;
+  z-index: 1;
+}
+.sec3 .txt-box .txt {
+  color: var(--wt);
+}
+.sec3 .txt-box .txt span {
+  color: var(--yellow);
+}
+.sec3 .txt-box .sub {
+  color: var(--wt);
+}
+
+.sec3 .ck-txt {
+  width: 100%;
+  height: auto;
+}
+.sec3 .ck-txt .flex-c {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+}
+.sec3 .ck-txt .flex-c dl {
+  display: flex;
+  gap: 8px;
+}
+.sec3 .ck-txt .flex-c dl dt {
+  width: 33px;
+  height: auto;
+}
+.sec3 .ck-txt .flex-c dl dt img {
+  width: 100%;
+  height: auto;
+}
+.sec3 .ck-txt .flex-c dl dd {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--wt);
+}
+.sec3 .ck-txt .inquiry-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  border-radius: 30px;
+  background: var(--pr);
+  margin-top: 41px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.17;
+  color: var(--wt);
+}
+
+/* rolling-item */
+.sec3 .rolling-item {
+  position: absolute;
+  top: 0;
+  right: 170px;
+  display: flex;
+  flex-flow: column;
+  gap: 50px;
+  width: 331px;
+  height: auto;
+  z-index: -1;
+}
+.sec3 .rolling-item ul {
+  animation: roll 10s linear infinite;
+  display: flex;
+  flex-flow: column;
+  gap: 50px;
+}
+.sec3 .rolling-item ul li {
+  width: 100%;
+  height: auto;
+}
+.sec3 .rolling-item ul li img {
+  width: 100%;
+  height: auto;
+}
+
+/* 롤링 애니메이션 정의 */
+@keyframes roll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* sec4 */
+.sec4 .container {
+  position: relative;
+  padding-top: 165px;
+  padding-bottom: 165px;
+  background: var(--pr2);
+}
+.sec4 .rolling-item2 {
+  position: absolute;
+  top: 50%;
+  right: 87px;
+  transform: translateY(-50%);
+  width: 1065px;
+  overflow: hidden;
+}
+.sec4 .rolling-item2:before {
+  position: absolute;
+  top: 0;
+  left: -140px;
+  content: "";
+  display: block;
+  width: 210px;
+  height: 100%;
+  background: var(--pr2);
+  -webkit-filter: blur(30px);
+  filter: blur(30px);
+  z-index: 1;
+}
+.sec4 .rolling-item2:after {
+  position: absolute;
+  top: 0;
+  right: -140px;
+  content: "";
+  display: block;
+  width: 210px;
+  height: 100%;
+  background: var(--pr2);
+  -webkit-filter: blur(30px);
+  filter: blur(30px);
+  z-index: 1;
+}
+.sec4 .rolling-item2 .d-block {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.sec4 .rolling-item2 ul {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.sec4 .rolling-item2 .d-block:first-child ul {
+  animation: roll2 20s linear infinite;
+}
+.sec4 .rolling-item2 .d-block:last-child {
+  flex-flow: row-reverse;
+  margin-top: 40px;
+}
+.sec4 .rolling-item2 .d-block:last-child ul {
+  animation: roll3 20s linear infinite;
+  flex-flow: row-reverse;
+  justify-content: flex-start;
+}
+.sec4 .rolling-item2 ul li {
+  flex: 0 0 auto;
+  width: 300px;
+  height: auto;
+}
+.sec4 .rolling-item2 ul li img {
+  width: 100%;
+  height: auto;
+}
+/* list */
+.userList{display: flex;flex-wrap:wrap;justify-content: space-between;}
+.userList li{opacity:0;display:flex;align-items:center;text-align:left;background-color:#fff;width:40%;padding:30px 0 30px 6%;font-weight:500;font-size:20px;color:#42535d;margin-bottom:1.5rem;box-shadow:1px 5px 10px rgba(0,0,0,0.1);}
+.userList li:last-of-type{margin-bottom:0;}
+.userList .im{display:inline-block;width:50px;margin-right:2%;}
+
+/* footer */
+footer {
+  width: 100%;
+  height: auto;
+  margin: 40px 0;
+}
+footer .container {
+  width: 100%;
+  height: auto;
+  padding: 50px 170px;
+  box-sizing: border-box;
+  background: var(--gray_72);
+}
+footer .tit {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.21;
+  color: var(--wt);
+}
+footer .address {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.17;
+  color: var(--wt);
+}
+
+/* 롤링 애니메이션 정의 */
+@keyframes roll2 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes roll3 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.leftActive{
+    -webkit-animation-name: leftActive; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-fill-mode: forwards; /* Safari 4.0 - 8.0 */
+    -ms-animation-name: leftActive;
+    -ms-animation-duration: 1s;
+    -ms-animation-fill-mode: forwards;
+    position: relative;
+}
+@keyframes leftActive{
+    0% {
+        left: 50px;
+        opacity: 0;
+    }
+    100% {
+        left: 0;
+        opacity: 1;
+    }
+}
+@-ms-keyframes leftActive{
+    0% {
+        left: 50px;
+        opacity: 0;
+    }
+    100% {
+        left: 0;
+        opacity: 1;
+    }
+}
+@-webkit-keyframes leftActive{
+    0% {
+        left: 50px;
+        opacity: 0;
+    }
+    100% {
+        left: 0;
+        opacity: 1;
+    }
+}

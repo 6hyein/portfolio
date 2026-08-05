@@ -1,0 +1,232 @@
+<?
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$INTRO_advertiser_DIR=dirname(__FILE__);
+if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
+@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
+else
+echo "파트너 링크 오류";
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$_SESSION['this_is_csrf_token'] = base64_encode(openssl_random_pseudo_bytes(32));
+
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"
+        />
+        <meta charset="euc-kr" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no"> <!--아이폰 자동 a태그 방지-->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/rem.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"> 
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="text/javascript" src="./js/jquery.animateNumber.min.js"></script>
+    <script type="text/javascript"  src="./js/script.js"></script>  
+    <title>정부 정책자금 - 단군비즈</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="inner3">
+                <h1><a href="#formArea"><img src="./img/log.png" alt="단군비즈"></a></h1>
+                <div class="btnArea"><a href="#formArea" class="fromBtn">바로 신청하기</a></div>
+            </div>
+        </header>
+        <div class="container">
+            <section class="sec sec1">
+                <article class="inner">
+                    <h2  data-aos="fade-up" >사업 운영과 성장에 있어 <br/>자금 조달이 절실한 <br/>소상공인,사업자라면?</h2>
+                    <h2  data-aos="fade-up" data-aos-delay="100" ><b>금리 2%대~ 최대 10억원까지</b><br/>몰라서 놓치고 있는 <br/>정부 정책자금을 찾아 보세요!</h2>
+                    <h2  data-aos="fade-up" data-aos-delay="200" ><b>30초 간편 신청으로</b></h2>
+                    <h2  data-aos="fade-up" data-aos-delay="300" ><b>현재 확보 가능한 <br/>정책 자금, 보조금, 융자지원 등을 <br/>신속하게 찾아드립니다.</b></h2>
+                    <div class="boxArea" data-aos="zoom-in">
+                        <h3>2026년 소상공인 정책자금 안내</h3>
+                        <ul class="infoList">
+                            <li class="on">정부 보증, 무담보, 저금리, 높은 한도!</li>
+                            <li>최저 금리 연 2% ~ 상환 최대 10년까지!</li>
+                            <li>세금 연체 없는 사업자라면 누구나!</li>
+                            <!-- <li>연 매출 10억 이상 가능!</li> -->
+                        </ul>
+                        <div class="btnArea">
+                            <a href="#formArea" class="fromBtn">지원 가능 자금 확인하기</a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <section class="sec sec2">
+                <article class="inner3" >
+                    <h3 data-aos="zoom-in">소상공인 정책자금만의 특별한 장점</h3>
+                    <h4 class="title1" data-aos="zoom-in">은행 대출로는 <br/>자금 확보가 어렵더라도 <br/>걱정마세요!</h4>
+                    <h4 class="title2" data-aos="zoom-in">일반 대출과 달리 <br/><span class="mark">정책자금은 가능합니다!</span></h4>
+                    <h5 class="title3" data-aos="zoom-in">자금 조달이 어려운 <br/>중소기업을 위해 <br/>정부가 보증하는 제도로</h5>
+                    <h5 class="title4" data-aos="zoom-in">일반 대출에선 어려운 <br/>혜택을 받을 수 있습니다.</h5>
+                    <div class="vsArea" data-aos="fade-up" >
+                        <div class="nomal">
+                            <div class="title">일반 대출</div>
+                            <ul class="infoList">
+                                <li><i><img src="./img/sec2_dot.png" alt="점"></i>대출 조건 높음</li>
+                                <li><i><img src="./img/sec2_dot.png" alt="점"></i>적은 한도</li>
+                                <li><i><img src="./img/sec2_dot.png" alt="점"></i>짧은 업력으로 신용미달</li>
+                                <li><i><img src="./img/sec2_dot.png" alt="점"></i>담보 · 보증 필수</li>
+                            </ul>
+                            <div class="vsIcon">vs</div>
+                        </div>
+                        <div class="new">
+                            <div class="title">정책 자금</div>
+                            <ul class="infoList">
+                                <li><i><img src="./img/sec2_check2.png" alt="체크"></i>매출 조건만 맞으면 가능!</li>
+                                <li><i><img src="./img/sec2_check2.png" alt="체크"></i>높은 한도 (최대 10억까지!)</li>
+                                <li><i><img src="./img/sec2_check2.png" alt="체크"></i>여러 번 신청·지원 가능!</li>
+                                <li><i><img src="./img/sec2_check2.png" alt="체크"></i>무담보, 정부 보증</li>
+                                <li><i><img src="./img/sec2_check2.png" alt="체크"></i>저신용자 접수가능</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <section class="sec sec3">
+                <article class="inner2">
+                    <div class="boxArea boxArea1">
+                        <h3>소상공인 및 사업자를 위한 <br/>정책자금! <br/><b>놓치고 있으면 손해</b>입니다. <br/>이젠 복잡한 절차없이 한번에!</h3>
+                        <p>
+                            정부와 지자체에서 운영하는 정책자금은 매년 수십 가지가 넘지만, <br/>
+                            정보가 흩어져 있어 많은 사장님들이 제때 신청하지 못합니다. <br/><br/>
+                            업종·매출·사업 기간 등 4가지 핵심 항목을 기준으로, <br/>
+                            신청 가능한 정책자금을 빠르고 정확하게 분류합니다. <br/><br/>
+                            복잡한 절차를 모두 줄이고 1분 신청만으로 <br/>
+                            지금 상황에 꼭 맞는 자금 확보 기회를 잡으세요!
+                        </p>
+                        <div class="btnArea"><a href="#formArea" class="fromBtn">지원 가능 자금 확인하기</a></div>
+                    </div>
+                    <div class="boxArea boxArea2">
+                        <div class="box">
+                            <div class="title">고객만족도</div>
+                            <div class="numArea"><span class="num" id="aN1">93</span><span class="txt">%</span></div>
+                        </div>
+                        <div class="box">
+                            <div class="title">자금 집행 금액</div>
+                            <div class="numArea"><span class="txt">평균</span><span class="num" id="aN2">1</span><span class="txt">억 ~</span></div>
+                            <div class="numArea"><span class="txt">최대</span><span class="num" id="aN3">10</span><span class="txt">억 ~</span></div>
+                        </div>
+                        <div class="box">
+                            <div class="title">연간 상담건수</div>
+                            <div class="numArea"><span class="num" id="aN4">29871</span><span class="txt">건</span></div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <section class="sec sec4">
+                <article class="inner3">
+                    <h3>단 이런 경우에는 신청이 불가능합니다.</h3>
+                    <h4>신청 불가 조건</h4>
+                    <ol class="infoList">
+                        <li class="on">1. <b>세금,대출 연체 및 체납</b> 있는 분</li>
+                        <li>2. <b>직장인, 프리랜서, 무직자</b></li>
+                        <li>3. <b>불법유흥, 도박업</b></li>
+                    </ol>
+                </article>
+            </section>
+            <section class="sec formArea" id="formArea" >
+                <article class="inner3">
+                    <h3 class="timer">
+                        <span class="hour">02</span>시간 <span class="minte">48</span>분 <span class="sec">33</span>초 남음
+                    </h3>
+                    <h4>개인 신용에 어떠한 영향도 끼치지 않습니다.</h4>
+                    <div class="boxArea"  data-aos="zoom-in-up">
+                        <h5>연체중·직장인·프리랜서·무직자 불가</h5>
+                        <form name="Write_form" class="infoArea"  method="post"  action="/intro/8571765514911/index.html">
+                            <input name="csrf" type="hidden" value="<?=$_SESSION['this_is_csrf_token']?>" />
+                            <input name="Mode_value" type="hidden" value="Write_Now"><!--신청후 팝업 수정 소스(call_alert를 지정네임으로 수정(광고주번호or 특이네임))-->
+                            <input name="alert_type" type="hidden" value="8571765514911">
+                            <input name="sourceUrl" type="hidden" value="<? echo is_null($_POST['sourceUrl'])?$_SERVER['HTTP_REFERER']:$_POST['sourceUrl'] ?>">
+                            <div class="userInfo">
+                                <dl>
+                                    <dt>기본정보</dt>
+                                    <dd>
+                                        <div class="line txtLine"><input type="text" name="M_name" placeholder="성명" onkeyup="cdcheck(this)" onkeydown="cdcheck(this)" oninput="cdcheck(this)" oncontextmenu="return false;"></div>
+                                        <div class="line phoneLine">
+                                            <input name="M_phone1" type="tel" value="010" readonly="">
+                                            <span class="bar"></span>
+                                            <input  name="M_phone2" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                            <span class="bar"></span>
+                                            <input name="M_phone3" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                        </div>  
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>사업자</dt>
+                                    <dd class="check check2">
+                                        <label for="check2_1">개인<input id="check2_1" name="M_data0" type="radio"  value="개인"></label>
+                                        <label for="check2_2">법인<input id="check2_2" name="M_data0" type="radio"  value="법인"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>업종</dt>
+                                    <dd class="check check5">
+                                        <label for="check5_1">요식업<input id = "check5_1" name="M_job"  type="radio" value="요식업"></label>
+                                        <label for="check5_2">제조업<input id="check5_2" name="M_job" type="radio" value="제조업"></label>
+                                        <label for="check5_3">도소매업<input id="check5_3" name="M_job" type="radio" value="도소매업"></label>
+                                        <label for="check5_4">운수업<input id="check5_4" name="M_job" type="radio" value="운수업"></label>
+                                        <label for="check5_5">그 외 업종<input id="check5_5" name="M_job" type="radio" value="그 외 업종"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>그 외 업종</dt>
+                                    <dd class="check check3">
+                                        <label for="check3_1">운전자금<input id="check3_1" name="M_data1" type="radio" value="운전자금"></label>
+                                        <label for="check3_2">시설자금<input id="check3_2" name="M_data1" type="radio" value="시설자금"></label>
+                                        <label for="check3_3">기타자금<input id="check3_3" name="M_data1" type="radio" value="기타자금"></label>
+                                    </dd>
+                                </dl> 
+                            </div>                            
+                            <div class="gif"><img src="./img/self.gif" alt="보안중"></div>
+                            <p class="selfTxt">상담 후 개인정보는 전부 파기됩니다.</p>        
+                            <div class="agreeArea">
+                                <div class="agreeLine">
+                                    <div class="txt">개인정보 처리방침 동의</div>
+                                    <div class="infoArea">
+                                        <input type="checkbox" id="agreeCheck" name="M_agree" value="1" checked="">
+                                        <label for="agreeCheck">동의함</label>
+                                    </div>
+                                </div>
+                                <div class="slideDown">
+<textarea name="" cols="" rows="3" class="agreement" readonly="" style="display: inline-block\;">개인정보취급방침
+
+▶ 개인정보의 수집 및 이용목적
+- 서비스 이용에 따른 본인식별, 실명확인, 가입의사 확인, 연령제한 서비스 이용
+- 고지사항 전달, 불만처리 의사소통 경로 확보
+- 신규 서비스 등 최신정보 안내 및 개인맞춤서비스 제공을 위한 자료
+- 기타 원활한 양질의 서비스 제공 등
+
+▶ 수집하는 개인정보의 항목
+- 이름, 핸드폰번호 그 외 선택항목
+
+▶ 개인정보의 보유 및 이용기간
+- 원칙적으로 개인정보의 수집 또는 제공받은 목적 달성 시 지체 없이 파기합니다.
+- 다만, 원활한 서비스의 상담을 위해 상담 완료 후 내용을 3개월간 보유할 수 있으며 전자상거래에서의 소비자보호에 관한 법률 등 타법률에 의해 보존할 필요가 있는 경우에는 일정기간 보존합니다.
+</textarea>
+                                </div>
+                            </div>     
+                            <div class="btnArea">
+                                <button type="button" onclick="Request_Now_input_check(Write_form);return false;">상담신청</button>
+                            </div>
+                        </form>
+                    </div>                    
+                </article>
+            </section>
+        </div>
+        <footer>
+            <div class="inner">
+                <h3>단군비즈 부천지사</h3>
+                <p>회사명 : 단군비즈 부천지사 <br/>대표자 : 장성훈 <br/>주소지 : 경기도 부천시 원미구 부일로 199번길 31, 501호 <br/>대표번호 : 032-715-6459 <br/>Copyright ⓒ tnjbiz All right Reserved</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

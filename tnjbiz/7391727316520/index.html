@@ -1,0 +1,630 @@
+<?
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$INTRO_advertiser_DIR=dirname(__FILE__);
+if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
+@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
+else
+echo "파트너 링크 오류";
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"
+    />
+    <meta charset="euc-kr" />
+    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+    <title>단군비즈</title>
+    <!--noto sans kr-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- slick, aos css -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="./js/slick/slick.css" />
+    <!-- //slick -->
+    <link rel="stylesheet" href="./css/reset.css?v=10" />
+    <link rel="stylesheet" href="./css/kv.css?v=4" />
+    <link rel="stylesheet" href="./css/style.css?v=6" />
+    <link rel="stylesheet" href="./css/respond.css?v=6" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- slick aos -->
+    <script type="text/javascript" src="./js/slick/slick.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  </head>
+  <body>
+    <!-- header -->
+    <header>
+      <div class="container">
+        <p class="txt">25년 정부지원예산 14조 9,497억원</p>
+      </div>
+    </header>
+    <!-- //header -->
+
+    <!-- visual -->
+    <div class="visual">
+      <div class="container">
+        <!-- img-item 
+        <div class="img-item">
+          <img src="./img/kv_img1.png" alt="여행 아이콘" />
+        </div>
+        <div class="img-item">
+          <img src="./img/kv_img2.png" alt="은행 아이콘" />
+        </div>
+        <div class="img-item">
+          <img src="./img/kv_img3.png" alt="동전 아이콘" />
+        </div>
+        <div class="img-item">
+          <img src="./img/kv_img4.png" alt="지폐 아이콘" />
+        </div>-->
+        <!-- //img-item -->
+
+        <!-- kv-box -->
+        <div class="kv-box">
+          <p class="tit" data-aos="zoom-in">
+            사업자 정책자금
+          </p>
+          <p
+            class="txt"
+            data-aos="fade-up"
+            data-aos-easing="ease"
+            data-aos-delay="400"
+          >
+            소상공인·개인·법인<br />
+            사업자 자금조달
+          </p>
+          <p
+            class="txt2"
+            data-aos="fade-up"
+            data-aos-easing="ease"
+            data-aos-delay="600"
+          >
+          최대 10억원<br/>금리 2~4%
+          </p>
+          <p
+            class="sub"
+            data-aos="fade-up"
+            data-aos-easing="ease"
+            data-aos-delay="800"
+          >
+            지금 신청가능한 정책자금 확인하세요.
+          </p>
+          <a
+            href="#formArea"
+            class="kv-btn"
+            data-aos="fade-up"
+            data-aos-easing="ease"
+            data-aos-delay="800"
+            >신청하기</a
+          >
+ <!-- 
+          <figure
+            class="img-box"
+            data-aos="fade-up"
+            data-aos-easing="ease"
+            data-aos-delay="800"
+          >
+           <img src="./img/kv_img5.png" alt="정책자금 진단 리포트 실행 화면" /> 
+          </figure>-->
+        </div>
+        <!-- //kv-box -->
+      </div>
+    </div>
+    <!-- //visual -->
+
+    <!-- sec4 -->
+    <section class="sec4" data-aos="fade-up" data-aos-duration="3000">
+      <div class="container">
+        <!-- txt-box -->
+        <div class="txt-box">
+          <p class="txt">
+            정책자금, <span>당신도 대상자</span><br />
+            입니다
+          </p>
+          <p class="sub">사업자 10명 중 8명은 대상자</p>
+          <a
+            href="#formArea"
+            class="kv-btn"
+            >대상자 여부 확인</a
+          >
+        </div>
+        <!-- //txt-box -->
+
+        <!-- rolling-item2 -->
+        <ul class="userList">
+            <li><span class="im"><img src="./img/icon31.png" alt="서류가방이미지"></span><span class="txt">소상공인·개인·법인 사업자라면 누구나 가능</span></li>
+            <li><span class="im"><img src="./img/icon32.png" alt="엑스이미지"></span><span class="txt">연체중·직장인·프리랜서·무직자 불가</span></li>
+            <li><span class="im"><img src="./img/icon33.png" alt="노란우산공제로고"></span><span class="txt">노란우산공제 가입자 우대</span></li>
+            <li><span class="im"><img src="./img/icon34.png" alt="제로페이이미지"></span><span class="txt">제로페이 사용자 우대</span></li>
+            <li><span class="im"><img src="./img/icon35.png" alt="풍수재해이미지"></span><span class="txt">풍수재해보험 가입자 우대</span></li>
+            <li><span class="im"><img src="./img/icon36.png" alt="뎌성기업로고"></span><span class="txt">여성기업 등 우대</span></li>
+            <li><span class="im"><img src="./img/icon37.png" alt="집과차이미지"></span><span class="txt">건설업, 제조업, 운수업, 서비스업, 음식점업 등 가능</span></li>
+        </ul>
+        <!-- //rolling-item2 -->
+      </div>
+    </section>
+    <!-- //sec4 -->
+
+    <!-- sec1 -->
+    <section class="sec1" data-aos="fade-up" data-aos-duration="3000">
+      <div class="container">
+        <!-- txt-box -->
+        <div class="txt-box">
+          <p class="txt">
+            대표님들이<br />
+            '단군비즈'을 찾는 <span>이유 5가지</span>
+          </p>
+          <p class="sub">지금 신청가능한 정책자금 확인하세요.</p>
+          <a
+            href="#formArea"
+            class="kv-btn"
+            >지금 바로 가능금액 확인하기</a
+          >
+        </div>
+        <!-- //txt-box -->
+
+        <!-- sec1-slide -->
+        <div class="sec1-slide">
+          <!-- Swiper -->
+          <div class="sec1_slick">
+            <ul class="sec1_slick_ul">
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img1.png"
+                    alt="전화 한통으로 정책자금 가능여부 및 금액 확인"
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img2.png"
+                    alt="벤처기업부 정식등록 상담회사"
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img src="./img/sec1_img3.png" alt="저금리로 자금고민 해결" />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img4.png"
+                    alt="전국 상위1% 전문가들이 모였습니다."
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img5.png"
+                    alt="월평균 상담자수 3000거느 승인율 91.7%"
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img1.png"
+                    alt="전화 한통으로 정책자금 가능여부 및 금액 확인"
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img2.png"
+                    alt="벤처기업부 정식등록 상담회사"
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img src="./img/sec1_img3.png" alt="저금리로 자금고민 해결" />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img4.png"
+                    alt="전국 상위1% 전문가들이 모였습니다."
+                  />
+                </figure>
+              </li>
+              <li>
+                <figure class="img-box">
+                  <img
+                    src="./img/sec1_img5.png"
+                    alt="월평균 상담자수 3000거느 승인율 91.7%"
+                  />
+                </figure>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- //sec1-slide -->
+      </div>
+    </section>
+    <!-- //sec1 -->
+
+    <!-- sec2 -->
+    <section class="sec2" data-aos="fade-up" data-aos-duration="3000">
+      <div class="container">
+        <!-- txt-box -->
+        <div class="txt-box">
+          <div class="d-block">
+            <p class="txt">'단군비즈' <span>실제 고객 후기</span></p>
+            <p class="sub">지금 신청가능한 정책자금 확인하세요.</p>
+          </div>
+
+          <!-- slide-btn -->
+          <div class="slide-btn">
+            <button class="prev" type="button">
+              <img src="./img/prev.png" alt="왼쪽이동 버튼" />
+            </button>
+            <button class="next" type="button">
+              <img src="./img/next.png" alt="오른쪽이동 버튼" />
+            </button>
+          </div>
+          <!-- //slide-btn -->
+        </div>
+        <!-- //txt-box -->
+
+        <!-- review-slide -->
+        <div class="review-slide">
+          <ul class="review_ul">
+            <li>
+              <img
+                src="./img/slide1.png"
+                alt="신청 후 바로 당일부터 컨설팅진행되었습니다."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide2.png"
+                alt="솔직히 한 5곳은 비교해본 것 같습니다."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide3.png"
+                alt="솔직하게 가능한 정책자금과 금액에 대해서 설명"
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide4.png"
+                alt="상담 전에 전산으로 가능한 부분 검토 다 되고 상담을 이어가니 신뢰도가 매우 높네요."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img src="./img/slide5.png" alt="소개로 진행하게 되었습니다." />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide6.png"
+                alt="온라인에 많은 컨설팅업체가 있었지만 전 여길 선택했어요."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide7.png"
+                alt="많은곳을 알아봤지만 진정성있고 빠른피드백에 신뢰감있는 곳은 처음입니다."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+            <li>
+              <img
+                src="./img/slide8.png"
+                alt="분명 여러곳에서 안된다고 했는데 여기서는 3천만원 승인되었어요."
+              />
+              <a
+                href="#formArea"
+              ></a>
+            </li>
+          </ul>
+          
+        </div>
+        <!-- //review-slide -->
+          <a
+          href="#formArea"
+          class="kv-btn"
+          data-aos="fade-up"
+          data-aos-easing="ease"
+          data-aos-delay="200"
+          >신청하기</a>
+          
+      </div>
+    </section>
+    <!-- //sec2 -->
+    <section class="sec5" id="formArea">
+      <link rel="stylesheet" href="./css/form/rem.css">
+      <link rel="stylesheet" href="./css/form/style.css?v=3">
+      <script src="./js/script.js"></script>
+      <div class="inner">
+          <h2 class="timer">
+              <span class="hours">6</span>시간 <span class="miniutes">00</span>분 <span class="seconds">00</span>초 남음
+          </h2>
+          <h3>개인 신용에 어떠한 영향도 끼치지 않습니다</h3>
+          <form name="Write_form" class="infoArea"  method="post"  action="/intro/7391727316520/index.html">
+              <input name="Mode_value" type="hidden" value="Write_Now"><!--신청후 팝업 수정 소스(call_alert를 지정네임으로 수정(광고주번호or 특이네임))-->
+              <input name="alert_type" type="hidden" value="7391727316520">
+              <input name="sourceUrl" type="hidden" value="<? echo is_null($_POST['sourceUrl'])?$_SERVER['HTTP_REFERER']:$_POST['sourceUrl'] ?>">
+              <h4 class="colorChange">연체중·직장인·프리랜서·무직자 불가</h4>
+              <div class="basicInfo">
+                  <label>기본정보</label>
+                  <div class="nameInput">
+                      <input type="text" name="M_name" placeholder="성명" onkeyup="cdcheck(this)" onkeydown="cdcheck(this)" oncontextmenu="return false;">
+                  </div>  
+                  <div class="phoneInput">
+                      <input name="M_phone1" class="smallBox" value="010" readonly="">
+                      <span>-</span>
+                      <input name="M_phone2" type="tel" value="" maxlength="4" class="smallBox" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                      <span>-</span>
+                      <input name="M_phone3" type="tel" value="" maxlength="4" class="smallBox" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                  </div>
+                  <div class="dataArea">
+                      <label>사업자</label>
+                      <div class="radioList">
+                          <label for="rd1"><input id="rd1" type="radio" name="M_data0" value="개인">개인</label>
+                          <label for="rd2"><input id="rd2" type="radio" name="M_data0" value="법인">법인</label>
+                      </div>
+                  </div>
+                  <div class="dataArea noFlex">
+                      <label>업종</label>
+                      <div class="radioList">
+                          <label for="rd3"><input id="rd3" type="radio" name="M_job" value="요식업">요식업</label>
+                          <label for="rd4"><input id="rd4" type="radio" name="M_job" value="제조업">제조업</label>
+                          <label for="rd5"><input id="rd5" type="radio" name="M_job" value="도소매업">도소매업</label>
+                          <label for="rd6"><input id="rd6" type="radio" name="M_job" value="운수업">운수업</label>
+                          <label for="rd7"><input id="rd7" type="radio" name="M_job" value="그 외 업종">그 외 업종</label>
+                      </div>
+                  </div>
+                  <div class="dataArea">
+                      <label>자금용도</label>
+                      <div class="radioList">
+                          <label for="rd8"><input id="rd8" type="radio" name="M_data1" value="운전자금">운전자금</label>
+                          <label for="rd9"><input id="rd9" type="radio" name="M_data1" value="시설자금">시설자금</label>
+                          <label for="rd10"><input id="rd10" type="radio" name="M_data1" value="기타자금">기타자금</label>
+                      </div>
+                  </div>
+                  <div class="privacyArea">
+                      <img src="./img/sec5.gif" alt="보안작동이미지">
+                      <p class="privacy">
+                          상담 후 개인정보는 전부 파기됩니다.
+                      </p>
+                  </div>
+                  <div class="policyArea">
+                      <label class="agreeShow" for="agreeCheck">개인정보 처리방침 동의</label>
+                      <div class="right">
+                          <input type="checkbox" name="M_agree" class="agree" id="agreeCheck" value="1" checked="">
+                          <label for="agreeCheck" class="checkview"></label>
+                          <label for="agreeCheck">동의함</label>
+                      </div>
+                  </div>
+                  <textarea name="" cols="" rows="3" class="agreement" readonly="">
+개인정보취급방침
+
+▶ 개인정보의 수집 및 이용목적
+- 서비스 이용에 따른 본인식별, 실명확인, 가입의사 확인, 연령제한 서비스 이용
+- 고지사항 전달, 불만처리 의사소통 경로 확보
+- 신규 서비스 등 최신정보 안내 및 개인맞춤서비스 제공을 위한 자료
+- 기타 원활한 양질의 서비스 제공 등
+
+▶ 수집하는 개인정보의 항목
+- 이름, 핸드폰번호 그 외 선택항목
+
+▶ 개인정보의 보유 및 이용기간
+- 원칙적으로 개인정보의 수집 또는 제공받은 목적 달성 시 지체 없이 파기합니다.
+- 다만, 원활한 서비스의 상담을 위해 상담 완료 후 내용을 3개월간 보유할 수 있으며 전자상거래에서의 소비자보호에 관한 법률 등 타법률에 의해 보존할 필요가 있는 경우에는 일정기간 보존합니다.
+                  </textarea>
+                  <div class="btnArea"> 
+                      <button type="button" class="sendBtn" onclick="Request_Now_input_check(Write_form);return false;">상담신청</span>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </section>
+    <!-- sec3 
+    <section class="sec3" data-aos="fade-up" data-aos-duration="3000">
+      <div class="container">
+        <div class="txt-box">
+          <p class="txt">
+            정책자금은 <span>매월</span><br />
+            새로운 상품 신청이 가능합니다.
+          </p>
+          <p class="sub">[사업자등록번호]만으로 조회 가능합니다.</p>
+        </div>
+        <div class="ck-txt">
+          <div class="flex-c">
+            <dl>
+              <dt><img src="./img/ckd_on.png" alt="" /></dt>
+              <dd>이미 정부 정책자금을 받으셨더라도 매월 재확인이 필요해요</dd>
+            </dl>
+            <dl>
+              <dt><img src="./img/ckd_on.png" alt="" /></dt>
+              <dd>
+                신규정책상품, 매출, 신용등급 변동으로 인해 이번엔 자금을
+                확보할수도있어요.
+              </dd>
+            </dl>
+          </div>
+
+          <a
+            href="#formArea"
+            class="inquiry-btn"
+            >이번 달 가능여부 조회하기</a
+          >
+        </div>
+        <div class="rolling-item">
+          <ul>
+            <li><img src="./img/star1.png" alt="" /></li>
+            <li><img src="./img/star2.png" alt="" /></li>
+            <li><img src="./img/star3.png" alt="" /></li>
+            <li><img src="./img/star4.png" alt="" /></li>
+            <li><img src="./img/star5.png" alt="" /></li>
+          </ul>
+          <ul>
+            <li><img src="./img/star1.png" alt="" /></li>
+            <li><img src="./img/star2.png" alt="" /></li>
+            <li><img src="./img/star3.png" alt="" /></li>
+            <li><img src="./img/star4.png" alt="" /></li>
+            <li><img src="./img/star5.png" alt="" /></li>
+          </ul>
+        </div>
+      </div>
+    </section>-->
+    <!-- //sec3 -->
+
+    
+
+    <!-- footer -->
+    <footer data-aos="fade-up" data-aos-duration="3000" class="">
+      <div class="container">
+        <p class="tit">단군비즈 부천지사</p>
+        <div class="address">
+          회사명 : 단군비즈 부천지사<br />
+          대표자 : 장성훈<br />
+          주소지 : 경기도 부천시 원미구 부일로 199번길 31, 501호<br />
+          대표번호 : 032-715-6459<br />
+
+          Copyright ⓒ tnjbiz All right Reserved
+        </div>
+      </div>
+    </footer>
+    <!-- //footer -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var animationEnd = true;
+        // Slick Slider 초기화
+        $(".sec1_slick_ul").slick({
+          slidesToShow: 5,
+          arrows: false,
+          vertical: true,
+          autoplay: true,
+          autoplaySpeed: 2000,
+          verticalSwiping: true,
+          draggable: false,
+          swipe: false,
+          pauseOnHover: false,
+          pauseOnFocus: false,
+          centerMode: true,
+          infinite: true,
+        });
+
+        function updateActiveSlides() {
+          $(".slick-slide").removeClass("on1 on2 on3 on4 on5 ac");
+          $(".slick-active").each(function (idx) {
+            let thisActive = $(this);
+            thisActive.addClass("ac on" + (idx + 1));
+          });
+        }
+
+        // 슬라이드가 전환된 후에 발생하는 이벤트 처리
+        $(".sec1_slick_ul").on(
+          "afterChange",
+          function (event, slick, currentSlide) {
+            updateActiveSlides();
+          }
+        );
+
+        // 초기 로딩 시 활성화된 슬라이드 업데이트
+        updateActiveSlides();
+
+        $(".review_ul").slick({
+          variableWidth: true,
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 2000,
+        });
+
+        $(".sec2 .txt-box .slide-btn .next").on("click", function () {
+          $(".review-slide .slick-next").trigger("click");
+        });
+        $(".sec2 .txt-box .slide-btn .prev").on("click", function () {
+          $(".review-slide .slick-prev").trigger("click");
+        });
+
+        // visual
+        $(window).scroll(function () {
+          if ($(window).scrollTop() >= 100) {
+            $(".visual .img-item").addClass("on");
+          } else {
+            $(".visual .img-item").removeClass("on");
+          }
+          onListAni()
+        });
+
+        if ($(window).width() <= 1554) {
+          $(window).scroll(function () {
+            if ($(window).scrollTop() >= 50) {
+              $(".visual .img-item").addClass("on");
+            } else {
+              $(".visual .img-item").removeClass("on");
+            }
+          });
+        }
+
+        // 리스트 애니메이션
+        function onListAni(){
+          
+          if(animationEnd){
+            var windowHight = $(window).innerHeight();
+            var scrollTop = $(window).scrollTop();
+            var section1 = $(".sec4").offset().top - windowHight/2;
+            var section2 = $(".sec1").offset().top;
+            var num = 0
+
+            console.log(scrollTop, animationEnd, section1 , section2);
+            
+
+            if(scrollTop >= section1 && scrollTop < section2){
+              $( `.sec4 .userList li`).each(function(idx, item){
+                  setTimeout(function(){
+                      $(item).addClass("leftActive");
+                  }, 100 + 100 * num++);
+                  animationEnd = false;
+                  console.log("애니메니션 중");
+              });
+            }
+          }
+        }
+        AOS.init({
+          easing: "ease-out-back",
+          duration: 1000,
+        });
+      });
+    </script>
+  </body>
+</html>

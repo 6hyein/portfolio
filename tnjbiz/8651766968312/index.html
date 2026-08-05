@@ -1,0 +1,313 @@
+<?
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+$INTRO_advertiser_DIR=dirname(__FILE__);
+if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
+@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
+else
+echo "파트너 링크 오류";
+$_SESSION['this_is_csrf_token'] = base64_encode(openssl_random_pseudo_bytes(32));
+
+///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"
+    />
+    <meta charset="euc-kr" />
+    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no"> <!--아이폰 자동 a태그 방지-->
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/rem.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript"  src="./js/script.js"></script>  
+    <title>정부 정책자금 - 단군비즈</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="inner">
+                <h1><a href="#formArea"><img src="./img/log.png" alt="단군비즈"></a></h1>
+                <div class="btnArea"><a href="#formArea" class="goBtn">상담신청</a></div>
+            </div>
+        </header>
+        <div class="container">
+            <section class="sec sec1">
+                <article class="inner">
+                    <h2>정책자금 <br/><b>진단</b>여부</h2>
+                    <h3>전문상담으로 <br/>가능여부,금액 측정</h3>
+                    <ul class="infoList">
+                        <li>
+                            <i><img src="./img/sec1_icon.png" alt="체크"></i>
+                            <p><b>간단한 질문</b> 만으로 신청완료</p>
+                        </li>
+                        <li>
+                            <i><img src="./img/sec1_icon.png" alt="체크"></i>
+                            <p>전문상담으로 <b>맟춤형</b> 정책자금 추천</p>
+                        </li>
+                        <li>
+                            <i><img src="./img/sec1_icon.png" alt="체크"></i>
+                            <p>최대 <b>10억</b>,금리 <b>2%</b>대로 지원가능</p>
+                        </li>
+                    </ul>
+                    <div class="imgArea"><img src="./img/sec1_phone.png" alt="최대한도 10억 휴대폰이미지"></div>
+                    <div class="btnArea"><a href="#formArea" class="goBtn">무료 진단 시작하기</a></div>
+                </article>
+            </section>
+            <section class="sec sec2">
+                <article class="inner">
+                    <div class="box1 box">
+                        <h3>대표님들이 <br/>소상공인 정책자금 <br/>상담이 필요한 경우</h3>
+                        <ul class="infoList">
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon1.png" alt="new 아이콘"></div>
+                                <div class="txt">신규 사업자예요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon2.png" alt="직원 아이콘"></div>
+                                <div class="txt">직원을 추가 채용 했어요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon3.png" alt="맞춤 아이콘"></div>
+                                <div class="txt">맞춤형 컨설팅이 필요해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon4.png" alt="서류 아이콘"></div>
+                                <div class="txt">임대차보증금이 필요해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon5.png" alt="자금 아이콘"></div>
+                                <div class="txt">사업자금이 필요해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon6.png" alt="혼란 아이콘"></div>
+                                <div class="txt">은행 대출이 어려워요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon7.png" alt="금리 인상 아이콘"></div>
+                                <div class="txt">높은 금리를 쓰고있어요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon8.png" alt="혼란 아이콘"> </div>
+                                <div class="txt">신청 과정이 막막해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon9.png" alt="확장 아이콘"></div>
+                                <div class="txt">사업을 확장하고 싶어요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon10.png" alt="운영자금 아이콘"></div>
+                                <div class="txt">운영자금이 급해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon11.png" alt="서류 아이콘"></div>
+                                <div class="txt">서류 준비가 부담돼요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon12.png" alt="오르는 아이콘"></div>
+                                <div class="txt">대출 문턱이 너무 높아요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon13.png" alt="온라인 아이콘"></div>
+                                <div class="txt">온라인 사업을 하고 싶어요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon14.png" alt="인테리어 아이콘"></div>
+                                <div class="txt">인테리어 자금이 필요해요</div>
+                            </li>
+                            <li>
+                                <div class="icon"><img src="./img/sec2_icon15.png" alt="맞춤형 아이콘"></div>
+                                <div class="txt">맞춤형 자원이 궁금해요</div>
+                            </li>
+                        </ul>
+                        <div class="btnArea"><a href="#formArea" class="goBtn">지금 바로 가능금액 확인하기</a></div>
+                    </div>
+                    
+                    <div class="box2 box">
+                        <h3>정책자금 종류만 <br/>500가지 이상!</h3>
+                        <h4>다 찾아보시려구요?</h4>
+                        <p class="infoTxt">
+                            어차피 대표님께 유리한 자금은 이미 정해져있습니다. <br/>
+                            많은 대표님들은 이사실을 잘 모르고 진행하셔서 <br/>
+                            거절되는 경우가 많습니다.
+                        </p>
+                        <h5>내 사업장은 얼마까지 가능할까?</h5>
+                        <div class="btnArea"><a href="#formArea" class="goBtn">정책자금 가능여부 조회하기</a></div>
+                    </div>
+                    <div class="box3 box">
+                        <ul class="infoList">
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon1.png" alt="체크 아이콘"></div>
+                                <div class="txtArea">경영컨설팅업 <br/>정식 사업자 등록 업체</div>
+                            </li>
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon2.png" alt="굿 아이콘"></div>
+                                <div class="txtArea">맞춤형 컨설팅으로 <br/>고객 만족도 99%</div>
+                            </li>
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon3.png" alt="1위 아이콘"></div>
+                                <div class="txtArea">전국 상위 1% <br/>전문가들로 구성</div>
+                            </li>
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon1.png" alt="체크 아이콘"></div>
+                                <div class="txtArea">경영컨설팅업 <br/>정식 사업자 등록 업체</div>
+                            </li>
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon2.png" alt="굿 아이콘"></div>
+                                <div class="txtArea">맞춤형 컨설팅으로 <br/>고객 만족도 99%</div>
+                            </li>
+                            <li>
+                                <div class="imgArea"><img src="./img/sec2_box2_icon3.png" alt="1위 아이콘"></div>
+                                <div class="txtArea">전국 상위 1% <br/>전문가들로 구성</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="box4 box">
+                        <h3>저금리 정책자금</h3>
+                        <h4>원클릭 상담부터 신청해보세요</h4>
+                        <h5>10명 중, 9명은 대상자!</h5>
+                        <div class="imgArea">
+                            <img class="people" src="./img/box4_main.png" alt="상담원 이미지">
+                            <img class="leap1" src="./img/box4_leap1.png" alt="잎1">
+                            <img class="leap2" src="./img/box4_leap2.png" alt="잎2">
+                            <img class="leap3" src="./img/box4_leap3.png" alt="잎3">
+                            <img class="icon1" src="./img/box4_icon1.png" alt="아이콘1">
+                            <img class="icon2" src="./img/box4_icon2.png" alt="아이콘2">
+                            <img class="icon3" src="./img/box4_icon3.png" alt="아이콘3">
+                            <img class="icon4" src="./img/box4_icon4.png" alt="아이콘4">
+                        </div>
+                        <div class="btnArea"><a href="#formArea" class="goBtn">대상자 여부 확인</a></div>
+                    </div>
+                    <div class="step">
+                        <h3>복잡한 절차를 <br/>소상공인 정책자금 <br/>간편하게 신청!</h3>
+                        <h4>자격 있는데 모르고 있는 기업들을 위해</h4>
+                        <ol class="infoList">
+                            <li>
+                                <i>&#129303;</i>
+                                <div class="title">step1</div>
+                                <div class="txt">맞춤 1:1 상담</div>
+                            </li>
+                            <li>
+                                <i>&#128525;</i>
+                                <div class="title">step2</div>
+                                <div class="txt">올인원 진행</div>
+                            </li>
+                            <li>
+                                <i>&#129392;</i>
+                                <div class="title">step3</div>
+                                <div class="txt">최대한도 자금 확보</div>
+                            </li>
+                        </ol>
+                    </div>
+                </article>
+            </section>
+            <section class="sec formArea" id="formArea" >
+                <article class="inner">
+                    <h3 class="timer">
+                        <span class="hour">02</span>시간 <span class="minte">48</span>분 <span class="sec">33</span>초 남음
+                    </h3>
+                    <h4>개인 신용에 어떠한 영향도 끼치지 않습니다.</h4>
+                    <div class="boxArea"  data-aos="zoom-in-up">
+                        <h5>연체중·직장인·프리랜서·무직자 불가</h5>
+                        <form name="Write_form" class="infoArea"  method="post"  action="/intro/8651766968312/index.html">
+                            <input name="csrf" type="hidden" value="<?=$_SESSION['this_is_csrf_token']?>" />
+                            <input name="Mode_value" type="hidden" value="Write_Now"><!--신청후 팝업 수정 소스(call_alert를 지정네임으로 수정(광고주번호or 특이네임))-->
+                            <input name="alert_type" type="hidden" value="8651766968312">
+                            <input name="sourceUrl" type="hidden" value="<? echo is_null($_POST['sourceUrl'])?$_SERVER['HTTP_REFERER']:$_POST['sourceUrl'] ?>">
+                            <div class="userInfo">
+                                <dl>
+                                    <dt>기본정보</dt>
+                                    <dd>
+                                        <div class="line txtLine"><input type="text" name="M_name" placeholder="성명" onkeyup="cdcheck(this)" onkeydown="cdcheck(this)" oninput="cdcheck(this)" oncontextmenu="return false;"></div>
+                                        <div class="line phoneLine">
+                                            <input name="M_phone1" type="tel" value="010" readonly="">
+                                            <span class="bar"></span>
+                                            <input  name="M_phone2" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                            <span class="bar"></span>
+                                            <input name="M_phone3" type="tel"  maxlength="4" onkeyup="Auto_focus_next(this,Write_form.M_phone3,4);">
+                                        </div>  
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>사업자</dt>
+                                    <dd class="check check2">
+                                        <label for="check2_1">개인<input id="check2_1" name="M_data0" type="radio"  value="개인"></label>
+                                        <label for="check2_2">법인<input id="check2_2" name="M_data0" type="radio"  value="법인"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>업종</dt>
+                                    <dd class="check check5">
+                                        <label for="check5_1">요식업<input id = "check5_1" name="M_job"  type="radio" value="요식업"></label>
+                                        <label for="check5_2">제조업<input id="check5_2" name="M_job" type="radio" value="제조업"></label>
+                                        <label for="check5_3">도소매업<input id="check5_3" name="M_job" type="radio" value="도소매업"></label>
+                                        <label for="check5_4">운수업<input id="check5_4" name="M_job" type="radio" value="운수업"></label>
+                                        <label for="check5_5">그 외 업종<input id="check5_5" name="M_job" type="radio" value="그 외 업종"></label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>그 외 업종</dt>
+                                    <dd class="check check3">
+                                        <label for="check3_1">운전자금<input id="check3_1" name="M_data1" type="radio" value="운전자금"></label>
+                                        <label for="check3_2">시설자금<input id="check3_2" name="M_data1" type="radio" value="시설자금"></label>
+                                        <label for="check3_3">기타자금<input id="check3_3" name="M_data1" type="radio" value="기타자금"></label>
+                                    </dd>
+                                </dl> 
+                            </div>                            
+                            <div class="gif"><img src="./img/self.gif" alt="보안중"></div>
+                            <p class="selfTxt">상담 후 개인정보는 전부 파기됩니다.</p>        
+                            <div class="agreeArea">
+                                <div class="agreeLine">
+                                    <div class="txt">개인정보 처리방침 동의</div>
+                                    <div class="infoArea">
+                                        <input type="checkbox" id="agreeCheck" name="M_agree" value="1" checked="">
+                                        <label for="agreeCheck">동의함</label>
+                                    </div>
+                                </div>
+                                <div class="slideDown">
+<textarea name="" cols="" rows="3" class="agreement" readonly="" style="display: inline-block\;">개인정보취급방침
+
+▶ 개인정보의 수집 및 이용목적
+- 서비스 이용에 따른 본인식별, 실명확인, 가입의사 확인, 연령제한 서비스 이용
+- 고지사항 전달, 불만처리 의사소통 경로 확보
+- 신규 서비스 등 최신정보 안내 및 개인맞춤서비스 제공을 위한 자료
+- 기타 원활한 양질의 서비스 제공 등
+
+▶ 수집하는 개인정보의 항목
+- 이름, 핸드폰번호 그 외 선택항목
+
+▶ 개인정보의 보유 및 이용기간
+- 원칙적으로 개인정보의 수집 또는 제공받은 목적 달성 시 지체 없이 파기합니다.
+- 다만, 원활한 서비스의 상담을 위해 상담 완료 후 내용을 3개월간 보유할 수 있으며 전자상거래에서의 소비자보호에 관한 법률 등 타법률에 의해 보존할 필요가 있는 경우에는 일정기간 보존합니다.
+</textarea>
+                                </div>
+                            </div>     
+                            <div class="btnArea">
+                                <button type="button" onclick="Request_Now_input_check(Write_form);return false;">상담신청</button>
+                            </div>
+                        </form>
+                    </div>                    
+                </article>
+            </section>
+        </div>
+        <footer>
+            <div class="inner">
+                <h3>단군비즈 부천지사</h3>
+                <p>회사명 : 단군비즈 부천지사 <br/>대표자 : 장성훈 <br/>주소지 : 경기도 부천시 원미구 부일로 199번길 31, 501호 <br/>대표번호 : 032-715-6459 Copyright ⓒ tnjbiz All right Reserved</p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        var inputs = document.querySelectorAll("input[type='tel']")
+        for(input of inputs){
+            input.setAttribute("autocomplete", "off");
+        }
+    </script>
+</body>
+</html>
