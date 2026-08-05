@@ -1,0 +1,58 @@
+.wrapper{max-width:750px;margin:0 auto;}
+b.y{color:#FFF000;}
+/* header */
+.textSlider{background-color:#fff;}
+.textSlider .line{position:relative;overflow:hidden;height:7.7rem; }
+.textSlider .text{white-space: nowrap;color:#0B1428CC;font-size:2.4rem;font-weight:700;}
+.textSlider .track {display:inline-flex; white-space:nowrap; height:7.7rem;align-items:center;gap:3px}
+/* form */
+.formArea article{display:flex;justify-content:space-between; }
+.formArea .leftW{width:4%;background-position:left top;background-repeat:repeat-y;background-size: contain;}
+.formArea .rightW{width:3.7%;background-position:right top;background-repeat:repeat-y;background-size: contain;}
+.formArea .center{width:90%;padding-top:2rem;}
+.userInfo li{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem; }
+.userInfo li label{font-size:2.6rem;color:#002262;}
+.userInfo li label i{color:#FD3A24;}
+.userInfo li > div{width:80%;}
+.userInfo input{width:100%;font-size:2.6rem;color:#002262;background-color:#F8F8F8;border-radius:1rem;border:1px solid #E5E5E5;padding:0 2rem;height:7rem;}
+.userInfo input::placeholder{color:#B9B9B9;font-size:2.4rem;}
+.userInfo .phoneBox{display:flex;justify-content:space-between; }
+.userInfo .phoneBox select,
+.userInfo .phoneBox input{width:30%;}
+.userInfo .phoneBox select{color:#002262;background-color:#F8F8F8;border-radius:1rem;border:1px solid #E5E5E5;font-size:2.6rem;padding:0 2rem;}
+.agreeList{margin-bottom:5rem;padding-top:2rem;}
+.agreeList li{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;color:#B9B9B9;font-size:2.6rem;}
+.agreeList input{vertical-align: bottom;width:3rem;height:3rem;border-radius:0.5rem;accent-color:#298AFF;border:1px solid #E5E5E5;display:inline-block;margin-right:1rem;background-color:#F8F8F8; }
+.agreeList button{font-size:2.6rem;}
+.formArea .btnArea button{color:#fff;background-color:#FF0000;border-radius:2rem;height:10rem;width:100%;font-size:5.5rem;font-family:'MBC';box-shadow: 0px 3px 6px #0000004D;margin-bottom:1rem;}
+/* popup */
+.modalArea{display:none;position:fixed;left:0;top:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);z-index:100;}
+.modal{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;width:90%;height:min(90% ,180rem );padding:3rem;}
+.modal .closeBtn{position:absolute;right:3rem;top:3rem;z-index:2;}
+.modal .closeBtn svg{width:3.5rem;height:3.5rem;}
+.modal .closeBtn svg line{stroke-width:0.5rem;stroke:var(--hl, #5900FF);}
+.modal .scroll{overflow-x:hidden;overflow-y:auto;height:min(90% , 170rem );font-size:2rem;line-height:3.2rem;}
+.modal h3{font-size:3.5rem;font-weight:700;text-align:center;margin-bottom:2rem;padding-bottom:2rem; border-bottom:3px solid #000;}
+.modal h4{font-size:2.6rem;font-weight:600;line-height:3.1rem;}
+.modal ul li{font-size:2rem;line-height:3.2rem;}
+.modal ol.numbering{counter-reset:list-number;}
+.modal ol.numbering > li{counter-increment:list-number;position:relative;display:flex;}
+.modal ol.numbering > li::before{content:counter(list-number)".\00a0"; ;text-align:right;}
+.modal li.line1{text-indent:-1.7rem;padding-left:1.7rem;} /* * */
+.modal .dot{text-indent:-1rem;padding-left:1rem;} /* . */
+.modal .stick{text-indent:-1.3rem;padding-left:1.3rem;} /* - */
+.modal .sign1{text-indent:-1.8rem;padding-left:1.8rem;}/* ※ */
+.modal li.none{text-indent:0;padding-left:0;}
+.modal li.none::before,
+.modal li.line1::before,
+.modal .dot::before{display:none;}
+.modal .btnArea{padding-top:3rem;text-align:center;}
+.modal .colseBtn2{width:15rem;height:6rem;border:0.1rem solid var(--line, #B9A6B3);font-size:2.4rem; }
+.modal .box{border:0.1rem solid var(--line, #B9A6B3);padding:1.5rem;}
+.modalLine h3{border-bottom:0.2rem solid var(--line);padding-bottom:2rem;text-align:left;margin-bottom:1.3rem;}
+.modalLine h4{padding-bottom:1.3rem;border-bottom:0.1rem solid var(--line);margin-bottom:2rem;}
+.modalLine h5{color:var(--hl);font-weight:600;margin-bottom:1.2rem;}
+@media all and ( min-width:750px ) {
+    .modal{padding:5rem;}
+    .formArea .center{width:70%;}
+}

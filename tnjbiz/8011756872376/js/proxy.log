@@ -1,0 +1,1 @@
+2025-09-03T15:58:14+09:00	HTTP=200	RESULT=-	{"message":"랜딩 키 오류","result":400,"code":"E03"}	DATA=landing_key=&phone=NaN&reg_date=20250903155809&age=42&name=%ED%85%8C%EC%8A%A4%ED%8A%B8&mkt_chk=N&api_key=winaid_ql4djdi6rzas9uodue&agency=winaid

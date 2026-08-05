@@ -1,0 +1,57 @@
+.wrapper{max-width:750px;margin:0 auto;}
+b.b{color:#0032C2;}
+b.r{color:#FF0000;}
+b.bl{color:#00B1FF;}
+b.bk{color:#0D152B;}
+b.y{color:#FFFD00;}
+/* header */
+.textSlider{background-color:#fff;}
+.textSlider .line{position:relative;overflow:hidden;height:7.7rem; }
+.textSlider .text{white-space: nowrap;color:#8F8F8F;font-family:'JalnanGothic';font-size:2rem;}
+.textSlider .track {display:inline-flex; white-space:nowrap; height:7.7rem;align-items:center;gap:3px}
+/* form */
+.formArea article{display:flex;justify-content:space-between; }
+.formArea .left{width:3.5%;background-position:left top;background-repeat:repeat-y;background-size: contain;}
+.formArea .right{width:3.6%;background-position:right top;background-repeat:repeat-y;background-size: contain;}
+.formArea .userInfo{max-width:51rem;margin:0 auto;}
+.formArea .userInfo input{height:9rem;width:100%;border-radius:1rem;border:0.2rem solid #606060;padding: 0 4rem;color:#111111;font-size:3rem; }
+.formArea .userInfo input::placeholder{color:#606060;}
+.formArea .userInfo .line{margin-bottom:3rem;}
+.formArea .userInfo .line1{display:flex;justify-content:space-between;}
+.formArea .userInfo .line1 input{width:49%;text-align:center;}
+.formArea .agreeArea .line{margin-bottom:2rem;font-size:2.6rem;}
+.formArea .agreeArea .line input{width:2.5rem;height:2.5rem;background-color:#fff;border:1px solid #606060; }
+.formArea .agreeArea .line button{font-size:inherit;font-weight:700;}
+.formArea .btnArea{padding-top:6.7rem;}
+.formArea .btnArea .submitBtn{text-wrap:nowrap;font-size:5.8rem;font-family:JalnanGothic;letter-spacing:1.45px;color:#fff;background-color: #1F2ED7;box-shadow: inset -10px -10px 10px #0000004D;border-radius: 63px;padding:3.2rem 5.2rem}
+/* popup */
+.modalArea{display:none;position:fixed;left:0;top:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);z-index:100;}
+.modal{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;width:90%;height:min(90% ,180rem );padding:3rem;}
+.modal .closeBtn{position:absolute;right:3rem;top:3rem;z-index:2;}
+.modal .closeBtn svg{width:3.5rem;height:3.5rem;}
+.modal .closeBtn svg line{stroke-width:0.5rem;stroke:var(--hl, #5900FF);}
+.modal .scroll{overflow-x:hidden;overflow-y:auto;height:min(90% , 170rem );font-size:2rem;line-height:3.2rem;}
+.modal h3{font-size:3.5rem;font-weight:700;text-align:center;margin-bottom:2rem;padding-bottom:2rem; border-bottom:3px solid #000;}
+.modal h4{font-size:2.6rem;font-weight:600;line-height:3.1rem;}
+.modal ul li{font-size:2rem;line-height:3.2rem;}
+.modal ol.numbering{counter-reset:list-number;}
+.modal ol.numbering > li{counter-increment:list-number;position:relative;display:flex;}
+.modal ol.numbering > li::before{content:counter(list-number)".\00a0"; ;text-align:right;}
+.modal li.line1{text-indent:-1.7rem;padding-left:1.7rem;} /* * */
+.modal .dot{text-indent:-1rem;padding-left:1rem;} /* . */
+.modal .stick{text-indent:-1.3rem;padding-left:1.3rem;} /* - */
+.modal .sign1{text-indent:-1.8rem;padding-left:1.8rem;}/* ※ */
+.modal li.none{text-indent:0;padding-left:0;}
+.modal li.none::before,
+.modal li.line1::before,
+.modal .dot::before{display:none;}
+.modal .btnArea{padding-top:3rem;text-align:center;}
+.modal .colseBtn2{width:15rem;height:6rem;border:0.1rem solid var(--line, #B9A6B3);font-size:2.4rem; }
+.modal .box{border:0.1rem solid var(--line, #B9A6B3);padding:1.5rem;}
+.modalLine h3{border-bottom:0.2rem solid var(--line);padding-bottom:2rem;text-align:left;margin-bottom:1.3rem;}
+.modalLine h4{padding-bottom:1.3rem;border-bottom:0.1rem solid var(--line);margin-bottom:2rem;}
+.modalLine h5{color:var(--hl);font-weight:600;margin-bottom:1.2rem;}
+@media all and ( min-width:750px ) {
+    .modal{padding:5rem;}
+    .formArea .userInfo{max-width:59.6rem}
+}

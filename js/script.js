@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tech: ['Adobe XD', 'HTML5', 'CSS3', 'jQuery', 'fullPage.js', 'PHP'] 
         },
         {
-            category: 't&j biz', title: 'T&J AD 랜딩페이지', desc: '사내 디자이너와 협업하여 광고 랜딩 페이지 퍼블리싱을 전담했습니다. 스크롤 위치에 반응하는 동적인 인터랙션 애니메이션을 구현하여 사용자 몰입도를 높였습니다.', detail: '퍼블리싱', url:'https://tnjbiz1.co.kr/intro/6811772779117/', period: '24.04.23~24.05.08', isBest: true,
+            category: 't&j biz', title: 'T&J AD 랜딩페이지', desc: '사내 디자이너와 협업하여 광고 랜딩 페이지 퍼블리싱을 전담했습니다. 스크롤 위치에 반응하는 동적인 인터랙션 애니메이션을 구현하여 사용자 몰입도를 높였습니다.', detail: '퍼블리싱', url:'tnjbiz1.mycafe24.com/intro/6811772779117/', period: '24.04.23~24.05.08', isBest: true,
             image: '/portfolio/images/preview_tnjad.png',
             tech: ['HTML5', 'CSS3', 'jQuery', 'Scroll Animation']
         },
@@ -205,12 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 { title: '기업 맞춤형AI 정책자금', period: '26.04.07~26.04.07', url:'https://www.ins-leaders.co.kr/intro/8861775540900/' },
                 { title: '소상공인 정책자금 변형', period: '26.01.05~26.01.08', url:'https://www.ins-leaders.co.kr/intro/8691767836995/' },
                 { title: '정책자금 진단여부', period: '25.12.23~25.12.29', url:'https://www.ins-leaders.co.kr/intro/8651766968312/' },
-                { title: '소상공인 정책자금', period: '25.12.17~25.12.22', url:'http://ins-leaders.co.kr/intro/8631766376733/' },
-                { title: '정부 정책자금', period: '25.12.10~25.12.12', url:'http://ins-leaders.co.kr/intro/8571765514911/' },
-                { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'http://ins-leaders.co.kr/intro/8551765159065/' },
-                { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'http://ins-leaders.co.kr/intro/8561765164738/' },
-                { title: '사업자정책자금', period: '24.09.25~24.09.27', url:'http://ins-leaders.co.kr/intro/7391727316520/' },
-                { title: '사업자정책자금', period: '24.02.15~24.02.20', url:'http://ins-leaders.co.kr/intro/6891708410582/' },
+                { title: '소상공인 정책자금', period: '25.12.17~25.12.22', url:'/tnjbiz/8631766376733/' },
+                { title: '정부 정책자금', period: '25.12.10~25.12.12', url:'/tnjbiz/8571765514911/' },
+                { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'/tnjbiz/8551765159065/' },
+                { title: '정책자금 대출', period: '25.12.03~25.12.09', url:'/tnjbiz/8561765164738/' },
+                { title: '사업자정책자금', period: '24.09.25~24.09.27', url:'/tnjbiz/7391727316520/' },
+                { title: '사업자정책자금', period: '24.02.15~24.02.20', url:'/tnjbiz/6891708410582/' },
             ]
         },
         {
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             subList: [
                 { title: '바른비즈 랜딩페이지', period: '26.04.06~26.04.29', url:'https://bareunbiz.co.kr/basic' },
                 { title: 'T&JT 사이트 수정/번역', period: '24.10.07~24.10.17', url:'http://www.tnjt.co.kr/' },
-                { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'https://tnjbiz1.co.kr/intro/6811772779117/' },
+                { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'tnjbiz1.mycafe24.com/intro/6811772779117/' },
                 { title: 'T&J biz 홈페이지', period: '24.04.11~25.05.27', url:'http://www.tnjbiz.co.kr/' },                
                 { title: '한경비즈', period: '25.04.09~25.04.21', url:'https://www.hankyungbiz.co.kr/' },
                 
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { title: '암보험모아1', period: '24.05.07~24.05.10', url:'https://kiwoomdb.co.kr/intro/121715311548/' },
                 { title: '한화 암보험', period: '24.03.19~24.03.21', url:'https://kiwoomdb.co.kr/intro/81710993753/' },
                 { title: '롯데88플러스', period: '24.03.13~24.03.18', url:'https://kiwoomdb.co.kr/intro/61710740684' },
-                { title: '삼성화재56암', period: '24.03.11~24.03.22', url:'https://tnjbiz1.co.kr/intro/6541711093739/' },
+                { title: '삼성화재56암', period: '24.03.11~24.03.22', url:'tnjbiz1.mycafe24.com/intro/6541711093739/' },
                 { title: '암보험1억-피플라이프', period: '24.03.04~24.03.13', url:'https://tnjtaboola.co.kr/intro/121710306671/' },
                 
             ]
@@ -258,10 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             category: 't&j biz', title: '모모성형외과 랜딩(5)', desc: '서울점 남성모발이식 랜딩페이지 시리즈 제작', detail: '디자인 & 퍼블리싱',
             subList: [
-                { title: '남성모발이식5', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8001756872362/' },
-                { title: '남성모발이식4', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/8011756872376/' },
-                { title: '남성모발이식3', period: '25.09.02~25.09.03', url:'http://ins-leaders.co.kr/intro/7991756872343/' },
-                { title: '남성모발이식2', period: '25.08.29~25.08.29', url:'http://ins-leaders.co.kr/intro/7961756361750/' },
+                { title: '남성모발이식5', period: '25.09.02~25.09.03', url:'/tnjbiz/8001756872362/' },
+                { title: '남성모발이식4', period: '25.09.02~25.09.03', url:'/tnjbiz/8011756872376/' },
+                { title: '남성모발이식3', period: '25.09.02~25.09.03', url:'/tnjbiz/7991756872343/' },
+                { title: '남성모발이식2', period: '25.08.29~25.08.29', url:'/tnjbiz/7961756361750/' },
                 { title: '남성모발이식1', period: '25.08.21~25.08.25', url:'https://tnjtaboola.co.kr/intro/451755584031/' },
             ]
         }

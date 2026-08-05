@@ -1,0 +1,8 @@
+@font-face {
+	font-family: 'MBC';
+	font-weight: 400;
+	font-display: swap;
+	src: local('MBC 1961 Regular'), 
+    url('./MBC_1961_win/MBC\ 1961\ OTF\ M.otf') format('opentype'),
+    url('./MBC_1961_win/MBC\ 1961\ M.ttf')  format('truetype');
+}

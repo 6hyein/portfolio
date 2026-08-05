@@ -1,0 +1,7 @@
+@font-face{
+    font-family:JalnanGothic;
+    font-weight:400;
+    src:local('JalnanGothic'),
+    url('./JalnanGothic/JalnanGothic.otf') format('opentype'),
+    url('./JalnanGothic/JalnanGothicTTF.ttf') format('truetype');
+}
