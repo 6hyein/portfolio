@@ -422,11 +422,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const bannerModal = document.getElementById('banner-modal');
     const BASE_IMG_PATH = '/portfolio/images/banner/';
     const bannerData = [
+        { url: '260901_3.webp', year: '2026.09.01' },        
+        { url: '260901_2.webp', year: '2026.09.01' },        
+        { url: '260901_1.webp', year: '2026.09.01' },        
+        { url: '260807_1.webp', year: '2026.08.07' },        
         { url: '260720_5.webp', year: '2026.07.20' },        
         { url: '260720_4.webp', year: '2026.07.20' },        
         { url: '260720_3.webp', year: '2026.07.20' },        
         { url: '260720_2.webp', year: '2026.07.20' },        
         { url: '260720_1.webp', year: '2026.07.20' },        
+        { url: '260716_1.webp', year: '2026.07.16' },        
+        { url: '260703_3.webp', year: '2026.07.03' },        
+        { url: '260703_2.webp', year: '2026.07.03' },        
+        { url: '260703_1.webp', year: '2026.07.03' },        
         { url: '260309_2.webp', year: '2026.03.09' },
         { url: '260309_1.webp', year: '2026.03.09' },
         { url: '251210_3.webp', year: '2025.12.10' },
