@@ -640,8 +640,20 @@ document.addEventListener('DOMContentLoaded', () => {
         { url: '240731_3.webp', year: '2024.07.31' },
         { url: '240731_2.webp', year: '2024.07.31' },
         { url: '240731_1.webp', year: '2024.07.31' },
+        { url: '240729_1.webp', year: '2024.07.29' },
         { url: '240726_2.webp', year: '2024.07.26' },
         { url: '240726_1.webp', year: '2024.07.26' },
+        { url: '240725_1.webp', year: '2024.07.25' },
+        { url: '240723_1.webp', year: '2024.07.23' },
+        { url: '240722_1.webp', year: '2024.07.22' },
+        { url: '240719_1.webp', year: '2024.07.19' },
+        { url: '240718_1.webp', year: '2024.07.18' },
+        { url: '240716_1.webp', year: '2024.07.16' },
+        { url: '240712_1.webp', year: '2024.07.12' },
+        { url: '240711_1.webp', year: '2024.07.11' },
+        { url: '240710_1.webp', year: '2024.07.10' },
+        { url: '240709_1.webp', year: '2024.07.09' },
+        { url: '240708_1.webp', year: '2024.07.08' },
         { url: '240620_3.webp', year: '2024.06.20' },
         { url: '240620_2.webp', year: '2024.06.20' },
         { url: '240620_1.webp', year: '2024.06.20' },
@@ -682,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modalGrid.innerHTML.trim() === '') {
             modalGrid.innerHTML = bannerData.map(item => `
                 <div class="flex flex-col items-center gap-2">
-                    <img src="${BASE_IMG_PATH}${item.url}" class="w-full h-auto object-cover rounded-lg border border-stone-200 shadow-sm hover:scale-105 transition cursor-zoom-in" loading="lazy" alt="banner">
+                    <img src="${BASE_IMG_PATH}${item.url}" class="w-full aspect-square object-cover rounded-lg border border-stone-200 shadow-sm hover:scale-105 transition cursor-zoom-in" loading="lazy" alt="banner">
                     <span class="text-xs font-mono text-stone-500">${item.year}</span>
                 </div>
             `).join('');
