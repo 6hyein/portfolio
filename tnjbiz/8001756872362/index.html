@@ -1,29 +1,19 @@
-<?
-///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
-$INTRO_advertiser_DIR=dirname(__FILE__);
-if(is_file(dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php"))
-	@include dirname(dirname($INTRO_advertiser_DIR))."/include/code_partner.php";
-else
-	echo "파트너 링크 오류";
-///////////////////////////////기본 INCLUDE 필수 - 삭제불가 - S
-?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes"/>
-    <meta charset="euc-kr" />
-    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#fff">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <link rel="stylesheet" href="/tnjbiz/8001756872362/fonts/MBC_1961.css">
-    <link rel="stylesheet" href="/tnjbiz/8001756872362/css/reset.css">
-    <link rel="stylesheet" href="/tnjbiz/8001756872362/css/rem.css">
-    <link rel="stylesheet" href="/tnjbiz/8001756872362/css/style.css">
+    <link rel="stylesheet" href="/portfolio/tnjbiz/8001756872362/fonts/MBC_1961.css">
+    <link rel="stylesheet" href="/portfolio/tnjbiz/8001756872362/css/reset.css">
+    <link rel="stylesheet" href="/portfolio/tnjbiz/8001756872362/css/rem.css">
+    <link rel="stylesheet" href="/portfolio/tnjbiz/8001756872362/css/style.css">
     
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script language="javascript" src="/script.js"></script>
-    <script type="text/javascript"  src="/tnjbiz/8001756872362/js/script.js"></script>  
-    <script type="text/javascript" src="/tnjbiz/8001756872362/js/api.js"></script>
+    <script type="text/javascript"  src="/portfolio/tnjbiz/8001756872362/js/script.js"></script>  
+    <script type="text/javascript" src="/portfolio/tnjbiz/8001756872362/js/api.js"></script>
     <title>모발이식 지원자모집</title>
 </head>
 <body>
@@ -37,19 +27,19 @@ else
         <div class="container">
             <section class="sec1">
                 <article>
-                    <img src="/tnjbiz/8001756872362/img/1_02.jpg" alt="비용부담없는모발이식event">
+                    <img src="/portfolio/tnjbiz/8001756872362/img/1_02.jpg" alt="비용부담없는모발이식event">
                 </article>
             </section>
             <section class="sec2">
                 <article>
-                    <img src="/tnjbiz/8001756872362/img/1_03.jpg" alt="쏟아지는 혜택!">
+                    <img src="/portfolio/tnjbiz/8001756872362/img/1_03.jpg" alt="쏟아지는 혜택!">
                 </article>
             </section>
             <section class="sec3 formArea">
                 <article>
                     <div class="leftW" style="background-image: url('/tnjbiz/8001756872362/img/1_04_01.jpg');"></div>
                     <div class="center">
-                         <form name="Write_form" method="post" action="/tnjbiz/8001756872362/index.html">
+                         <form name="Write_form" method="post" action="/portfolio/tnjbiz/8001756872362/index.html">
                             <input name="Mode_value" type="hidden" value="Write_Now"><!--신청후 팝업 수정 소스(call_alert를 지정네임으로 수정(광고주번호or 특이네임))-->
                             <input id="landingNum" name="alert_type" type="hidden" value="8001756872362">
                             <input name="sourceUrl" type="hidden" value="<? echo is_null($_POST['sourceUrl'])?$_SERVER['HTTP_REFERER']:$_POST['sourceUrl'] ?>">
@@ -98,7 +88,7 @@ else
             </section>
             <section class="sec4">
                 <article>
-                    <img src="/tnjbiz/8001756872362/img/1_05.jpg?v=1">
+                    <img src="/portfolio/tnjbiz/8001756872362/img/1_05.jpg?v=1">
                 </article>
             </section>
         </div>

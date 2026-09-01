@@ -1,0 +1,35 @@
+@font-face{
+    font-family:HanwhaGothic;
+    font-weight:700;
+    src:local('HanwhaGothic'),
+    url('./HanwhaGothicFont/04HanwhaGothicB_OTF.otf') format('opentype'),
+    url('./HanwhaGothicFont/04HanwhaGothicB.ttf') format('truetype');
+}
+@font-face{
+    font-family:HanwhaGothic;
+    font-weight:400;
+    src:local('HanwhaGothic'),
+    url('./HanwhaGothicFont/05HanwhaGothicR_OTF.otf') format('opentype'),
+    url('./HanwhaGothicFont/05HanwhaGothicR.ttf') format('truetype');
+}
+@font-face{
+    font-family:HanwhaGothic;
+    font-weight:300;
+    src:local('HanwhaGothic'),
+    url('./HanwhaGothicFont/06HanwhaGothicL_OTF.otf') format('opentype'),
+    url('./HanwhaGothicFont/06HanwhaGothicL.ttf') format('truetype');
+}
+@font-face{
+    font-family:HanwhaGothic;
+    font-weight:200;
+    src:local('HanwhaGothic'),
+    url('./HanwhaGothicFont/07HanwhaGothicEL_OTF.otf') format('opentype'),
+    url('./HanwhaGothicFont/07HanwhaGothicEL.ttf') format('truetype');
+}
+@font-face{
+    font-family:HanwhaGothic;
+    font-weight:100;
+    src:local('HanwhaGothic'),
+    url('./HanwhaGothicFont/08HanwhaGothicT_OTF.otf') format('opentype'),
+    url('./HanwhaGothicFont/08HanwhaGothicT.ttf') format('truetype');
+}

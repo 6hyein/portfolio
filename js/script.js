@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
             category: 't&j biz', title: '암보험 랜딩 페이지(10)', desc: '암 광고 랜딩페이지', detail: '디자인 & 퍼블리싱',
             subList: [
-                { title: '피플 암보험', period: '26.03.09~26.03.10', url:'https://thedbpro.co.kr/intro/7121773033695/' },
+                { title: '피플 암보험', period: '26.03.09~26.03.10', url:'/portfolio/tnjbiz/7121773033695/' },
                 { title: '키움암보험특약(3)', period: '24.11.12~24.11.20', url:'https://tnjtaboola.co.kr/intro/301731398476/' },
                 { title: '암보험모아3', period: '24.06.21~24.06.21', url:'https://kiwoomdb.co.kr/intro/151718944836/' },
                 { title: '삼성 내돈내삼', period: '24.06.17~24.06.19', url:'https://kiwoomdb.co.kr/intro/91711093679/' },
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { title: '암보험모아1', period: '24.05.07~24.05.10', url:'https://kiwoomdb.co.kr/intro/121715311548/' },
                 { title: '한화 암보험', period: '24.03.19~24.03.21', url:'https://kiwoomdb.co.kr/intro/81710993753/' },
                 { title: '롯데88플러스', period: '24.03.13~24.03.18', url:'https://kiwoomdb.co.kr/intro/61710740684' },
-                { title: '삼성화재56암', period: '24.03.11~24.03.22', url:'tnjbiz1.mycafe24.com/intro/6541711093739/' },
+                { title: '삼성화재56암', period: '24.03.11~24.03.22', url:'https://tnjbiz1.mycafe24.com/intro/6541711093739/' },
                 { title: '암보험1억-피플라이프', period: '24.03.04~24.03.13', url:'https://tnjtaboola.co.kr/intro/121710306671/' },
                 
             ]
