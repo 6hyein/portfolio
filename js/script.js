@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tech: ['HTML5', 'CSS3', 'jQuery', 'Responsive']
         },       
         {
-            category: 't&j biz', title: '정책자금 대출 랜딩(8)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
+            category: 't&j biz', title: '정책자금 대출 랜딩(13)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
             subList: [
                 { title: '정책자금은 단군비즈', period: '26.08.04~26.08.05', url:'/portfolio/tnjbiz/9151785896111'},
                 { title: '초기비용으로 나도 사장님', period: '26.07.23~26.07.24', url:'/portfolio/tnjbiz/9101784857017/'},
@@ -214,8 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         {
-            category: 't&j biz', title: '자사, 파트너 사이트(4)', desc: '자사 랜딩/사이트 구축, 유지보수, 수정, 번역', detail: '시스템 관리',
+            category: 't&j biz', title: '자사, 파트너 사이트(5)', desc: '자사 랜딩/사이트 구축, 유지보수, 수정, 번역', detail: '시스템 관리',
             subList: [
+                { title: '바른비즈 마케팅페이지', period: '26.06.10~26.06.15', url:'http://brbiz.co.kr/' },
                 { title: '바른비즈 랜딩페이지', period: '26.04.06~26.04.29', url:'https://bareunbiz.co.kr/basic' },
                 { title: 'T&JT 사이트 수정/번역', period: '24.10.07~24.10.17', url:'http://www.tnjt.co.kr/' },
                 { title: 'T&J AD 랜딩페이지', period: '24.04.23~24.05.08', url:'https://tnjbiz1.mycafe24.com/intro/6811772779117/' },
