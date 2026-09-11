@@ -1,0 +1,886 @@
+@charset "UTF-8";
+
+/* =========================================
+   Base Layout & Variables
+========================================= */
+:root {
+    --primary-blue: #00a8ff; /* 시안과 동일한 쨍한 블루 */
+    --hero-blue: #054da5;
+    --primary-blue-gradient: linear-gradient(180deg, #0acffe 0%, #495aff 100%);
+    --bg-black: #000000;
+    --bg-dark-gray: #111111;
+    --bg-card-gray: #1a1a1a;
+    --bg-light-gray: #f8f9fa;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --text-gray: #999999;
+    --text-light-gray: #666666;
+}
+
+body {
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    line-height: 1.5;
+}
+
+/* 모바일 화면에서는 꽉 차게, PC에서는 유연하게 넓어짐 */
+.wrapper {
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--bg-black);
+    position: relative;
+    overflow: hidden;
+}
+
+.inner {
+    width: 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* =========================================
+   Header
+========================================= */
+.header {
+    background-color: transparent;
+    position: fixed; /* absolute에서 fixed로 변경하여 화면 상단에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999; /* 모달보다 아래, 다른 요소보다 위에 오도록 설정 */
+    padding: 2rem 0;
+    transition: background-color 0.3s ease, padding 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+/* 자바스크립트로 스크롤 시 추가될 클래스 */
+.header.scrolled {
+    background-color: var(--bg-black);
+    padding: 1.5rem 0; /* 스크롤 시 헤더를 살짝 얇게 만들면 세련돼 보입니다 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+}
+
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 3.2rem; font-weight: 800; color: var(--text-white); }
+.gnb { display: none; }
+.btn-head { 
+    background-color: var(--text-white); 
+    color: var(--hero-blue); 
+    padding: 1rem 2rem; 
+    border-radius: 3rem; 
+    font-size: 2.4rem; 
+    font-weight: 700; 
+}
+.btn-head:hover{color: var(--primary-blue); }
+.pc-text { display: none; } 
+
+/* =========================================
+   Hero Section 
+========================================= */
+.text-yellow {
+    color: #ffeb3b; 
+}
+.hero-section {
+    background-color: var(--hero-blue); 
+    padding: 12rem 0 0; /* 하단 패딩(여백)을 0으로 만들어 바닥에 붙임 */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-flex { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5rem; /* 텍스트+버튼 그룹과 이미지 사이의 간격 */
+}
+
+.hero-sub { font-size: 2.8rem; font-weight: 500; margin-bottom: 2rem; }
+.hero-title { font-size: 8rem; font-weight: 800; margin-bottom: 3rem; line-height: 1.2; }
+.hero-desc { font-size: 3.4rem; font-weight: 600; margin-bottom: 4rem; line-height: 1.4; }
+
+/* 텍스트 강조 박스 */
+.hero-highlight-box {
+    background-color: #279cf4; 
+    padding: 4rem 2rem;
+    margin-bottom: 4rem;
+    border-radius: 1.5rem;
+    font-size: 3.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--text-white);
+    display: inline-block;
+    width: 100%;
+    max-width: 50rem; 
+}
+.hero-highlight-box p { margin: 0; }
+
+/* 버튼 디자인 (기본 위치 지정 제거) */
+.btn-hero-black {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 2.5rem 6rem;
+    border-radius: 5rem;
+    font-size: 3.2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+.btn-hero-black:hover { background-color: #333; }
+
+/* 이미지 - 다음 검은색 영역에 찰싹 붙도록 설정 */
+.hero-image-wrap { 
+    position: relative; 
+    max-width: 100%; 
+    margin: 0 auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-image-wrap img { 
+    width: 100%; 
+    max-height: 60rem; 
+    object-fit: contain; 
+    border-radius: 3rem 3rem 0 0; /* 위쪽만 둥글게, 바닥은 직각으로 변경 */
+    box-shadow: none !important; 
+    margin-bottom: -1px; /* 미세한 하단 1px 흰선 뜨는 현상 방지 */
+    display: block;
+}
+.hero-icon-list {
+    display: flex;
+    flex-direction: column; /* 모바일은 세로로 나열 */
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+    width: 100%;
+}
+.hero-icon-list {
+    display: flex;
+    flex-direction: row; /* 모바일에서도 가로 3열 */
+    gap: 1rem; /* 카드 사이 간격 축소 */
+    margin-bottom: 3.5rem;
+    width: 100%;
+}
+
+/* 개별 카드: 아이콘 위, 텍스트 아래 수직 중앙 정렬 */
+.icon-item {
+    flex: 1; /* 3개가 동일한 너비 균등 분할 */
+    min-width: 0; /* flex 자식 요소의 텍스트 오버플로우 방지 */
+    background-color: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1.4rem;
+    padding: 1.8rem 0.8rem; /* 모바일 좌우 패딩을 좁게 설정 */
+    display: flex;
+    flex-direction: column; /* 세로 배치 (아이콘 위, 글자 아래) */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1.2rem;
+}
+
+/* 상단 아이콘 이미지 */
+.icon-item img.item-icon {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+    flex-shrink: 0;
+    background-color: #ffffff;
+    border-radius: 1.2rem;
+    border: none;
+    padding: 0.8rem;
+    box-sizing: border-box;
+}
+
+/* 하단 텍스트 */
+.icon-item span {
+    font-size: 1.8rem; /* 3열 배치에 맞춘 폰트 크기 조절 */
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.3;
+    word-break: keep-all;
+    text-align: center;
+}
+
+/* 히어로 안내 문구 */
+.hero-notice {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 2rem;
+    line-height: 1.4;
+    word-break: keep-all;
+}
+
+/* 플로팅 카드 (모바일: 이미지 위 일반적인 블록 배치) */
+.hero-floating-card {
+    background-color: #fff;
+    color: #333;
+    border-radius: 2rem;
+    padding: 3rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    margin: 0 2rem 4rem; /* 모바일 좌우 여백 및 하단 여백 */
+    text-align: left;
+    position: relative;
+    z-index: 2;
+}
+.card-icon {
+    font-size: 4rem;
+}
+.card-text h4 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #000;
+}
+.card-text p {
+    font-size: 2rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* =========================================
+   Disclaimer Band (하단 안내 띠 신규 추가)
+========================================= */
+.disclaimer-band {
+    background-color: #ffffff;
+    padding: 4rem 2rem;
+    border-bottom: 1px solid #eaeaea;
+}
+.disclaimer-band .inner {
+    display: flex;
+    flex-direction: row; /* 모바일: 아이콘 위, 텍스트 아래 */
+    align-items: flex-start;
+    gap: 2rem;
+}
+.info-icon {
+    font-size: 3.4rem;
+    font-weight: 900;
+    color: #292dff;
+}
+.info-text {
+    font-size: 2rem;
+    line-height: 1.6;
+    color: #555;
+    text-align: left;
+    word-break: keep-all;
+}
+/* =========================================
+   Common Section Styles
+========================================= */
+.intro-section, .stats-section, .feature-section { padding: 8rem 0; text-align: center; }
+
+.point-text { color: var(--primary-blue); font-size: 2.8rem; font-weight: 700; margin-bottom: 2rem; }
+.point-text.left { text-align: left; }
+.section-title { font-size: 5rem; font-weight: 800; line-height: 1.3; margin-bottom: 3rem; word-break: keep-all; }
+.section-title.left { text-align: left; }
+.section-title.text-black { color: var(--text-black); }
+.section-desc { color: var(--text-gray); font-size: 2.2rem; line-height: 1.6; word-break: keep-all; }
+.section-desc.left { text-align: left; margin-bottom: 5rem;}
+
+/* =========================================
+   Stats Section (업데이트)
+========================================= */
+.stats-section { padding-top: 0; }
+.stats-list { display: flex; flex-direction: column; gap: 2.5rem; }
+.stat-card { background-color: var(--bg-card-gray); padding: 4rem 3rem; border-radius: 2rem; text-align: center; }
+/* 아이콘과 제목 가로 배치 */
+.stat-head { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+.stat-icon { width: 5rem; height: 5rem; object-fit: contain; }
+.stat-title { font-size: 2.2rem; color: #fff; font-weight: 700; margin-bottom: 0 !important; }
+
+.stat-card h3 { font-size: 5rem; font-weight: 800; margin-bottom: 1.5rem; }
+.stat-desc { font-size: 1.8rem; color: #999; word-break: keep-all; line-height: 1.5; }
+
+/* =========================================
+   Expert CTA Section (설명글 추가됨)
+========================================= */
+.expert-cta-section { padding: 4rem 0 6rem; text-align: center; }
+.expert-cta-section .section-desc { color: #fff; margin-top: -1.5rem; }
+
+/* =========================================
+   Feature Card Section (신규 3열 카드)
+========================================= */
+.feature-card-section { padding: 0 0 8rem; }
+.feature-card-list { display: flex; flex-direction: column; gap: 2.5rem; }
+.f-card {
+    background-color: var(--bg-card-gray);
+    border-radius: 2rem;
+    padding: 4rem 3rem;
+    text-align: left;
+    position: relative; /* 우측 하단 이미지를 절대 위치로 띄우기 위한 기준점 */
+    overflow: hidden;
+    min-height: 30rem; /* 이미지 들어갈 공간 강제 확보 */
+}
+.f-sub { color: var(--primary-blue); font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem; }
+.f-title { font-size: 3.4rem; font-weight: 800; color: #fff; margin-bottom: 2rem; line-height: 1.3; }
+.f-desc { font-size: 1.8rem; color: #999; line-height: 1.6; position: relative; z-index: 2; }
+/* 우측 하단 절대 위치로 들어가는 이미지 */
+.f-img {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    width: 14rem; 
+    height: 14rem;
+    object-fit: contain;
+    z-index: 1;
+}
+
+/* =========================================
+   Review Section (업데이트)
+========================================= */
+.review-section { 
+    background-color: var(--bg-light-gray); 
+    padding: 8rem 0 6rem; /* 하단 여백 추가 */
+    text-align: center; 
+}
+.review-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2.5rem; 
+    margin-top: 5rem; 
+}
+
+/* 카드 자체는 높이가 동일하게 늘어나도록 유지 */
+.review-card { 
+    background-color: #ffffff; 
+    border-radius: 2.5rem; 
+    padding: 5rem 4rem; 
+    text-align: left; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+}
+.review-author { 
+    color: var(--primary-blue); 
+    font-size: 2rem; 
+    font-weight: 700; 
+    margin-bottom: 1.5rem; 
+}
+.review-title { 
+    color: var(--text-black); 
+    font-size: 3.2rem; /* 시안에 맞게 사이즈 조정 */
+    font-weight: 800; 
+    line-height: 1.4; 
+    margin-bottom: 2.5rem; 
+    word-break: keep-all; 
+}
+/* 1. 설명 영역: 공간을 억지로 차지하지 않도록 flex-grow 제거 */
+.review-desc { 
+    color: var(--text-light-gray); 
+    font-size: 2rem; 
+    line-height: 1.6; 
+    flex-grow: 0; /* 설명 끝나면 바로 종료 */
+}
+.review-desc p { 
+    margin-bottom: 0.6rem; 
+}
+.review-desc p:last-child {
+    margin-bottom: 0; /* 마지막 줄 아래 여백 제거 */
+}
+
+/* 2. 별점 영역: 글자가 끝나자마자 일정한 간격(2rem) 뒤에 바로 나오도록 설정 */
+.review-stars {
+    color: #ffb800; 
+    font-size: 2.4rem;
+    margin-top: 2rem; /* 설명 텍스트 끝나고 바로 2rem 여백 후 등장 */
+    letter-spacing: 0.2rem;
+    line-height: 1;
+}
+/* 신규: 하단 안내 문구 스타일 */
+.review-notice {
+    font-size: 1.6rem;
+    color: #999;
+    text-align: left;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    word-break: keep-all;
+}
+
+/* =========================================
+   Contact & Form Section (수정)
+========================================= */
+.contact-form-area { 
+    background-color: var(--bg-black); /* 배경 검은색으로 변경 */
+    padding: 8rem 0; 
+}
+.form-flex { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4rem; 
+}
+
+/* 좌측 안내 영역 */
+.form-info-area {
+    text-align: left;
+    color: #ffffff;
+}
+.form-sub-blue {
+    color: var(--primary-blue);
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+.form-main-title {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 2.5rem;
+}
+.form-desc-text {
+    font-size: 2.4rem;
+    color: #aaaaaa;
+    line-height: 1.6;
+    margin-bottom: 3.5rem;
+}
+
+/* 체크 리스트 */
+.form-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.chk-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--primary-blue);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    flex-shrink: 0;
+}
+.check-item p {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* 우측 화이트 폼 카드 */
+.form-section {
+    background-color: #ffffff;
+    border-radius: 3rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    padding: 4.5rem 3rem;
+    color: #333333;
+    margin: 0;
+}
+
+.input-group { 
+    margin-bottom: 2.5rem; 
+    text-align: left; 
+}
+.input-group.full-width {
+    margin-bottom: 3rem;
+}
+.input-group label { 
+    display: block; 
+    font-size: 2.4rem; 
+    font-weight: 700; 
+    color: #333333; 
+    margin-bottom: 1rem; 
+}
+.req { color: #ef4444; margin-left: 0.3rem; }
+
+/* 라디오 버튼 */
+.radio-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 4rem; 
+}
+.radio-label { 
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; 
+    font-size: 2.4rem; 
+    color: #333; 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+.radio-label input[type="radio"] {
+    -webkit-appearance: none; appearance: none;
+    width: 2.4rem; height: 2.4rem; border: 2px solid #ccc; border-radius: 50%;
+    background-color: #fff; position: relative; cursor: pointer; flex-shrink: 0; margin: 0;
+}
+.radio-label input[type="radio"]:checked { border-color: var(--hero-blue); }
+.radio-label input[type="radio"]:checked::after {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 1.2rem; height: 1.2rem; background-color: var(--hero-blue); border-radius: 50%;
+}
+
+/* 인풋 및 셀렉트 박스 테두리 형태 */
+.form-grid-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.input-group input[type="text"],
+.select-wrap select {
+    width: 100%;
+    height: 6rem;
+    box-sizing: border-box;
+    border: 1px solid #dcdcdc;
+    border-radius: 0.8rem;
+    padding: 0 1.6rem;
+    font-size: 2.4rem;
+    color: #333;
+    background-color: #ffffff;
+    transition: border-color 0.2s;
+}
+.input-group input[type="text"]:focus,
+.select-wrap select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+}
+
+/* 셀렉트 드롭다운 화살표 처리 */
+.select-wrap {
+    position: relative;
+    width: 100%;
+}
+.select-wrap select {
+    -webkit-appearance: none; appearance: none;
+    cursor: pointer;
+}
+.select-wrap::after {
+    content: '▼';
+    font-size: 2.4rem;
+    color: #999;
+    position: absolute;
+    right: 1.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* 연락처 레이아웃 */
+.phone-inputs { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.8rem; 
+    width: 100%; 
+}
+.phone-inputs input {
+    flex: 1; min-width: 0; 
+    height: 6rem;
+    box-sizing: border-box;
+    border: 1px solid #dcdcdc;
+    border-radius: 0.8rem;
+    padding: 0; 
+    text-align: center; 
+    font-size: 2.4rem; 
+}
+.phone-inputs input:focus { border-color: var(--primary-blue); outline: none; }
+.phone-inputs span { font-size: 2.4rem; color: #999; }
+
+/* 간소화된 개인정보 동의 영역 */
+.terms-group-simple {
+    margin: 2.5rem 0 3.5rem;
+    text-align: left;
+}
+.checkbox-wrap { display: flex; align-items: center; gap: 1rem; }
+.checkbox-wrap input[type="checkbox"] {
+    -webkit-appearance: none; appearance: none;
+    width: 2.4rem; height: 2.4rem; border: 1.5px solid #bbb; border-radius: 0.4rem;
+    background-color: #fff; position: relative; cursor: pointer; flex-shrink: 0; margin: 0;
+}
+.checkbox-wrap input[type="checkbox"]:checked { background-color: var(--hero-blue); border-color: var(--hero-blue); }
+.checkbox-wrap input[type="checkbox"]:checked::after {
+    content: '✔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2.4rem; line-height: 1;
+}
+.checkbox-wrap label { font-size: 2.4rem; color: #555; cursor: pointer; font-weight: 500; }
+.link-terms {
+    display: inline-block;
+    font-size: 2.4rem;
+    color: #888;
+    text-decoration: underline;
+    margin-top: 0.8rem;
+    margin-left: 3.4rem;
+}
+
+/* 상담 신청하기 버튼 */
+.btn-group-center { display: flex; justify-content: center; }
+.btn-submit {
+    width: 100%; 
+    padding: 2.2rem; 
+    background-color: var(--hero-blue);
+    border: none; 
+    border-radius: 4rem; 
+    font-size: 2.4rem; 
+    font-weight: 800; 
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-submit:hover { background-color: #0093e0; }
+
+/* =========================================
+   Footer (수정)
+========================================= */
+.footer { 
+    background-color: var(--bg-black); 
+    border-top: 1px solid #222; 
+    color: #777; 
+    padding: 5rem 0; 
+    text-align: center; 
+}
+.footer-info { font-size: 1.6rem; line-height: 1.8; margin-bottom: 1.5rem; word-break: keep-all; }
+.footer-links { font-size: 1.6rem; }
+.footer-links a { color: #888; margin: 0 1rem; }
+/* =========================================
+   Modal (팝업) Styles
+========================================= */
+/* 모달 배경 (어둡게) */
+.modal-overlay {
+    display: none; /* 기본으로 숨김 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 9998;
+}
+
+/* 모달 창 본체 */
+.modal-wrap {
+    display: none; /* 기본으로 숨김 */
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px; /* PC에서도 너무 넓어지지 않게 고정 */
+    background-color: #fff;
+    z-index: 9999;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    color: #333;
+}
+
+/* 모달 상단 (제목 & 닫기 버튼) */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem 3rem;
+    border-bottom: 1px solid #eee;
+}
+.modal-header h2 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+}
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 3rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    line-height: 1;
+    font-weight: 300;
+}
+
+/* 모달 내용 영역 (스크롤 생성 부분) */
+.modal-body {
+    padding: 3rem;
+    max-height: 60vh; /* 창 높이의 60%까지만 커지고 그 이상은 스크롤 */
+    overflow-y: auto;
+    font-size: 2.2rem; 
+    line-height: 1.8;
+    color: #444;
+    text-align: left;
+    word-break: keep-all;
+}
+
+/* 모달이 열렸을 때 뒷배경(본문) 스크롤 방지 */
+body.modal-open {
+    overflow: hidden;
+}
+/* =========================================
+   반응형 PC 레이아웃 (min-width: 812px)
+========================================= */
+@media all and (min-width: 812px) {
+    .inner { max-width: 1200px; padding: 0; }
+
+    /* 헤더 */
+    .header { padding: 3rem 0; }
+    .gnb { display: flex; gap: 5rem; }
+    .gnb a { font-size: 2.4rem; color: var(--text-white); font-weight: 600; }
+    .gnb a:hover { opacity: 0.8; }
+    .btn-head { background-color: var(--text-white); color: var(--primary-blue); border-radius: 4rem; padding: 1.5rem 3.5rem; }
+    .m-text { display: none; }
+    .pc-text { display: inline; }
+    .mo{display: none;}
+
+    /* 히어로 섹션 (PC 좌우 가로 배치 최적화 - 시안 일치) */
+    .hero-section { 
+        padding-top: 14rem; /* 상단의 텅 빈 느낌을 줄이기 위해 컨텐츠를 조금 위로 끌어올림 */
+        padding-bottom: 0; 
+    } 
+    
+    .hero-flex {
+        flex-direction: row; 
+        align-items: stretch; 
+        justify-content: space-between; 
+    }
+    
+    /* 1. 글씨 눌림 현상 해결: 텍스트 영역이 차지하는 비율을 55%로 넉넉하게 넓혀줌 */
+    .hero-text-area {
+        flex: 0 0 55%; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: flex-start; 
+        padding-bottom: 6rem; 
+    }
+    
+    .hero-sub { text-align: left; margin-bottom: 2rem; }
+    .hero-title { font-size: 8rem; margin-bottom: 3rem; text-align: left; }
+    .hero-desc { text-align: left; margin-bottom: 4rem; }
+    
+    /* 글씨가 넓은 공간을 전부 활용하도록 max-width 100%로 변경 */
+    .hero-highlight-box { 
+        max-width: 100%; 
+        margin: 0 0 5rem 0; 
+        text-align: left; 
+    }
+    
+    .btn-hero-black { padding: 2.5rem 5rem; margin-bottom: 0; }
+
+    /* 2. 텅 빈 하늘(초록색 체크 영역) 채우기: 사진 컨테이너 설정 */
+    .hero-image-wrap { 
+        flex: 0 0 45%; /* 나머지 45% 영역 차지 */
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* 무조건 바닥 밀착 */
+        align-items: flex-end; 
+    }
+    
+    /* 핵심 수정: 사진 자체의 가로 크기를 135%로 뻥튀기하고 오른쪽으로 땡겨서, 세로 높이까지 위로 치솟게 만듦 */
+    .hero-image-wrap img { 
+        width: 135%; 
+        max-height: none; 
+        object-fit: contain;
+        object-position: bottom right; 
+        margin-right: -15%; /* 커진 이미지를 우측으로 살짝 빼주어 균형 맞춤 */
+        border-radius: 3rem 3rem 0 0; 
+        margin-bottom: -1px; 
+    }
+    .hero-icon-list {
+        gap: 1.5rem;
+    }
+    .icon-item {
+        flex: 1;
+        flex-direction: row; /* 다시 가로 배치로 복원 */
+        justify-content: flex-start; /* 왼쪽 정렬 */
+        align-items: center;
+        text-align: left;
+        padding: 1.8rem 2rem;
+        gap: 1.5rem;
+    }
+
+    .icon-item img.item-icon {
+        width: 8rem;
+        height: 8rem;
+        padding: 1rem;
+    }
+
+    .icon-item span {
+        font-size: 2rem;
+        text-align: left;
+        line-height: 1.35;
+    }
+    /* 플로팅 카드 */
+    .hero-floating-card {
+        position: absolute;
+        top: 3rem;
+        right: 0;
+        margin: 0;
+        width: 45rem;
+        padding: 4rem;
+    }
+
+    /* 이미지 래퍼에 relative를 주어 카드의 기준점이 되도록 설정 */
+    .hero-image-wrap {
+        position: relative; 
+        /* 기존 CSS 유지 */
+    }
+
+    /* 하단 안내 띠 가로 배치 */
+    .disclaimer-band .inner {
+        flex-direction: row;
+        align-items: flex-start;
+        max-width: 1200px;
+    }
+    .info-text {
+        font-size: 2.2rem;
+    }
+
+    /* Stats 횡렬 배치 (업데이트) */
+    .stats-list { flex-direction: row; justify-content: center; gap: 3rem; }
+    .stat-card { flex: 1; padding: 5rem 3rem; }
+    .stat-card h3 { font-size: 5.6rem; }
+
+    /* Feature Card 횡렬 배치 (신규) */
+    .feature-card-list { flex-direction: row; justify-content: space-between; gap: 3rem; }
+    .f-card { flex: 1; padding: 5rem 4rem; min-height: 38rem; }
+    .f-img { width: 18rem; height: 18rem; bottom: 3rem; right: 3rem; }
+
+    /* Review 횡렬 배치 */
+    .review-section { padding: 10rem 0; }
+    .review-list { 
+        flex-direction: row; 
+        gap: 3rem; 
+        align-items: stretch;
+    }
+    .review-card { 
+        flex: 1; 
+        padding: 5rem 4rem; 
+    }
+
+    .contact-form-area { padding: 12rem 0; }
+    .form-flex { 
+        flex-direction: row; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 6rem; 
+    }
+
+    .form-info-area { 
+        flex: 0 0 42%; 
+    }
+    .form-main-title { font-size: 4.8rem; }
+    .form-desc-text { font-size: 2.4rem; }
+
+    .form-section { 
+        flex: 0 0 54%; 
+        padding: 5rem; 
+        max-width: none; 
+    }
+
+    /* 폼 입력창 2단 그리드 */
+    .form-grid-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: 2rem;
+        width: 100%;
+    }
+    
+    .form-grid-row .input-group {
+        margin-bottom: 2rem;
+        width: 100%;
+        min-width: 0; 
+    }
+}

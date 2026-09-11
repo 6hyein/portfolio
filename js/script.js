@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             category: 't&j biz', title: '정책자금 대출 랜딩(13)', desc: '소상공인 및 정부 정책자금 진단/대출 랜딩', detail: '디자인 & 퍼블리싱',
             subList: [
-                { title: '정책자금은 단군비즈', period: '26.08.04~26.08.05', url:'/portfolio/tnjbiz/9151785896111'},
+                { title: '사업자 맞춤 정책자금 컨설팅', period: '26.08.04~26.08.05', url:'/portfolio/tnjbiz/9351789000033'},
                 { title: '초기비용으로 나도 사장님', period: '26.07.23~26.07.24', url:'/portfolio/tnjbiz/9101784857017/'},
                 { title: '2026년 하반기 정책자금', period: '26.07.06~26.07.07', url:'/portfolio/tnjbiz/9111784864921/'},
                 { title: '막막한 자금조달', period: '26.06.15~26.06.16', url:'/portfolio/tnjbiz/9141785810064/'},
