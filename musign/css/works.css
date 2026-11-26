@@ -233,16 +233,37 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .works__info { display: none; }
 
+/* 모바일 대표 작업 겹친 카드: JS 가 켰을 때만 (works.is-mstack) */
+.mstack { display: none; }
+.works.is-mstack .mstack {
+    display: block; position: relative; flex: none; height: 100vh; height: 100svh;
+    margin: 0 calc(var(--pad) * -1); overflow: hidden;
+}
+.mstack__stage { position: absolute; inset: 0; perspective: 1000px; }
+.mstack .card {
+    position: absolute; top: 44%; left: 50%; flex: none;
+    width: min(76vw, calc(50svh * var(--r)));
+}
+.mstack .card__cap { display: none; }
+.mstack .card__inner { box-shadow: 0 26px 50px rgba(27, 26, 24, .22); }
+.mstack__info { position: absolute; left: var(--pad); right: var(--pad); bottom: 7vh; z-index: 110; }
+.mstack__count { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mstack__count span { color: var(--ink-2); font-weight: 400; margin-right: 6px; }
+.mstack__title { margin: 6px 0 4px; font-size: 22px; font-weight: 800; letter-spacing: -.03em; line-height: 1.3; }
+.mstack__meta { font-size: 13px; color: var(--ink-2); }
+.works.is-mstack .works__stage { perspective: 900px; }
+
 @media (min-width: 640px) {
     .card { flex-basis: calc(var(--r) * 22vw); }
 }
 @media (max-width: 1023px) {
     /* 색인 탭은 화면 아래에 붙어 있다가 작업 영역을 보는 동안 계속 따라온다 */
     .works { display: flex; flex-direction: column; padding-bottom: 0; }
-    .works__head { order: 1; }
-    .works__stage { order: 2; padding-bottom: 6vh; }
+    /* 순서는 HTML 그대로: 제목, (대표 작업 겹친 카드), 전체 목록, 색인 탭 */
+    .works__stage { padding-bottom: 6vh; }
+    .works.is-mstack .works__stage { padding-top: 6vh; }
     .works__filters {
-        order: 3; position: sticky; bottom: 0; z-index: 20;
+        position: sticky; bottom: 0; z-index: 20;
         margin: 0 calc(var(--pad) * -1); padding: 14px 6px 0; overflow: hidden;
     }
     .filter { gap: 4px; padding: 11px 11px 14px; font-size: 13px; }
@@ -284,6 +305,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
     .works__stage { position: absolute; inset: 0; display: block; }
     .works__stage::after { display: none; }
+    .works .mstack { display: none !important; }
     .card { position: absolute; top: 56%; left: 60%; flex: none; width: calc(var(--card-h) * var(--r)); }
     .card__cap { display: none; }
     .card__text strong { font-size: clamp(22px, 2.2vw, 34px); }

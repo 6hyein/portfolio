@@ -118,7 +118,7 @@
         <!-- 2. 작업 45개
              PC: 인트로의 갈라진 틈이 벌어져 이어지고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
                  끝까지 넘기면 45장이 높이만 같고 가로는 제각각인 콜라주로 펼쳐진다.
-             모바일: 처음부터 격자 -->
+             모바일: 대표 작업 겹친 카드를 아래에서 위로 넘긴 뒤, 전체 목록은 카드가 누운 채 들어와 일어선다 -->
         <section class="works js-works" id="works" aria-labelledby="works-title">
             <div class="works__head js-works-head">
                 <h2 class="section-title" id="works-title">Works</h2>
@@ -133,6 +133,12 @@
                     <span class="steps__item">All works</span>
                     <span class="steps__item">Index</span>
                 </div>
+            </div>
+
+            <!-- 모바일 대표 작업 겹친 카드 (JS 가 대표 작업 카드를 복제해 넣음) -->
+            <div class="mstack js-mstack">
+                <div class="mstack__stage js-mstack-stage"></div>
+                <div class="mstack__info js-mstack-info" aria-hidden="true"></div>
             </div>
 
             <div class="works__stage js-cards">
