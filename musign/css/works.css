@@ -148,14 +148,25 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .work__link span { transition: transform .3s ease; }
 .work__link:hover span { transform: translateX(5px); }
 
-/* PC: 가로로 늘어선 카드. 실제 가로 이동은 works.js 에서 */
+/* PC: 카드가 비스듬히 겹쳐 선 무대. 카드 위치와 회전은 works.js(render)가 정한다 */
 @media (min-width: 1024px) {
-    .featured { height: 100vh; padding: calc(var(--header-h) + 4vh) 0 0; }
-    .featured__head { margin-bottom: 4vh; }
+    .featured { height: 100vh; padding: 0; }
+    .featured__head {
+        position: absolute; top: calc(var(--header-h) + 4vh); left: 0; right: 0; z-index: 2;
+        margin: 0; pointer-events: none;
+    }
     .featured__counter { display: block; }
-    .featured__track { flex-direction: row; gap: 4vw; width: max-content; padding-right: 12vw; }
-    .work { width: min(74vw, 1180px); grid-template-columns: 1.35fr 1fr; align-items: center; gap: 3.5vw; }
-    .work__media { aspect-ratio: auto; height: min(62vh, 600px); }
+    .featured__track { position: absolute; inset: 0; display: block; padding: 0; }
+    .work { position: absolute; inset: 0; display: block; }
+    /* 카드: 세로로 긴 3:4. 기준점은 화면 가운데에서 오른쪽 */
+    .work__media {
+        position: absolute; top: 56%; left: 54%;
+        width: min(26vw, 420px); height: auto; aspect-ratio: 3 / 4;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, .45);
+    }
+    /* 설명: 왼쪽 아래. 지금 앞에 있는 카드의 설명만 보임 */
+    .work__body { position: absolute; left: var(--pad); bottom: 9vh; width: min(32vw, 460px); }
+    .work__media--text span { font-size: clamp(28px, 2.6vw, 44px); }
 }
 
 /* 3. 전체 작업 */
@@ -190,19 +201,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .row__single { grid-column: 2 / -1; display: flex; gap: 16px; font-size: 14px; color: var(--muted); }
 .row__single a { color: var(--text); border-bottom: 1px solid var(--accent); }
 
-/* 4. 배너 */
-.banners { padding: 14vh 0 12vh; border-top: 1px solid var(--line); overflow: hidden; }
-.banners__head { padding: 0 var(--pad); margin-bottom: 6vh; }
-.banners__desc { margin-top: 18px; color: var(--muted); }
-/* gap 대신 margin-right: 두 묶음의 너비가 정확히 같아야 -50% 지점에서 이음새가 안 보인다 */
-.marquee { display: flex; width: max-content; }
-.marquee + .marquee { margin-top: 16px; }
-.marquee img {
-    width: clamp(120px, 14vw, 200px); aspect-ratio: 1; object-fit: cover;
-    margin-right: 16px; border-radius: 10px; background: var(--bg-2);
-}
-
-/* 5. 연락처 */
+/* 4. 연락처 */
 .contact { padding: 18vh var(--pad) 10vh; border-top: 1px solid var(--line); text-align: center; }
 .contact__label { color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size: 14px; }
 .contact__mail {

@@ -5,10 +5,9 @@
    0. 데이터(works-data.js)로 화면 그리기
    1. 스크롤 진행 바
    2. 인트로: 공이 이름 위를 튕기다가, 스크롤하면 커져서 화면을 덮고 소개로 넘어감
-   3. 대표 작업: PC에서 세로 스크롤을 가로 이동으로 바꾸기 (pin + scrub)
+   3. 대표 작업: PC에서 카드가 비스듬히 겹쳐 있다가 스크롤하면 한 장씩 앞으로 (pin + scrub + snap)
    4. 전체 작업: 회사별 필터와 등장 효과
-   5. 배너: 끝없이 흐르는 두 줄, 스크롤이 빠를수록 빨라짐
-   6. 이메일 복사
+   5. 이메일 복사
    ========================================================= */
 
 $(function () {
@@ -20,8 +19,7 @@ $(function () {
     const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
 
     const pad = (n) => String(n).padStart(2, '0');
-    // 배너 파일 이름 앞 6자리(260901)를 날짜(2026.09.01)로
-    const bannerDate = (name) => `20${name.slice(0, 2)}.${name.slice(2, 4)}.${name.slice(4, 6)}`;
+    const clamp = gsap.utils.clamp; // clamp(최소, 최대, 값)
 
 
     /* ---------------------------------------------------------
@@ -87,23 +85,13 @@ $(function () {
     renderArchive('all');
 
     // 인트로 숫자: 직접 세지 않고 데이터 개수로 계산한다
+    //  - landing: 랜딩페이지 시리즈들의 하위 항목 수
+    //  - total: 전체 작업 목록의 항목 수 (시리즈는 하위 항목 수, 단일 작업은 1)
     const counts = {
         landing: ARCHIVE.filter((g) => g.landing).reduce((sum, g) => sum + g.sub.length, 0),
-        banner: BANNERS.length,
+        total: ARCHIVE.reduce((sum, item) => sum + (item.sub ? item.sub.length : 1), 0),
         featured: FEATURED.length
     };
-    $('.js-banner-total').text(counts.banner);
-
-    // 배너 두 줄 채우기: 매번 섞어서 18장씩
-    const picks = gsap.utils.shuffle([...BANNERS]).slice(0, 36);
-    $('.js-marquee').each(function (i) {
-        const list = picks.slice(i * 18, i * 18 + 18);
-        const imgs = (withAlt) => list.map((name) =>
-            `<img src="../images/banner/${name}.webp" alt="${withAlt ? '광고 배너 ' + bannerDate(name) : ''}" width="200" height="200">`
-        ).join('');
-        // 같은 묶음을 두 번 이어 붙여야 끊김 없이 돈다 (두 번째 묶음은 스크린리더가 읽지 않게 alt 비움)
-        $(this).html(imgs(true) + imgs(false));
-    });
 
     // 인트로 글자 준비 (애니메이션을 끈 사용자에게도 필요해서 여기서 처리)
     // 1) 공이 밟을 줄은 글자마다 <span class="ch"> 로 쪼갠다
@@ -126,7 +114,7 @@ $(function () {
     }
     fitLines();
 
-    // 6. 이메일 복사 (애니메이션과 상관없어서 먼저 연결)
+    // 5. 이메일 복사 (애니메이션과 상관없어서 먼저 연결)
     $('.js-copy').on('click', async function () {
         const $btn = $(this);
         try {
@@ -148,7 +136,6 @@ $(function () {
         $('.js-count').each(function () {
             $(this).text(counts[$(this).data('count-from')]);
         });
-        $('.marquee').css({ width: 'auto', overflowX: 'auto' });
         $('.filter').on('click', function () {
             setActiveFilter($(this));
             renderArchive($(this).data('filter'));
@@ -271,7 +258,7 @@ $(function () {
 
     // 스크롤: 인트로를 고정한 채, 공 자리에서 주황색 원이 퍼져 화면을 덮고 소개가 올라온다
     // 작은 공을 scale 로 키우면 가장자리가 흐려져서, 화면 전체 크기의 덮개(.js-cover)를
-    // clip-path: circle() 로 동그렇게 잘라 두고 반지름을 키우는 방식으로 했다
+    // clip-path: circle() 로 동그럗게 잘라 두고 반지름을 키우는 방식으로 했다
     const cover = document.querySelector('.js-cover');
     const ballCenter = () => {
         const p = landing(lastChar);
@@ -335,29 +322,78 @@ $(function () {
 
 
     /* ---------------------------------------------------------
-       3. 대표 작업: 가로 스크롤
+       3. 대표 작업: 겹친 카드
        --------------------------------------------------------- */
     if (isDesktop) {
-        const track = document.querySelector('.js-track');
-        // 움직일 거리 = 카드 줄 전체 너비 - 화면 너비
-        const getDistance = () => track.scrollWidth - window.innerWidth;
+        const works = gsap.utils.toArray('.work');
+        const cards = works.map((work) => work.querySelector('.work__media'));
+        const bodies = works.map((work) => work.querySelector('.work__body'));
+        const last = works.length - 1;
 
-        gsap.to(track, {
-            x: () => -getDistance(),
+        // state.p: 지금 앞에 나와 있는 카드 번호 (0 ~ 4). 스크롤에 따라 0.37 처럼 중간값도 가진다
+        const state = { p: 0 };
+        let current = -1;
+
+        // 카드 가운데를 기준점으로, 원근감(transformPerspective)을 준다
+        gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
+        gsap.set(bodies, { autoAlpha: 0 });
+
+        // p 값으로 카드마다 위치를 계산해서 그린다
+        function render() {
+            const cardW = cards[0].offsetWidth;
+
+            cards.forEach((card, i) => {
+                const d = i - state.p; // 0: 맨 앞, 1: 바로 뒤, -1: 이미 지나간 카드
+                let x, z, rotationY, opacity;
+
+                if (d >= 0) {
+                    // 뒤에 기다리는 카드: 오른쪽으로 조금씩 밀리고, 비스듬히 돌아 있고, 멀어진다
+                    x = d * cardW * 0.32;
+                    z = -d * 140;
+                    rotationY = -38 * clamp(0, 1, d);
+                    opacity = 1 - clamp(0, 1, d - 3.5); // 너무 뒤(4장째 뒤)는 흐리게
+                } else {
+                    // 지나간 카드: 왼쪽으로 빠지면서 사라진다
+                    x = d * cardW * 1.2;
+                    z = 0;
+                    rotationY = 25 * clamp(0, 1, -d);
+                    opacity = clamp(0, 1, 1 + d * 1.5);
+                }
+
+                gsap.set(card, {
+                    x: x, z: z, rotationY: rotationY, opacity: opacity,
+                    zIndex: 100 - Math.round(Math.abs(d) * 10) // 앞 카드가 위에 오도록
+                });
+            });
+
+            // 맨 앞 카드가 바뀌면 왼쪽 설명도 바꾼다
+            const index = Math.round(state.p);
+            if (index !== current) {
+                if (current > -1) gsap.to(bodies[current], { autoAlpha: 0, y: -16, duration: 0.25, overwrite: true });
+                gsap.fromTo(bodies[index], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.5, delay: 0.1, ease: 'power3.out', overwrite: true });
+                $('.js-current').text(pad(index + 1));
+                current = index;
+            }
+        }
+
+        // 스크롤하는 동안 섹션을 고정하고 state.p 를 0 -> 4 로 바꾼다
+        gsap.to(state, {
+            p: last,
             ease: 'none',
+            onUpdate: render,
             scrollTrigger: {
                 trigger: '.featured',
                 start: 'top top',
-                end: () => '+=' + getDistance(), // 가로로 움직이는 만큼 세로 스크롤 길이를 확보
-                pin: true,                       // 그동안 섹션을 화면에 고정
-                scrub: 1,                        // 스크롤에 1초 정도 부드럽게 따라옴
-                invalidateOnRefresh: true,       // 창 크기가 바뀌면 거리를 다시 계산
-                onUpdate: (self) => {
-                    const index = Math.min(FEATURED.length - 1, Math.floor(self.progress * FEATURED.length));
-                    $('.js-current').text(pad(index + 1));
-                }
+                end: () => '+=' + window.innerHeight * 0.8 * last, // 카드 한 장에 화면 높이의 80% 만큼 스크롤
+                pin: true,
+                scrub: 0.8,
+                snap: { snapTo: 1 / last, duration: { min: 0.2, max: 0.6 }, ease: 'power1.inOut' }, // 손을 떼면 가까운 카드에 멈춤
+                invalidateOnRefresh: true
             }
         });
+
+        render();
+        $(window).on('resize', render); // 카드 너비가 바뀌면 간격도 다시 계산
     } else {
         // 모바일: 카드가 화면에 들어올 때 하나씩 올라온다
         gsap.utils.toArray('.work').forEach((work) => {
@@ -405,37 +441,6 @@ $(function () {
         });
     });
 
-
-    /* ---------------------------------------------------------
-       5. 배너
-       --------------------------------------------------------- */
-
-    // 같은 묶음이 두 번 붙어 있으니, 절반(-50%)만큼 가면 처음 모습과 같아진다 -> repeat 로 무한 반복
-    const loops = gsap.utils.toArray('.js-marquee').map((row) => {
-        const toLeft = row.dataset.direction === 'left';
-        return gsap.fromTo(row,
-            { xPercent: toLeft ? 0 : -50 },
-            { xPercent: toLeft ? -50 : 0, duration: 60, ease: 'none', repeat: -1 }
-        );
-    });
-
-    // 스크롤 속도(px/초)를 재서 빠를수록 흐름을 빠르게, 멈추면 원래 속도로
-    ScrollTrigger.create({
-        trigger: '.banners',
-        start: 'top bottom',
-        end: 'bottom top',
-        onUpdate: (self) => {
-            const speed = 1 + Math.min(Math.abs(self.getVelocity()) / 300, 5);
-            loops.forEach((loop) => {
-                gsap.to(loop, {
-                    timeScale: speed,
-                    duration: 0.2,
-                    overwrite: true,
-                    onComplete: () => gsap.to(loop, { timeScale: 1, duration: 1.2 })
-                });
-            });
-        }
-    });
 
     // 이미지가 다 불러와지면 높이가 바뀌므로 위치 다시 계산
     $(window).on('load', () => ScrollTrigger.refresh());
