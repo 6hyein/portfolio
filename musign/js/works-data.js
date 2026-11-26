@@ -1,6 +1,6 @@
 /* =========================================================
    작업 데이터 (뮤자인 지원용)
-   - 카드 46장과 상세 창에 들어가는 내용.
+   - 카드 45장과 상세 창에 들어가는 내용.
    - 설명(points)은 노션 '작업내역' 페이지에 정리한 내용에서 옮겼다.
    - 썸네일은 tools/capture.mjs 를 돌리면 images/works/아이디.jpg 로 저장되고,
      링크가 살아 있는지는 js/works-status.js 에 기록된다.
@@ -189,14 +189,6 @@ const WORKS = [
       '번역 후 글자가 font 태그로 감싸져 언어 변경이 멈추던 문제를 부모 요소를 거슬러 올라가 찾는 방식으로 고쳤습니다.'
     ],
     tech: ['HTML5/CSS3', 'JavaScript', 'jQuery', 'Google Translate']
-  },
-  {
-    id: 'hankyungbiz', company: '티앤제이비즈', cat: 'tnj',
-    title: '한경비즈', period: '2025.04',
-    url: 'https://www.hankyungbiz.co.kr/',
-    role: '자사, 파트너 사이트 구축과 유지보수',
-    points: [],
-    tech: []
   },
 
   /* ---------- 랜딩페이지 시리즈 ---------- */
