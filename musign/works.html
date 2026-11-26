@@ -21,7 +21,6 @@
         <nav class="header__nav" aria-label="페이지 안 이동">
             <a href="#featured">대표 작업</a>
             <a href="#archive">전체 작업</a>
-            <a href="#banners">배너</a>
             <a href="#contact">연락처</a>
         </nav>
     </header>
@@ -48,13 +47,13 @@
                 <p class="intro__lead">디자인 시안부터 반응형 퍼블리싱, 신청 폼 검증까지<br>직접 만든 작업을 모았습니다.</p>
                 <ul class="intro__stats">
                     <li><strong class="js-count" data-count-from="landing">0</strong><span>랜딩페이지</span></li>
-                    <li><strong class="js-count" data-count-from="banner">0</strong><span>광고 배너</span></li>
+                    <li><strong class="js-count" data-count-from="total">0</strong><span>전체 작업</span></li>
                     <li><strong class="js-count" data-count-from="featured">0</strong><span>대표 작업</span></li>
                 </ul>
             </div>
         </section>
 
-        <!-- 2. 대표 작업 (PC: 세로 스크롤을 가로 이동으로 바꿈) -->
+        <!-- 2. 대표 작업 (PC: 카드가 비스듬히 겹쳐 서 있고, 스크롤하면 한 장씩 앞으로 넘어옴) -->
         <section class="featured" id="featured" aria-labelledby="featured-title">
             <div class="featured__head">
                 <h2 class="section-title" id="featured-title">Selected Works</h2>
@@ -80,19 +79,9 @@
                 <!-- works.js 에서 ARCHIVE 데이터로 그림 -->
             </div>
         </section>
-
-        <!-- 4. 배너 -->
-        <section class="banners" id="banners" aria-labelledby="banners-title">
-            <div class="banners__head">
-                <h2 class="section-title" id="banners-title">Banners</h2>
-                <p class="banners__desc">티앤제이비즈에서 만든 광고 배너 <span class="js-banner-total">0</span>장 중 일부입니다. 스크롤 속도에 맞춰 흐름이 빨라집니다.</p>
-            </div>
-            <div class="marquee js-marquee" data-direction="left"></div>
-            <div class="marquee js-marquee" data-direction="right"></div>
-        </section>
     </main>
 
-    <!-- 5. 연락처 -->
+    <!-- 4. 연락처 -->
     <footer class="contact" id="contact">
         <p class="contact__label">Contact</p>
         <a class="contact__mail" href="mailto:6hyein2013@gmail.com">6hyein2013@gmail.com</a>
