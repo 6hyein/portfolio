@@ -810,25 +810,101 @@ $(function () {
     }
 
     if (!isDesktop) {
-        // 모바일: 화면에 들어오는 만큼씩 묶어서 차례로 등장
-        gsap.set(cards, { opacity: 0, y: 40 });
-        ScrollTrigger.batch(cards, {
-            start: 'top 92%',
-            once: true,
-            onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 })
+        // 모바일 1) 대표 작업 겹친 카드: 화면을 잠깐 고정하고, 아래에서 비스듬히 누워 기다리던 카드가
+        //          한 장씩 올라와 똑바로 서고, 지나간 카드는 위로 젖혀지며 사라진다
+        const featIds = WORKS.map((w, i) => i).filter((i) => WORKS[i].featured);
+        const mstack = document.querySelector('.js-mstack');
+        const mstage = mstack.querySelector('.js-mstack-stage');
+        const minfo = mstack.querySelector('.js-mstack-info');
+        // 대표 작업 카드를 복제해 쓴다 (아래 전체 목록에도 같은 카드가 있으므로 화면 읽기 프로그램에는 숨김)
+        featIds.forEach((i) => {
+            const clone = cards[i].cloneNode(true);
+            clone.setAttribute('tabindex', '-1');
+            clone.setAttribute('aria-hidden', 'true');
+            mstage.appendChild(clone);
         });
-        // 색인 탭: 작업 영역이 화면에 들어오면 아래에서 차례로 올라온다
+        $(section).addClass('is-mstack');
+        const mcards = gsap.utils.toArray(mstage.children);
+        const mcount = mcards.length;
+        $(mstage).on('click', '.card', function () { openModal(this); });
+        gsap.set(mcards, { xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
+
+        const mstate = { p: 0 };
+        let mcurrent = -1;
+        function renderStack() {
+            const H = mstage.clientHeight;
+            mcards.forEach((card, i) => {
+                const d = i - mstate.p;
+                let y, z, rotationX, opacity, scale;
+                if (d >= 0) {
+                    // 기다리는 카드: 아래쪽에 뒤로 누운 채 겹쳐 있다
+                    y = d * H * 0.07 + clamp(0, 1, d) * H * 0.08;
+                    z = -d * 140;
+                    rotationX = 48 * clamp(0, 1, d);
+                    opacity = 1 - clamp(0, 1, d - 3);
+                    scale = 1 - clamp(0, 1, d) * 0.06;
+                } else {
+                    // 지나간 카드: 위로 올라가며 앞으로 젖혀져 사라진다
+                    const k = Math.max(d, -1.4);
+                    y = k * H * 0.55;
+                    z = -k * 60;
+                    rotationX = 40 * k;
+                    opacity = clamp(0, 1, 1 + d * 1.4);
+                    scale = 1;
+                }
+                gsap.set(card, {
+                    y: y, z: z, rotationX: rotationX, scale: scale, opacity: opacity,
+                    visibility: opacity < 0.01 ? 'hidden' : 'visible',
+                    zIndex: 100 - Math.round(Math.abs(d) * 2)
+                });
+            });
+            const index = Math.round(clamp(0, mcount - 1, mstate.p));
+            if (index !== mcurrent) {
+                mcurrent = index;
+                const w = WORKS[featIds[index]];
+                minfo.innerHTML = `<p class="mstack__count">${pad(index + 1)} <span>/ ${pad(mcount)}</span> 대표 작업</p>
+                    <h3 class="mstack__title">${w.title}</h3><p class="mstack__meta">${w.company} · ${w.period}</p>`;
+                gsap.fromTo(minfo.children,
+                    { opacity: 0, y: 12, filter: 'blur(6px)' },
+                    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.45, stagger: 0.05, ease: 'power2.out', overwrite: true });
+            }
+        }
+        gsap.timeline({
+            onUpdate: renderStack,
+            scrollTrigger: {
+                trigger: mstack,
+                start: 'top top',
+                end: () => '+=' + window.innerHeight * (0.7 * (mcount - 1) + 0.4),
+                pin: true,
+                pinSpacing: true, // 부모(.works)가 flex 라서 기본값이 false 가 된다. 고정된 동안 아래 목록이 밀려 내려가게
+                scrub: 0.5,
+                invalidateOnRefresh: true,
+                onRefresh: renderStack
+            }
+        })
+            .to(mstate, { p: mcount - 1, duration: mcount - 1, ease: 'none' })
+            .to({}, { duration: 0.5 });
+        renderStack();
+
+        // 모바일 2) 전체 목록: 카드가 아래에서 뒤로 누운 채 들어와, 화면 위로 올라오면서 일어선다
+        cards.forEach((card) => {
+            gsap.fromTo(card,
+                { rotationX: 58, y: 70, z: -160, opacity: 0, transformOrigin: '50% 100%' },
+                {
+                    rotationX: 0, y: 0, z: 0, opacity: 1, ease: 'power2.out',
+                    scrollTrigger: { trigger: card, start: 'top 102%', end: 'top 66%', scrub: 0.5 }
+                });
+        });
+        // 색인 탭: 전체 목록이 화면에 들어오면 아래에서 차례로 올라온다
         gsap.from(tabs, {
             yPercent: 110, duration: 0.7, ease: 'power3.out', stagger: 0.08,
-            scrollTrigger: { trigger: section, start: 'top 75%', once: true }
+            scrollTrigger: { trigger: '.js-cards', start: 'top 80%', once: true }
         });
-        // 회사별 보기를 누르면 작업 영역 처음으로 올라가고, 남은 카드가 다시 차례로 올라온다
+        // 회사별 보기를 누르면 목록 처음으로 올라간다 (카드 수가 바뀌어 페이지 길이가 달라졌으니 먼저 다시 잰다)
         onFilter = () => {
-            ScrollTrigger.refresh(); // 카드 수가 바뀌어 페이지 길이가 달라졌으니 먼저 다시 잰다
-            const top = section.getBoundingClientRect().top + window.scrollY - 64;
+            ScrollTrigger.refresh();
+            const top = document.querySelector('.js-cards').getBoundingClientRect().top + window.scrollY - 90;
             if (window.scrollY > top) window.scrollTo({ top: top, behavior: 'smooth' });
-            gsap.fromTo(cards.filter((c) => !c.classList.contains('is-off')),
-                { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03, overwrite: true });
         };
         const sectionEnd = ScrollTrigger.create({ trigger: section, start: 'bottom top+=64' });
         setupHeader(() => sectionEnd.start);
