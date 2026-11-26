@@ -6,7 +6,7 @@
    1. 스크롤 진행 바
    2. 인트로: 꼬마 악마가 이름 위를 뛰어다니고, 가운데 줄을 밟으면 글자가 전부 쓰러진다
       스크롤하면 악마 자리에서 원이 퍼져 화면을 덮고 소개로 넘어간다
-   3. 작업 46개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 격자로 펼쳐진다
+   3. 작업 46개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 콜라주로 흩어져 펼쳐진다
    4. 필터, 상세 창, 이메일 복사
    ========================================================= */
 
@@ -52,14 +52,26 @@ $(function () {
             : textCard(work);
     }
 
+    // 같은 결과가 나오는 난수 (새로고침해도 카드 크기, 자리가 그대로)
+    function seeded(seed) {
+        let s = (seed + 1) * 9301 + 49297;
+        return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+    }
+
     const cardsHtml = WORKS.map((work, i) => `
-        <button type="button" class="card" data-index="${i}" data-cat="${work.cat}" aria-label="${work.title} 자세히 보기">
+        <button type="button" class="card${seeded(i * 7)() < 0.3 ? ' card--mat' : ''}" data-index="${i}" data-cat="${work.cat}" aria-label="${work.title} 자세히 보기">
             <span class="card__inner">${mediaHtml(work)}<span class="card__no">${pad(i + 1)}</span></span>
             <span class="card__cap">${work.title}<small>${work.company}</small></span>
         </button>`).join('');
 
     $('.js-cards').html(cardsHtml);
     $('.js-total').text(pad(WORKS.length));
+
+    // 회사별 보기 버튼에 개수 (위첨자)
+    $('.filter').each(function () {
+        const cat = $(this).data('filter');
+        $(this).find('.js-n').text(cat === 'all' ? WORKS.length : WORKS.filter((w) => w.cat === cat).length);
+    });
 
     // 이미지 파일이 없으면 제목 카드로 바꾼다
     $('.js-cards img').on('error', function () {
@@ -173,7 +185,11 @@ $(function () {
             },
             { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' }
         );
-        gsap.fromTo('.modal__body > *', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, delay: 0.25, ease: 'power2.out' });
+        // 사진은 크게 확대된 상태에서 천천히 제자리로, 글은 흐릿하다가 한 줄씩 또렷해진다
+        gsap.fromTo('.js-m-media img', { scale: 1.3 }, { scale: 1, duration: 1.8, ease: 'power3.out' });
+        gsap.fromTo('.modal__body > *',
+            { opacity: 0, y: 18, filter: 'blur(10px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, stagger: 0.07, delay: 0.25, ease: 'power2.out', clearProps: 'filter' });
     }
 
     function closeModal() {
@@ -205,22 +221,31 @@ $(function () {
 
 
     /* ---------------------------------------------------------
-       4-2. 필터: 맞지 않는 카드는 흐리게 (자리는 그대로)
+       4-2. 회사별 보기
+       - 모바일: 맞지 않는 카드를 숨긴다
+       - PC: 맞는 카드만 콜라주로 다시 흩어 놓는다 (onFilter, 3번에서 넣음)
        --------------------------------------------------------- */
+    let currentFilter = 'all';
+    let onFilter = null;
     $('.filter').on('click', function () {
         const filter = $(this).data('filter');
+        if (filter === currentFilter) return;
+        currentFilter = filter;
         $('.filter').removeClass('is-active').attr('aria-pressed', 'false');
         $(this).addClass('is-active').attr('aria-pressed', 'true');
         $('.card').each(function () {
-            const dim = filter !== 'all' && $(this).data('cat') !== filter;
-            $(this).toggleClass('is-dim', dim).attr('tabindex', dim ? -1 : null);
+            const off = filter !== 'all' && $(this).data('cat') !== filter;
+            $(this).toggleClass('is-off', off).attr('tabindex', off ? -1 : null);
         });
+        if (onFilter) onFilter(filter);
     });
 
 
     if (reduceMotion) {
         $('.js-count').each(function () { $(this).text(counts[$(this).data('count-from')]); });
         $('.js-replay').hide();
+        $('.js-works').addClass('is-static');
+        $('.js-odo').text('');
         $(window).on('resize', fitLines);
         return; // 아래 애니메이션은 모두 건너뜀
     }
@@ -536,18 +561,9 @@ $(function () {
                     if (entranceTl.progress() < 1) entranceTl.progress(1);
                     if (playTl.progress() < 1) playTl.progress(1);
                 }
-                $('.header').toggleClass('is-light', self.progress > 0.35);
                 $(intro).toggleClass('is-covered', self.progress > 0.02);
             }
         }
-    });
-
-    // 고정이 풀린 뒤 다음 섹션이 헤더에 닿으면 헤더 색을 원래대로
-    ScrollTrigger.create({
-        trigger: '.js-works',
-        start: 'top top+=64',
-        onEnter: () => $('.header').removeClass('is-light'),
-        onLeaveBack: () => $('.header').addClass('is-light')
     });
 
     coverTl
@@ -579,9 +595,31 @@ $(function () {
     /* ---------------------------------------------------------
        3. 작업 46개
        --------------------------------------------------------- */
+    const section = document.querySelector('.js-works');
     const cards = gsap.utils.toArray('.card');
-    const inner = cards.map((c) => c.querySelector('.card__inner'));
     const n = cards.length;
+
+    // 밝은 판이 둥근 카드처럼 올라오다가 화면을 꽉 채운다 (clip-path inset 의 여백과 모서리를 0 으로)
+    gsap.fromTo(section,
+        { clipPath: 'inset(6vh 5vw 0vh 5vw round 56px)' },
+        {
+            clipPath: 'inset(0vh 0vw 0vh 0vw round 0px)',
+            ease: 'none',
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'top top', scrub: true }
+        });
+
+    // 헤더 글자색: 주황 소개 화면부터 밝은 작업 판이 헤더 밑을 지나갈 때까지는 어둡게
+    // lightEnd: 작업 판 아래쪽 끝이 헤더에 닿는 스크롤 위치
+    function setupHeader(lightEnd) {
+        const cover = coverTl.scrollTrigger;
+        const update = () => {
+            const y = window.scrollY;
+            const from = cover.start + (cover.end - cover.start) * 0.35;
+            $('.header').toggleClass('is-light', y >= from && y < lightEnd());
+        };
+        ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update, onRefresh: update });
+        update();
+    }
 
     if (!isDesktop) {
         // 모바일: 화면에 들어오는 만큼씩 묶어서 차례로 등장
@@ -591,56 +629,134 @@ $(function () {
             once: true,
             onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 })
         });
+        // 회사별 보기를 누르면 남은 카드가 다시 차례로 올라온다
+        onFilter = () => {
+            gsap.fromTo(cards.filter((c) => !c.classList.contains('is-off')),
+                { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03, overwrite: true });
+            ScrollTrigger.refresh();
+        };
+        const sectionEnd = ScrollTrigger.create({ trigger: section, start: 'bottom top+=64' });
+        setupHeader(() => sectionEnd.start);
         $(window).on('load', () => ScrollTrigger.refresh());
         return;
     }
 
-    const section = document.querySelector('.js-works');
     const info = document.querySelector('.js-info');
-    const tip = document.querySelector('.js-tip');
+    const track = document.querySelector('.js-steps-track');
+    const stepItems = gsap.utils.toArray('.steps__item');
     const featuredCount = WORKS.filter((w) => w.featured).length; // 앞쪽 대표 작업 5장은 천천히
+    const easeMorph = gsap.parseEase('power3.inOut');
 
-    // state.p: 맨 앞 카드 번호 (0 ~ 45, 중간값 있음) / state.g: 격자로 펼쳐진 정도 (0 ~ 1)
+    // state.p: 맨 앞 카드 번호 (0 ~ 45, 중간값 있음) / state.g: 콜라주로 펼쳐진 정도 (0 ~ 1)
     const state = { p: 0, g: 0 };
+    const par = { x: 0, y: 0 };   // 마우스 위치에 따라 콜라주가 살짝 움직이는 양 (카드마다 깊이가 달라 입체감)
     let current = -1;
     let gridOn = false;
-    let grid = [];
+    let phase = -1;
+    let hovered = -1;
+
+    // 한 프레임에 한 번만 그리기: 스크롤, 필터, 마우스가 동시에 그려 달라고 해도 묶어서 처리
+    let needsRender = false;
+    const requestRender = () => { needsRender = true; };
+    gsap.ticker.add(() => { if (needsRender) render(); });
+
+    // 콜라주 칸: 카드마다 목표 위치(x, y), 크기(s), 투명도(o), 겹침 순서(z), 깊이(depth)
+    const cells = cards.map(() => ({ x: 0, y: 0, s: 0.3, o: 1, z: 1, depth: 1 }));
 
     gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
 
-    // 격자 칸 계산: 제목 영역 아래부터 화면 아래까지, 46장이 다 들어가게
-    function layoutGrid() {
-        const head = document.querySelector('.js-works-head');
-        const W = section.clientWidth;
-        const H = section.clientHeight;
-        const sidePad = parseFloat(getComputedStyle(head).left);
-        const top = head.offsetTop + head.offsetHeight + 24;
-        const bottom = H - 28;
-        const cols = W >= 1360 ? 12 : 10;
-        const rows = Math.ceil(n / cols);
-        const gap = 12;
-        const cardW = cards[0].offsetWidth;
-        const cardH = cards[0].offsetHeight;
-        // 칸 하나 크기: 가로, 세로 중 좁은 쪽에 맞춘다 (카드 비율 3:4 유지)
-        const cellW = Math.min((W - sidePad * 2 - gap * (cols - 1)) / cols, ((bottom - top - gap * (rows - 1)) / rows) * (cardW / cardH));
-        const cellH = cellW * cardH / cardW;
-        const gridW = cols * cellW + (cols - 1) * gap;
-        const left = (W - gridW) / 2;
-        // 카드의 원래 자리(가운데 기준) = 무대의 left 60%, top 56%
-        const baseX = W * 0.6;
-        const baseY = H * 0.56;
-        grid = cards.map((c, i) => {
-            const col = i % cols;
-            const row = Math.floor(i / cols);
-            return {
-                x: left + col * (cellW + gap) + cellW / 2 - baseX,
-                y: top + row * (cellH + gap) + cellH / 2 - baseY,
-                scale: cellW / cardW
-            };
+    // 굴러가는 숫자 카운터: 두 자리 각각 0~9 를 세로로 쌓고 yPercent 로 옮긴다
+    const odo = document.querySelector('.js-odo');
+    odo.innerHTML = [0, 1].map(() =>
+        `<span class="odo__col">${'0123456789'.split('').map((d) => `<span>${d}</span>`).join('')}</span>`
+    ).join('');
+    const odoCols = odo.querySelectorAll('.odo__col');
+    function setCounter(num) {
+        pad(num).split('').forEach((d, k) => {
+            gsap.to(odoCols[k], { yPercent: -10 * Number(d), duration: 0.6, ease: 'power3.out', overwrite: true });
         });
     }
 
-    // 맨 앞 카드 설명 바꾸기
+    // 콜라주 배치: 보이는 카드 수에 맞춰 칸을 나누고, 칸 안에서 위치와 크기를 조금씩 흩트린다
+    // 대표 작업은 크게(다른 카드 밑에 깔리게), 몇 장은 조금 크게
+    function layoutCollage(filter, animate) {
+        const head = document.querySelector('.js-works-head');
+        const filters = document.querySelector('.js-filters');
+        const W = section.clientWidth;
+        const H = section.clientHeight;
+        const side = parseFloat(getComputedStyle(head).left);
+        const top = head.offsetTop + head.offsetHeight + 24;
+        const bottom = filters.offsetTop - 16;
+        const areaW = W - side * 2;
+        const areaH = bottom - top;
+        const cardW = cards[0].offsetWidth;
+        const ratio = cards[0].offsetHeight / cardW;
+        const ids = cards.map((c, i) => i).filter((i) => filter === 'all' || WORKS[i].cat === filter);
+        const count = ids.length;
+        // 칸 가로:세로 = 0.68 정도가 되도록 열 수를 정한다
+        const cols = Math.min(count, Math.max(1, Math.round(Math.sqrt(count * (areaW / areaH) / 0.68))));
+        const rows = Math.ceil(count / cols);
+        const cellW = areaW / cols;
+        const cellH = areaH / rows;
+        const base = Math.min(cellW * 0.78, cellH * 0.78 / ratio);
+        const maxW = Math.min(areaW * 0.45, areaH * 0.92 / ratio);
+        // 카드의 원래 자리(가운데 기준) = 무대의 left 60%, top 56%
+        const baseX = W * 0.6;
+        const baseY = H * 0.56;
+
+        // 칸 배정: 큰 대표 작업은 한쪽에 몰리지 않게 대각선으로 흩어 놓고, 나머지는 빈 칸을 차례로 채운다
+        const big = (i) => WORKS[i].featured && count > 6;
+        const feats = ids.filter(big);
+        const slots = new Array(count).fill(-1);
+        feats.forEach((i, j) => {
+            const r = Math.min(rows - 1, Math.floor(j * rows / feats.length));
+            const c = Math.min(cols - 1, Math.floor((j + 0.5) * cols / feats.length));
+            let slot = Math.min(count - 1, r * cols + c);
+            while (slots[slot] !== -1) slot = (slot + 1) % count;
+            slots[slot] = i;
+        });
+        let free = 0;
+        ids.filter((i) => !big(i)).forEach((i) => {
+            while (slots[free] !== -1) free += 1;
+            slots[free] = i;
+        });
+
+        // 보기에서 빠지는 카드: 제자리에서 작아지며 사라진다
+        const targets = cells.map((c) => ({ x: c.x, y: c.y, s: c.s * 0.6, o: 0, z: c.z, depth: c.depth }));
+        slots.forEach((i, k) => {
+            const rnd = seeded(i * 13 + 5);
+            const row = Math.floor(k / cols);
+            const col = k % cols;
+            const inRow = row === rows - 1 ? count - row * cols : cols;
+            const shift = (cols - inRow) * cellW / 2; // 마지막 줄은 가운데로
+            const isBig = big(i);
+            const factor = isBig ? 2.3 : (rnd() < 0.15 ? 1.4 : gsap.utils.interpolate(0.65, 1, rnd()));
+            const w = Math.min(base * factor, maxW);
+            const h = w * ratio;
+            const cx = clamp(side + w / 2, W - side - w / 2, side + shift + col * cellW + cellW / 2 + (rnd() - 0.5) * cellW * 0.4);
+            const cy = clamp(top + h / 2, bottom - h / 2, top + row * cellH + cellH / 2 + (rnd() - 0.5) * cellH * 0.3);
+            targets[i] = {
+                x: cx - baseX, y: cy - baseY, s: w / cardW, o: 1,
+                z: isBig ? 2 + k : 20 + Math.round(rnd() * 40),
+                depth: gsap.utils.interpolate(0.4, 1.4, rnd())
+            };
+        });
+
+        cells.forEach((cell, i) => {
+            if (!animate) {
+                Object.assign(cell, targets[i]);
+                return;
+            }
+            cell.z = targets[i].z;
+            gsap.to(cell, {
+                x: targets[i].x, y: targets[i].y, s: targets[i].s, o: targets[i].o, depth: targets[i].depth,
+                duration: 1, delay: Math.random() * 0.25, ease: 'power3.inOut', overwrite: true,
+                onUpdate: requestRender
+            });
+        });
+    }
+
+    // 맨 앞 카드 설명 바꾸기 (흐릿하다가 또렷해지며 올라온다)
     function showInfo(index) {
         const w = WORKS[index];
         const badge = w.featured ? '<span class="info__badge">대표 작업</span>' : '';
@@ -648,11 +764,14 @@ $(function () {
         info.innerHTML = `${badge}<p class="info__meta"><span>${w.company}</span><span>${w.period}</span></p>
             <h3 class="info__title">${w.title}</h3><p class="info__role">${role}</p>
             <p class="info__hint">카드를 누르면 작업 내용을 볼 수 있습니다</p>`;
-        gsap.fromTo(info.children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: 'power2.out', overwrite: true });
-        $('.js-current').text(pad(index + 1));
+        gsap.fromTo(info.children,
+            { opacity: 0, y: 16, filter: 'blur(8px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, stagger: 0.04, ease: 'power2.out', overwrite: true });
+        setCounter(index + 1);
     }
 
     function render() {
+        needsRender = false;
         const cardW = cards[0].offsetWidth;
         const g = state.g;
 
@@ -677,48 +796,65 @@ $(function () {
                 opacity = clamp(0, 1, 1 + d * 1.5);
             }
             let scale = 1;
+            let zIndex = 100 - Math.round(Math.abs(d) * 2);
 
-            // 격자로 펼치기: 왼쪽 위 카드부터 차례로 제 칸에 들어간다
+            // 콜라주로 펼치기: 앞 번호 카드부터 차례로 제자리에 들어간다
             if (g > 0) {
-                const t = gsap.parseEase('power3.inOut')(clamp(0, 1, (g - (i / (n - 1)) * 0.5) / 0.5));
-                const cell = grid[i];
-                x = lerp(x, cell.x, t);
-                y = lerp(y, cell.y, t);
+                const t = easeMorph(clamp(0, 1, (g - (i / (n - 1)) * 0.5) / 0.5));
+                const c = cells[i];
+                x = lerp(x, c.x + par.x * c.depth, t);
+                y = lerp(y, c.y + par.y * c.depth, t);
                 z = lerp(z, 0, t);
                 rotationY = lerp(rotationY, 0, t);
-                opacity = lerp(opacity, 1, t);
-                scale = lerp(1, cell.scale, t);
+                opacity = lerp(opacity, c.o, t);
+                scale = lerp(1, c.s, t);
+                if (g > 0.95) zIndex = i === hovered ? 500 : c.z;
             }
 
             gsap.set(card, {
                 x: x, y: y, z: z, rotationY: rotationY, scale: scale, opacity: opacity,
                 visibility: opacity < 0.01 ? 'hidden' : 'visible',
-                zIndex: g > 0.98 ? 1 : 100 - Math.round(Math.abs(d) * 2)
+                zIndex: zIndex
             });
         });
 
         // 겹친 카드 단계: 맨 앞 카드 설명
         const index = Math.round(clamp(0, n - 1, state.p));
         if (index !== current) { current = index; showInfo(index); }
-        gsap.set(info, { autoAlpha: 1 - clamp(0, 1, g * 4) });
-        gsap.set('.js-counter', { autoAlpha: 1 - clamp(0, 1, g * 4) });
-        // 필터는 격자가 거의 펼쳐졌을 때 나타나고, 건너뛰기 버튼은 사라진다
+        gsap.set([info, '.js-counter'], { autoAlpha: 1 - clamp(0, 1, g * 4) });
+        // 회사별 보기는 콜라주가 거의 펼쳐졌을 때 나타나고, 바로 가기 버튼은 사라진다
         gsap.set('.js-filters', { autoAlpha: clamp(0, 1, (g - 0.6) * 4) });
         gsap.set('.js-skip', { autoAlpha: 1 - clamp(0, 1, g * 3) });
 
-        const on = g > 0.98;
+        // 단계 표시: Selected(대표 5장) / All works(나머지) / Index(콜라주)
+        let ph;
+        let prog;
+        if (g > 0) { ph = 2; prog = g; }
+        else if (state.p > featuredCount - 1) { ph = 1; prog = (state.p - (featuredCount - 1)) / (n - featuredCount); }
+        else { ph = 0; prog = state.p / (featuredCount - 1); }
+        stepItems.forEach((el, k) => el.style.setProperty('--p', (k < ph ? 100 : k === ph ? prog * 100 : 0) + '%'));
+        if (ph !== phase) {
+            const el = stepItems[ph];
+            const x = -(el.offsetLeft + el.offsetWidth / 2); // 지금 단계를 가운데로
+            if (phase === -1) gsap.set(track, { x: x });
+            else gsap.to(track, { x: x, duration: 0.9, ease: 'power3.inOut', overwrite: true });
+            phase = ph;
+        }
+
+        const on = g > 0.95;
         if (on !== gridOn) {
             gridOn = on;
             $(section).toggleClass('is-grid', on);
-            if (!on) gsap.to(tip, { opacity: 0, duration: 0.2 });
+            if (!on) hovered = -1;
+            updateCursor();
         }
     }
 
-    // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 나머지는 0.09, 격자 펼치기 1.6, 멈춤 0.5
+    // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 나머지는 0.09, 콜라주 펼치기 1.6, 멈춤 0.5
     const SPEED = { featured: 0.55, rest: 0.09, grid: 1.6, hold: 0.5 };
     const TOTAL = (featuredCount - 1) * SPEED.featured + (n - featuredCount) * SPEED.rest + SPEED.grid + SPEED.hold;
     const worksTl = gsap.timeline({
-        onUpdate: render,
+        onUpdate: requestRender,
         scrollTrigger: {
             trigger: section,
             start: 'top top',
@@ -726,7 +862,7 @@ $(function () {
             pin: true,
             scrub: 0.6,
             invalidateOnRefresh: true,
-            onRefresh: () => { layoutGrid(); render(); }
+            onRefresh: () => { layoutCollage(currentFilter, false); render(); }
         }
     });
     worksTl
@@ -737,31 +873,96 @@ $(function () {
         .addLabel('gridDone')
         .to({}, { duration: SPEED.hold });
 
-    // 전체 한눈에 보기: 격자가 다 펼쳐진 위치로 스크롤
+    // 회사별 보기: 맞는 카드만 다시 흩어 놓는다
+    onFilter = (filter) => layoutCollage(filter, true);
+
+    // 전체 한눈에 보기: 콜라주가 다 펼쳐진 위치로 스크롤
     $('.js-skip').on('click', () => {
         const st = worksTl.scrollTrigger;
         const top = st.start + (st.end - st.start) * (worksTl.labels.gridDone / worksTl.duration());
         window.scrollTo({ top: top + 2, behavior: 'smooth' });
     });
 
-    // 격자에서 마우스를 올린 카드 이름을 마우스 옆에 띄운다
-    $(section).on('mouseenter focusin', '.card', function () {
-        if (!gridOn) return;
-        const w = WORKS[$(this).data('index')];
-        tip.innerHTML = `${w.title}<small>${w.company}, ${w.period}</small>`;
-        gsap.to(tip, { opacity: 1, duration: 0.2 });
-    }).on('mouseleave focusout', '.card', () => {
-        gsap.to(tip, { opacity: 0, duration: 0.2 });
-    }).on('mousemove', (e) => {
-        if (!gridOn) return;
-        const box = section.getBoundingClientRect();
-        let x = e.clientX - box.left + 16;
-        const y = e.clientY - box.top + 18;
-        if (x + tip.offsetWidth > box.width - 16) x = e.clientX - box.left - tip.offsetWidth - 16; // 오른쪽 끝이면 왼쪽에
-        gsap.to(tip, { x: x, y: y, duration: 0.25, ease: 'power3.out' });
-    });
+    // 마우스 커서: 유리 원은 천천히 따라오고(Scroll / View), 콜라주 카드 위에서는 십자선과 작업 이름
+    const cursor = document.querySelector('.js-cursor');
+    const glass = document.querySelector('.js-cursor-glass');
+    const pin = document.querySelector('.js-cursor-pin');
+    const cursorText = document.querySelector('.js-cursor-text');
+    const cursorLabel = document.querySelector('.js-cursor-label');
+    let overCard = -1;
+    let overButton = false;
 
-    layoutGrid();
+    function updateCursor() {
+        const onCard = overCard > -1;
+        $(cursor)
+            .toggleClass('is-card', onCard && gridOn)
+            .toggleClass('is-hidden', overButton)
+            .toggleClass('is-small', gridOn && !onCard && !overButton);
+        cursorText.textContent = gridOn ? '' : (onCard ? 'View' : 'Scroll');
+        if (onCard && gridOn) cursorLabel.textContent = WORKS[overCard].title;
+    }
+
+    if (hasMouse) {
+        $('html').addClass('has-cursor');
+        const move = (e, instant) => {
+            const d = instant ? 0 : 1;
+            gsap.to(pin, { x: e.clientX, y: e.clientY, duration: 0.15 * d, ease: 'power3.out', overwrite: true });
+            gsap.to(glass, { x: e.clientX, y: e.clientY, duration: 0.7 * d, ease: 'power3.out', overwrite: true });
+        };
+        let mouse = null;
+
+        // 마우스 아래에 무엇이 있는지 보고 커서 모양을 정한다
+        // (마우스를 움직일 때뿐 아니라 스크롤할 때도: 가만히 있어도 카드가 지나가므로)
+        function checkUnder() {
+            if (!mouse) return;
+            const box = section.getBoundingClientRect();
+            const inside = mouse.x >= box.left && mouse.x <= box.right && mouse.y >= box.top && mouse.y <= box.bottom;
+            cursor.classList.toggle('is-on', inside);
+            const el = inside ? document.elementFromPoint(mouse.x, mouse.y) : null;
+            const cardEl = el ? el.closest('.card') : null;
+            const idx = cardEl ? Number(cardEl.dataset.index) : -1;
+            const btn = !cardEl && !!(el && el.closest('button'));
+            if (idx !== overCard || btn !== overButton) {
+                overCard = idx;
+                overButton = btn;
+                hovered = gridOn ? idx : -1;
+                requestRender();
+                updateCursor();
+            }
+        }
+        let scrollFrame = 0;
+        $(window).on('scroll', () => {
+            if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; checkUnder(); });
+        });
+
+        $(section).on('mouseenter', (e) => {
+            move(e, true);
+        }).on('mouseleave', () => {
+            cursor.classList.remove('is-on');
+            mouse = null;
+            overCard = -1;
+            hovered = -1;
+            requestRender();
+        }).on('mousemove', (e) => {
+            mouse = { x: e.clientX, y: e.clientY };
+            move(e, false);
+            checkUnder();
+            // 콜라주에서는 마우스 반대쪽으로 카드들이 깊이에 따라 조금씩 밀린다
+            if (gridOn) {
+                const box = section.getBoundingClientRect();
+                gsap.to(par, {
+                    x: -((e.clientX - box.left) / box.width - 0.5) * 40,
+                    y: -((e.clientY - box.top) / box.height - 0.5) * 30,
+                    duration: 1.2, ease: 'power3.out', overwrite: true, onUpdate: requestRender
+                });
+            }
+        });
+    }
+
+    layoutCollage('all', false);
     render();
+    updateCursor();
+    // 고정이 풀린 뒤 작업 판 높이만큼 더 올라가면 판 아래쪽 끝이 헤더에 닿는다
+    setupHeader(() => worksTl.scrollTrigger.end + section.offsetHeight - 64);
     $(window).on('load', () => ScrollTrigger.refresh());
 });
