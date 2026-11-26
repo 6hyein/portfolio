@@ -4,10 +4,11 @@
 
    0. 데이터(works-data.js, works-status.js)로 화면 그리기
    1. 스크롤 진행 바
-   2. 인트로: 꼬마 악마가 이름 위를 뛰어다니고, 가운데 줄을 밟으면 글자가 전부 쓰러진다
-      스크롤하면 악마 자리에서 원이 퍼져 화면을 덮고 소개로 넘어간다
-   3. 작업 46개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 콜라주로 흩어져 펼쳐진다
-   4. 필터, 상세 창, 이메일 복사
+   2. 인트로: 꼬마 악마가 Y, H 를 밟으며 화면 쪽으로 다가오다가 H 에 쾅 내려찍으면
+      지진이 난 듯 글자가 무너지고 땅이 갈라진다. 스크롤하면 틈이 벌어져 작업 판으로 이어진다
+   3. 작업 45개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 콜라주로 펼쳐진다
+      (카드는 높이만 같고 가로는 작업마다 다르다)
+   4. 회사별 보기(색인 탭), 상세 창, 이메일 복사
    ========================================================= */
 
 $(function () {
@@ -58,8 +59,33 @@ $(function () {
         return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
     }
 
+    // 카드 가로 비율(가로 / 세로). 높이는 모두 같고 가로만 작업 성격에 맞게 다르다
+    //  - 직접 고른 이미지: 원본 비율 그대로 (800 x 600)
+    //  - PC 사이트 캡처: 첫 화면을 가로로 넓게
+    //  - 모바일 랜딩페이지 캡처: 세로로 길게, 장마다 조금씩 다르게
+    //  - 이미지가 없는 작업(제목 카드): 정사각형 근처
+    function ratioOf(work, i) {
+        const pick = (list) => list[Math.floor(seeded(i * 17 + 3)() * list.length)];
+        if (work.thumb) return 4 / 3;
+        if (!thumbOf(work)) return pick([1, 0.82, 1.18]);
+        if (work.series) return pick([0.75, 0.66, 0.58, 0.75]);
+        return pick([1.6, 1.45]);
+    }
+    const ratios = WORKS.map(ratioOf);
+
+    // 콜라주에 놓는 순서: 같은 묶음이 한 줄에 몰리지 않게 섞는다 (새로고침해도 같은 순서)
+    const collageOrder = (() => {
+        const rnd = seeded(99);
+        const ids = WORKS.map((w, i) => i);
+        for (let k = ids.length - 1; k > 0; k--) {
+            const j = Math.floor(rnd() * (k + 1));
+            [ids[k], ids[j]] = [ids[j], ids[k]];
+        }
+        return ids;
+    })();
+
     const cardsHtml = WORKS.map((work, i) => `
-        <button type="button" class="card${seeded(i * 7)() < 0.3 ? ' card--mat' : ''}" data-index="${i}" data-cat="${work.cat}" aria-label="${work.title} 자세히 보기">
+        <button type="button" class="card${seeded(i * 7)() < 0.3 ? ' card--mat' : ''}" style="--r:${ratios[i].toFixed(3)}" data-index="${i}" data-cat="${work.cat}" aria-label="${work.title} 자세히 보기">
             <span class="card__inner">${mediaHtml(work)}<span class="card__no">${pad(i + 1)}</span></span>
             <span class="card__cap">${work.title}<small>${work.company}</small></span>
         </button>`).join('');
@@ -263,18 +289,29 @@ $(function () {
 
     /* ---------------------------------------------------------
        2. 인트로
+       - 꼬마 악마가 Y 를 밟고, H 로 튀면서 화면 쪽으로 다가온다 (크기로 원근)
+       - H 에서 아주 높이 솟아 화면 바로 앞까지 왔다가 쾅 내려찍는다
+       - 지진이 난 듯 화면이 흔들리고 글자가 한꺼번에 무너지며 땅이 갈라진다
+       - 스크롤하면 갈라진 틈이 벌어지고, 틈 사이로 보이던 작업 판이 커지며 화면을 채운다
        --------------------------------------------------------- */
     const intro = document.querySelector('.js-intro');
     const stage = document.querySelector('.js-stage');
     const devil = document.querySelector('.js-devil');
     const devilSvg = devil.querySelector('.devil__svg');
+    const shadow = document.querySelector('.js-devil-shadow');
+    const cracksSvg = document.querySelector('.js-cracks');
+    const rift = document.querySelector('.js-rift');
+    const riftInner = document.querySelector('.js-rift-inner');
     $(intro).addClass('is-animated');
 
-    const outers = $('.js-fit .ch').not('.ch--space').toArray();   // 쓰러지는 상자
+    const outers = $('.js-fit .ch').not('.ch--space').toArray();   // 무너지는 상자
     const inners = outers.map((o) => o.firstChild);                // 안쪽 글자
-    const hopChars = $('.js-hop-line .ch').not('.ch--space').toArray();     // Y O O K H Y E I N
-    const stompLine = $('.js-stomp-line .ch').not('.ch--space').toArray();  // W E B P U B L I S H E R
+    const hopLine = $('.js-hop-line .ch').not('.ch--space').toArray(); // Y O O K H Y E I N
+    const charY = hopLine[0];
+    const charH = hopLine.find((c) => c.textContent === 'H');
     const measure = document.createElement('canvas').getContext('2d');
+
+    gsap.set(devil, { transformPerspective: 600 });
 
     // 위치는 offsetLeft/offsetTop 으로 잰다 (무대 .intro__stage 기준)
     // transform 의 영향을 받지 않아서, 글자가 움직이는 중에 재도 원래 자리가 나온다
@@ -295,7 +332,7 @@ $(function () {
         };
     }
 
-    // 악마가 글자 위에 섰을 때의 좌표 (발바닥 = 글자 꼭대기)
+    // 악마가 글자 위에 섰을 때의 좌표. 발바닥(아래 가운데)을 기준으로 커지므로 크기와 상관없다
     function landing(ch) {
         const g = glyph(ch);
         return { x: g.cx - devil.offsetWidth / 2, y: g.top - devil.offsetHeight };
@@ -307,46 +344,80 @@ $(function () {
     gsap.timeline({ repeat: -1, repeatDelay: 2.4 })
         .to('.devil__eyes', { scaleY: 0.1, transformOrigin: '50% 60%', duration: 0.08, yoyo: true, repeat: 1 });
 
+    // 그림자: 악마가 서 있는 바닥(surfaceY)에 깔린다. 높이 뜰수록 작고 흐려지고, 악마가 커지면 같이 커진다
+    let surfaceY = null;
+    let shadowOn = true;
+    function drawShadow() {
+        if (!shadowOn) return;
+        const alpha = gsap.getProperty(devil, 'opacity');
+        if (surfaceY === null || alpha < 0.01) { shadow.style.opacity = 0; return; }
+        const s = gsap.getProperty(devil, 'scale');
+        const feet = gsap.getProperty(devil, 'y') + devil.offsetHeight;
+        const air = Math.max(0, surfaceY - feet);
+        const k = clamp(0, 1, 1 - air / (devil.offsetHeight * s * 2.2));
+        gsap.set(shadow, {
+            x: gsap.getProperty(devil, 'x') + devil.offsetWidth / 2,
+            y: surfaceY,
+            scale: s * (0.45 + 0.65 * k),
+            opacity: alpha * (0.15 + 0.75 * k)
+        });
+    }
+    gsap.ticker.add(drawShadow);
+
     // 착지: 악마가 납작해졌다 돌아온다
     function squash(power) {
         return gsap.timeline()
             .to(devilSvg, { scaleX: 1 + 0.35 * power, scaleY: 1 - 0.4 * power, transformOrigin: '50% 100%', duration: 0.06 })
-            .to(devilSvg, { scaleX: 1, scaleY: 1, duration: 0.45, ease: 'elastic.out(1, 0.4)' });
+            .to(devilSvg, { scaleX: 1, scaleY: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+    }
+
+    // 웅크리기 (뛰기 전)
+    function crouch(time) {
+        return gsap.timeline()
+            .to(devilSvg, { scaleY: 0.66, scaleX: 1.22, transformOrigin: '50% 100%', duration: time, ease: 'power2.out' })
+            .to(devilSvg, { scaleY: 1.1, scaleX: 0.92, duration: 0.12, ease: 'power2.in' })
+            .to(devilSvg, { scaleY: 1, scaleX: 1, duration: 0.3 });
     }
 
     // 밟힌 글자: 주황색으로 바뀌고 눌렸다 튄다
-    function stepOn(ch) {
+    function stepOn(ch, power) {
         const inner = ch.firstChild;
         return gsap.timeline()
-            .to(inner, { color: '#f0a63a', scaleY: 0.82, transformOrigin: '50% 100%', duration: 0.06 })
-            .to(inner, { scaleY: 1, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+            .to(inner, { color: '#f0a63a', scaleY: 1 - 0.2 * power, scaleX: 1 + 0.06 * power, transformOrigin: '50% 100%', duration: 0.06 })
+            .to(inner, { scaleY: 1, scaleX: 1, duration: 0.8, ease: 'elastic.out(1, 0.3)' });
     }
 
-    // 한 번 뛰기: 옆으로는 일정하게, 위아래는 올라갈 때 느려지고 떨어질 때 빨라지게
-    // 뛰는 방향으로 몸을 기울이고 팔을 든다
-    function hop(ch, duration, height) {
+    // 튀기: 옆으로는 부드럽게, 위아래는 올라갈 때 느려지고 떨어질 때 빨라지게.
+    // 크기(scale)를 키우면 화면 쪽으로 다가오는 것처럼 보인다. 앞으로 숙이는 각도(rotationX)도 함께
+    function hop(ch, duration, height, peakScale, endScale) {
         const to = () => landing(ch);
-        const peak = () => Math.min(gsap.getProperty(devil, 'y'), to().y) - height();
+        const peak = () => {
+            const y = Math.min(gsap.getProperty(devil, 'y'), to().y) - height();
+            return Math.max(y, devil.offsetHeight * (peakScale - 1) + 8); // 머리가 너무 잘리지 않게
+        };
         const dir = () => (to().x >= gsap.getProperty(devil, 'x') ? 1 : -1);
+        const half = duration / 2;
         return gsap.timeline()
-            .to(devil, { x: () => to().x, duration: duration, ease: 'none' }, 0)
-            .to(devil, { y: peak, duration: duration / 2, ease: 'power2.out' }, 0)
-            .to(devil, { y: () => to().y, duration: duration / 2, ease: 'power2.in' }, duration / 2)
-            .to(devil, { rotation: () => dir() * 10, duration: duration / 2, ease: 'sine.out' }, 0)
-            .to(devil, { rotation: 0, duration: duration / 2, ease: 'sine.in' }, duration / 2)
-            .to('.devil__arm--l', { rotation: 30, svgOrigin: '19 76', duration: duration / 2, yoyo: true, repeat: 1 }, 0)
-            .to('.devil__arm--r', { rotation: -30, svgOrigin: '81 76', duration: duration / 2, yoyo: true, repeat: 1 }, 0);
+            .to(devil, { x: () => to().x, duration: duration, ease: 'sine.inOut' }, 0)
+            .to(devil, { y: peak, duration: half, ease: 'power2.out' }, 0)
+            .to(devil, { y: () => to().y, duration: half, ease: 'power2.in' }, half)
+            .to(devil, { scale: peakScale, duration: half, ease: 'sine.out' }, 0)
+            .to(devil, { scale: endScale, duration: half, ease: 'sine.in' }, half)
+            .to(devil, { rotation: () => dir() * 12, rotationX: -22, duration: half, ease: 'sine.out' }, 0)
+            .to(devil, { rotation: 0, rotationX: 0, duration: half, ease: 'sine.in' }, half)
+            .to('.devil__arm--l', { rotation: 35, svgOrigin: '19 76', duration: half, yoyo: true, repeat: 1 }, 0)
+            .to('.devil__arm--r', { rotation: -35, svgOrigin: '81 76', duration: half, yoyo: true, repeat: 1 }, 0);
     }
 
-    // 와장창 계획: 글자마다 어느 쪽으로, 몇 도로, 어디까지 떨어질지 미리 정한다
-    // (악마가 쓰러진 글자 더미 위에 앉을 높이도 여기서 계산)
+    // 무너짐 계획: 글자마다 어느 쪽으로, 몇 도로, 어디까지 떨어질지 미리 정한다
+    // (악마가 무너진 글자 더미 위에 설 높이도 여기서 계산)
     function planCollapse(impactCh) {
         const hit = glyph(impactCh);
-        const floor = stage.clientHeight - Math.max(28, window.innerHeight * 0.07); // 바닥선
+        const floor = stage.clientHeight - Math.max(28, window.innerHeight * 0.06); // 바닥선
         const plan = outers.map((ch) => {
             const g = glyph(ch);
-            const side = g.cx < hit.cx ? -1 : 1;                       // 밟힌 곳에서 멀어지는 쪽으로
-            const rot = side * gsap.utils.random(72, 108);
+            const side = g.cx < hit.cx ? -1 : 1;                       // 내려찍은 곳에서 멀어지는 쪽으로
+            const rot = side * gsap.utils.random(70, 110);
             const rad = rot * Math.PI / 180;
             // 돌아간 글자가 차지하는 세로 절반, 가로 절반
             const halfH = Math.abs(Math.cos(rad)) * g.ascent / 2 + Math.abs(Math.sin(rad)) * g.w / 2;
@@ -359,32 +430,151 @@ $(function () {
                 y: floor - halfH - centerY,
                 rotation: rot,
                 origin: `50% ${((centerY - g.boxTop) / g.boxH) * 100}%`,
-                delay: dist / 2600,
+                // 한꺼번에 무너지도록 지연은 아주 짧게 (가까운 글자가 아주 조금 먼저)
+                delay: dist / 9000 + gsap.utils.random(0, 0.06),
+                toss: gsap.utils.random(14, 46) * (1 - Math.min(1, dist / window.innerWidth)),
                 left: g.cx + dx - halfW,
                 right: g.cx + dx + halfW,
                 top: floor - halfH * 2
             };
         });
 
-        // 악마가 앉을 자리: 밟은 글자가 쓰러진 자리에서, 그 아래 쌓인 글자 중 가장 높은 곳
-        // (밟은 곳 바로 아래는 글자가 양쪽으로 갈라져 비어 있을 수 있어서)
+        // 악마가 설 자리: 내려찍은 글자가 떨어진 자리에서, 그 아래 쌓인 글자 중 가장 높은 곳
         const restCx = hit.cx + plan[outers.indexOf(impactCh)].x;
         const below = plan.filter((p) => p.left < restCx && p.right > restCx);
         const pileTop = below.length ? Math.min(...below.map((p) => p.top)) : floor;
-        const rest = { x: restCx - devil.offsetWidth / 2, y: pileTop - devil.offsetHeight * 0.92 };
-        return { plan, rest };
+        const rest = { x: restCx - devil.offsetWidth / 2, y: pileTop - devil.offsetHeight * 0.92, floor: pileTop + devil.offsetHeight * 0.08 };
+        return { plan, rest, hit };
     }
 
-    // 화면 흔들기
-    function shake() {
+    // 지진: 처음엔 세게, 점점 잦아들게. 무대와 갈라진 틈을 같이 흔든다
+    function quake(power) {
         const tl = gsap.timeline();
-        [-16, 13, -10, 7, -4, 2, 0].forEach((x, i) => tl.to(stage, { x: x, y: i % 2 ? -x / 2 : x / 3, duration: 0.045 }));
-        return tl;
+        const steps = 22;
+        for (let k = 0; k < steps; k++) {
+            const a = power * Math.pow(1 - k / steps, 1.6);
+            tl.to([stage, rift], {
+                x: gsap.utils.random(-1, 1) * a,
+                y: gsap.utils.random(-1, 1) * a * 0.7,
+                rotation: gsap.utils.random(-1, 1) * a * 0.035,
+                duration: 0.05, ease: 'none'
+            });
+        }
+        return tl.to([stage, rift], { x: 0, y: 0, rotation: 0, duration: 0.1 });
+    }
+
+    /* 갈라진 틈 ----------------------------------------------------
+       crack.pts: 화면 위에서 아래까지 내려찍은 자리를 지나는 들쭉날쭉한 선 (점마다 폭 비율 wf)
+       riftState.o: 내려찍었을 때 벌어진 틈의 반쪽 폭(px). 0 이면 닫힘
+       riftState.k: 스크롤로 벌린 정도 (0 ~ 1). 1 이면 crack.full 까지 벌어져 화면을 다 덮음
+       (다 덮는 폭은 틈 모양마다 다르므로, 그릴 때마다 지금 틈으로 계산한다) */
+    let crack = null;
+    const riftState = { o: 0, k: 0 };
+
+    function makeCrack(cx, cy) {
+        const W = intro.clientWidth;
+        const H = intro.clientHeight;
+        const steps = 18;
+        const pts = [];
+        let walk = 0;
+        for (let k = 0; k <= steps; k++) {
+            const y = -30 + (H + 60) * k / steps;
+            walk += (Math.random() - 0.5) * W * 0.06;
+            const near = Math.min(1, Math.abs(y - cy) / (H * 0.12));   // 내려찍은 곳 가까이는 그 자리를 지나게
+            const bulge = 1 + 1.4 * Math.exp(-Math.pow((y - cy) / (H * 0.16), 2)); // 내려찍은 곳이 가장 넓게
+            pts.push({ x: cx + walk * near, y: y, l: (0.45 + Math.random()) * bulge, r: (0.45 + Math.random()) * bulge });
+        }
+        // 다 덮었을 때의 폭: 어느 점에서든 양쪽 화면 끝을 넘을 만큼
+        const full = Math.max(...pts.map((p) => Math.max(p.x / p.l, (W - p.x) / p.r))) + 80;
+        return { pts, full, cx, cy, W, H };
+    }
+
+    function drawRift() {
+        const o = crack ? riftState.o + (crack.full - riftState.o) * riftState.k : 0;
+        if (o < 0.2) {
+            rift.style.visibility = 'hidden';
+            return;
+        }
+        const left = crack.pts.map((p) => `${(p.x - o * p.l).toFixed(1)}px ${p.y.toFixed(1)}px`);
+        const right = crack.pts.slice().reverse().map((p) => `${(p.x + o * p.r).toFixed(1)}px ${p.y.toFixed(1)}px`);
+        rift.style.clipPath = `polygon(${left.concat(right).join(',')})`;
+        rift.style.visibility = 'visible';
+    }
+
+    // 잔금: 내려찍은 자리에서 사방으로 뻗는 가는 금. 선 길이만큼 dash 를 줘서 그려지듯 나타나게
+    function drawCracks(cx, cy) {
+        const W = intro.clientWidth;
+        let html = '';
+        const count = 9;
+        for (let b = 0; b < count; b++) {
+            let angle = (b / count) * Math.PI * 2 + gsap.utils.random(-0.3, 0.3);
+            const len = W * gsap.utils.random(0.08, 0.26);
+            let x = cx;
+            let y = cy;
+            let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+            const seg = 7;
+            for (let k = 0; k < seg; k++) {
+                angle += gsap.utils.random(-0.45, 0.45);
+                x += Math.cos(angle) * len / seg;
+                y += Math.sin(angle) * len / seg;
+                d += ` L${x.toFixed(1)} ${y.toFixed(1)}`;
+            }
+            html += `<path d="${d}" stroke-width="${gsap.utils.random(1.2, 3.2).toFixed(1)}"/>`;
+        }
+        cracksSvg.innerHTML = html;
+        const paths = cracksSvg.querySelectorAll('path');
+        paths.forEach((p) => {
+            const L = p.getTotalLength();
+            p.style.strokeDasharray = L;
+            p.style.strokeDashoffset = L;
+        });
+        return paths;
+    }
+
+    // 틈 사이로 보이는 작업 판: 썸네일을 같은 높이로 줄지어 깐다
+    function buildRift() {
+        const W = intro.clientWidth;
+        const H = intro.clientHeight;
+        const pool = collageOrder.filter((i) => thumbOf(WORKS[i]));
+        if (!pool.length) { riftInner.innerHTML = ''; return; }
+        const h = Math.max(140, H * 0.3);
+        const gap = Math.max(12, W * 0.014);
+        let html = '';
+        let idx = 0;
+        let row = 0;
+        for (let y = H * 0.03; y < H; y += h + gap * 1.6) {
+            const rnd = seeded(row * 11 + 3);
+            for (let x = -h * (0.15 + (row % 2) * 0.4); x < W; ) {
+                const i = pool[idx % pool.length];
+                idx += 1;
+                const w = h * ratios[i];
+                const dy = (rnd() - 0.5) * gap * 1.4;
+                html += `<img class="rift__img" src="${thumbOf(WORKS[i])}" alt="" decoding="async" style="left:${x.toFixed(0)}px;top:${(y + dy).toFixed(0)}px;width:${w.toFixed(0)}px;height:${h.toFixed(0)}px">`;
+                x += w + gap * (1 + rnd());
+            }
+            row += 1;
+        }
+        riftInner.innerHTML = html;
     }
 
     // 첫 등장 (한 번만): 글자가 아래에서 올라온다
     const entranceTl = gsap.timeline({ paused: true })
         .from('.fit-line', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 });
+
+    // 숫자를 0부터 목표값까지 (한 번만)
+    let counted = false;
+    function countUp() {
+        if (counted) return;
+        counted = true;
+        $('.js-count').each(function () {
+            const $el = $(this);
+            const counter = { value: 0 };
+            gsap.to(counter, {
+                value: counts[$el.data('count-from')], duration: 1.4, ease: 'power2.out',
+                onUpdate: () => $el.text(Math.round(counter.value))
+            });
+        });
+    }
 
     // 악마 공연 타임라인. 다시 세우기를 누를 때마다 새로 만든다
     let playTl = gsap.timeline({ paused: true });
@@ -392,56 +582,81 @@ $(function () {
 
     function buildPlay() {
         const tl = gsap.timeline({ paused: true });
-        const impactCh = stompLine.reduce((best, ch) =>
-            Math.abs(glyph(ch).cx - stage.clientWidth / 2) < Math.abs(glyph(best).cx - stage.clientWidth / 2) ? ch : best
-        );
-        collapse = planCollapse(impactCh);
+        collapse = planCollapse(charH);
+        const hit = collapse.hit;
+        crack = makeCrack(hit.cx, hit.top);
+        riftState.o = 0;
+        drawRift();
+        gsap.set(riftInner, { transformOrigin: `${hit.cx}px ${hit.top}px`, scale: 0.82, opacity: 1 });
+        const crackPaths = drawCracks(hit.cx, hit.top);
         const size = () => devil.offsetHeight;
+        // 원근: 멀리(작게) → 가까이(크게)
+        const FAR = 0.6;
+        const NEAR = 1.05;
+        const IMPACT = 1.25;
 
-        // 위에서 첫 글자(Y)로 떨어짐
-        tl.set(devil, { opacity: 1, rotation: 0, x: () => landing(hopChars[0]).x, y: () => -size() * 1.5 })
-            .to(devil, { y: () => landing(hopChars[0]).y, duration: 0.55, ease: 'power2.in' });
-
+        // 위에서 Y 로 떨어짐 (아직 멀리 있어서 작다)
+        tl.set(devil, { opacity: 1, rotation: 0, rotationX: 0, scale: FAR, x: () => landing(charY).x, y: () => -size() * 1.2 })
+            .call(() => { surfaceY = glyph(charY).top; })
+            .to(devil, { y: () => landing(charY).y, duration: 0.55, ease: 'power2.in' });
         let t = tl.duration();
-        tl.add(squash(1), t).add(stepOn(hopChars[0]), t);
+        tl.add(squash(1), t).add(stepOn(charY, 1), t);
+
+        // 첫 번째 튕김: Y 에서 H 로. 튀어 오르며 화면 쪽으로 다가온다
         t += 0.1;
+        tl.add(crouch(0.18), t);
+        t += 0.22;
+        tl.add(hop(charH, 0.95, () => size() * 1.8, 1.7, NEAR), t);
+        t += 0.95;
+        tl.add(squash(1.1), t).add(stepOn(charH, 1.3), t)
+            .to(stage, { y: 5, duration: 0.05, yoyo: true, repeat: 1 }, t);
 
-        // 첫 줄을 차례로 밟는다
-        hopChars.slice(1).forEach((ch) => {
-            tl.add(hop(ch, 0.34, () => size() * 0.9), t);
-            t += 0.34;
-            tl.add(squash(0.8), t).add(stepOn(ch), t);
-            t += 0.08;
-        });
+        // 두 번째: H 에서 아주 높이, 화면 바로 앞까지 다가온다 (크게 + 앞으로 숙임)
+        t += 0.12;
+        tl.add(crouch(0.3), t);
+        t += 0.34;
+        const upY = () => Math.max(landing(charH).y - size() * 1.6, size() * 1.9);
+        tl.to(devil, { y: upY, duration: 0.62, ease: 'power3.out' }, t)
+            .to(devil, { x: () => lerp(landing(charH).x, stage.clientWidth / 2 - devil.offsetWidth / 2, 0.25), duration: 0.62, ease: 'sine.out' }, t)
+            .to(devil, { scale: 2.9, rotationX: -30, rotation: -8, duration: 0.62, ease: 'power2.out' }, t)
+            .to('.devil__arm--l', { rotation: 60, svgOrigin: '19 76', duration: 0.3 }, t)
+            .to('.devil__arm--r', { rotation: -60, svgOrigin: '81 76', duration: 0.3 }, t);
+        t += 0.62;
+        // 잠깐 멈춰 장난스럽게 흔들기
+        tl.to(devil, { rotation: 8, duration: 0.08, yoyo: true, repeat: 3, ease: 'sine.inOut' }, t);
+        t += 0.34;
+        // 쾅: 빠르게 내려찍는다
+        tl.to(devil, { y: () => landing(charH).y, x: () => landing(charH).x, scale: IMPACT, rotationX: 12, rotation: 0, duration: 0.22, ease: 'power4.in' }, t)
+            .to(['.devil__arm--l', '.devil__arm--r'], { rotation: 0, duration: 0.22 }, t);
+        t += 0.22;
 
-        // 마지막 글자에서 한 번 웅크렸다가 높이 뛰어, 한 바퀴 돌며 가운데 줄로 내려찍는다
-        tl.to(devilSvg, { scaleY: 0.7, scaleX: 1.2, transformOrigin: '50% 100%', duration: 0.25, ease: 'power2.out' }, t + 0.15);
-        t += 0.4;
-        tl.to(devilSvg, { scaleY: 1, scaleX: 1, duration: 0.2 }, t)
-            .to(devil, { x: () => landing(impactCh).x, duration: 0.9, ease: 'power1.inOut' }, t)
-            .to(devil, { y: () => Math.min(0, landing(hopChars[0]).y) - size() * 1.2, duration: 0.5, ease: 'power2.out' }, t)
-            .to(devil, { rotation: -360, duration: 0.9, ease: 'power1.inOut' }, t)
-            .to(devil, { y: () => landing(impactCh).y, duration: 0.4, ease: 'power3.in' }, t + 0.5)
-            .set(devil, { rotation: 0 }, t + 0.9);
-        t += 0.9;
-
-        // 쾅: 악마 납작, 화면 흔들림, 글자가 밟힌 곳에서부터 차례로 쓰러져 바닥에 쌓인다
-        tl.add(squash(1.3), t).add(shake(), t);
+        // 충격: 악마 납작, 지진, 잔금, 땅이 갈라짐, 글자가 한꺼번에 튀었다가 무너진다
+        tl.add(squash(1.7), t)
+            .set(devil, { rotationX: 0 }, t + 0.1)
+            .add(quake(26), t)
+            .to(crackPaths, { strokeDashoffset: 0, duration: 0.35, ease: 'power3.out', stagger: 0.02 }, t)
+            .to(riftState, { o: () => Math.max(5, intro.clientWidth * 0.008), duration: 0.6, ease: 'power4.out', onUpdate: drawRift }, t + 0.05);
         outers.forEach((ch, i) => {
             const p = collapse.plan[i];
+            const at = t + 0.04 + p.delay;
             tl.set(ch, { transformOrigin: p.origin }, t)
-                .to(ch, { x: p.x, y: p.y, rotation: p.rotation, duration: gsap.utils.random(0.9, 1.3), ease: 'bounce.out' }, t + 0.05 + p.delay);
+                .to(ch, { y: -p.toss, rotation: p.rotation * 0.08, duration: 0.12, ease: 'power2.out' }, at)
+                .to(ch, { x: p.x, y: p.y, rotation: p.rotation, duration: gsap.utils.random(0.8, 1.15), ease: 'bounce.out' }, at + 0.12);
         });
 
-        // 악마는 튕겨 올랐다가 쓰러진 글자 더미 위에 앉는다
-        const up = t + 0.12;
-        tl.to(devil, { y: () => landing(impactCh).y - size() * 2.2, duration: 0.45, ease: 'power2.out' }, up)
-            .to(devil, { rotation: 25, duration: 0.45 }, up)
-            .to(devil, { y: collapse.rest.y, x: collapse.rest.x, duration: 0.6, ease: 'power2.in' }, up + 0.45)
-            .to(devil, { rotation: 0, duration: 0.6 }, up + 0.45)
-            .add(squash(1), up + 1.05)
+        // 악마는 튕겨 올랐다가 무너진 글자 더미 위에 선다
+        const up = t + 0.1;
+        tl.to(devil, { y: () => landing(charH).y - size() * 1.4, scale: 1.1, duration: 0.4, ease: 'power2.out' }, up)
+            .to(devil, { rotation: 20, duration: 0.4 }, up)
+            .call(() => { surfaceY = collapse.rest.floor; }, null, up + 0.4)
+            .to(devil, { y: collapse.rest.y, x: collapse.rest.x, duration: 0.55, ease: 'power2.in' }, up + 0.4)
+            .to(devil, { rotation: 0, duration: 0.55 }, up + 0.4)
+            .add(squash(1), up + 0.95)
             // 장난스럽게 좌우로 흔들며 웃기
-            .to(devil, { rotation: 8, duration: 0.12, yoyo: true, repeat: 5, ease: 'sine.inOut' }, up + 1.5)
+            .to(devil, { rotation: 8, duration: 0.12, yoyo: true, repeat: 5, ease: 'sine.inOut' }, up + 1.4)
+            // 무너져서 빈 위쪽에 소개가 나타난다
+            .fromTo('.js-about', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' }, up + 1.1)
+            .add(countUp, up + 1.2)
             .fromTo('.js-replay', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5 }, up + 1.6)
             .fromTo('.js-scroll-hint', { opacity: 0 }, { opacity: 1, duration: 0.6 }, up + 1.6);
 
@@ -453,6 +668,7 @@ $(function () {
     const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
     Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 1500))]).then(() => {
         fitLines();
+        buildRift();
         ScrollTrigger.refresh();
         ready = true;
         entranceTl.play();
@@ -460,18 +676,52 @@ $(function () {
         playTl.delay(0.9).play();
     });
 
-    // 다시 세우기: 쓰러진 글자가 일어서고, 악마가 다시 위에서 떨어진다
+    // 스크롤: 인트로를 고정한 채, 갈라진 틈이 벌어지며 틈 사이 작업 판이 커져 화면을 채운다
+    // 글자 무대는 카메라가 틈 속으로 들어가듯 커지며 흐려진다
+    const riftTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: intro,
+            start: 'top top',
+            end: '+=170%',
+            pin: true,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                // 공연 중에 스크롤하면 공연을 바로 끝내고(글자가 무너진 상태) 스크롤 동작으로
+                if (self.progress > 0.01 && ready) {
+                    if (entranceTl.progress() < 1) entranceTl.progress(1);
+                    if (playTl.progress() < 1) playTl.progress(1);
+                }
+                $(intro).toggleClass('is-covered', self.progress > 0.02);
+                shadowOn = self.progress < 0.6;
+            }
+        }
+    });
+    riftTl
+        .fromTo(riftState, { k: 0 }, { k: 1, duration: 1, ease: 'power2.in', immediateRender: false, onUpdate: drawRift }, 0)
+        .fromTo(riftInner, { scale: 0.82 }, { scale: 1.06, duration: 1, ease: 'power1.inOut', immediateRender: false }, 0)
+        .to('.js-about', { autoAlpha: 0, y: -20, duration: 0.25 }, 0)
+        .to(stage, { scale: 1.3, opacity: 0.2, duration: 0.9, ease: 'power1.in', transformOrigin: () => (crack ? `${crack.cx}px ${crack.cy}px` : '50% 50%') }, 0.05)
+        // 다 벌어지면 썸네일은 사라지고 밝은 판만 남아 작업 영역으로 이어진다
+        .to(riftInner, { opacity: 0, duration: 0.25 }, 0.95)
+        .to({}, { duration: 0.15 });
+
+    // 다시 세우기: 틈이 닫히고, 무너진 글자가 일어서고, 악마가 다시 위에서 떨어진다
     $('.js-replay').on('click', function () {
-        if (coverTl.scrollTrigger.progress > 0.01) return; // 0 이 아니라 0.01: 처음 계산 때 아주 작은 값이 나올 수 있음
+        if (riftTl.scrollTrigger.progress > 0.01) return; // 0 이 아니라 0.01: 처음 계산 때 아주 작은 값이 나올 수 있음
         playTl.kill();
         gsap.to(this, { autoAlpha: 0, duration: 0.2 });
+        gsap.to('.js-about', { autoAlpha: 0, y: 24, duration: 0.3 });
         gsap.to(devil, { y: '-=' + (devil.offsetHeight * 3), opacity: 0, rotation: -40, duration: 0.45, ease: 'power2.in' });
+        gsap.to(riftState, { o: 0, duration: 0.5, ease: 'power2.in', onUpdate: drawRift });
+        gsap.to(cracksSvg.querySelectorAll('path'), { opacity: 0, duration: 0.4 });
         gsap.to(outers, {
             x: 0, y: 0, rotation: 0, duration: 0.9, ease: 'back.out(1.4)',
             stagger: { each: 0.012, from: 'random' }
         });
-        gsap.to(hopChars.map((c) => c.firstChild), { color: getComputedStyle(hopChars[0].parentElement).color, duration: 0.6 });
+        gsap.to([charY.firstChild, charH.firstChild], { color: getComputedStyle(charY.parentElement).color, duration: 0.6 });
         gsap.delayedCall(1.3, () => {
+            gsap.set(devil, { scale: 0.6, rotation: 0 });
             playTl = buildPlay();
             playTl.play();
         });
@@ -517,61 +767,6 @@ $(function () {
         });
     }
 
-    // 숫자를 0부터 목표값까지 (한 번만)
-    let counted = false;
-    function countUp() {
-        if (counted) return;
-        counted = true;
-        $('.js-count').each(function () {
-            const $el = $(this);
-            const counter = { value: 0 };
-            gsap.to(counter, {
-                value: counts[$el.data('count-from')], duration: 1.4, ease: 'power2.out',
-                onUpdate: () => $el.text(Math.round(counter.value))
-            });
-        });
-    }
-
-    // 스크롤: 인트로를 고정한 채, 악마 자리에서 주황색 원이 퍼져 화면을 덮는다
-    // 원 크기(0~1)만 트윈하고, 그릴 때마다 악마의 지금 위치를 읽어 clip-path 를 만든다
-    const cover = document.querySelector('.js-cover');
-    const coverState = { p: 0 };
-    function drawCover() {
-        const cx = gsap.getProperty(devil, 'x') + devil.offsetWidth / 2;
-        const cy = gsap.getProperty(devil, 'y') + devil.offsetHeight / 2;
-        const w = intro.clientWidth;
-        const h = intro.clientHeight;
-        const far = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy)); // 가장 먼 모서리까지
-        const r = lerp(devil.offsetWidth * 0.3, far, coverState.p);
-        cover.style.clipPath = `circle(${r}px at ${cx}px ${cy}px)`;
-        cover.style.visibility = coverState.p > 0.001 ? 'visible' : 'hidden';
-    }
-
-    const coverTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: intro,
-            start: 'top top',
-            end: '+=160%',
-            pin: true,
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-                // 공연 중에 스크롤하면 공연을 바로 끝내고(글자가 쓰러진 상태) 스크롤 동작으로
-                if (self.progress > 0.01 && ready) {
-                    if (entranceTl.progress() < 1) entranceTl.progress(1);
-                    if (playTl.progress() < 1) playTl.progress(1);
-                }
-                $(intro).toggleClass('is-covered', self.progress > 0.02);
-            }
-        }
-    });
-
-    coverTl
-        .to(coverState, { p: 1, duration: 1, ease: 'power2.in', onUpdate: drawCover }, 0)
-        .fromTo('.js-about', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.85)
-        .add(countUp, 1)
-        .to({}, { duration: 0.6 });
-
     // 창 크기가 바뀌면 글자 크기를 다시 맞추고, 공연이 끝난 상태라면 새 크기로 다시 쌓는다
     let resizeTimer;
     let lastWidth = window.innerWidth;
@@ -581,6 +776,7 @@ $(function () {
             if (window.innerWidth === lastWidth) return; // 모바일 주소창 때문에 높이만 바뀐 경우
             lastWidth = window.innerWidth;
             fitLines();
+            buildRift();
             if (ready) {
                 playTl.kill();
                 gsap.set(outers, { x: 0, y: 0, rotation: 0 });
@@ -593,28 +789,20 @@ $(function () {
 
 
     /* ---------------------------------------------------------
-       3. 작업 46개
+       3. 작업 45개
        --------------------------------------------------------- */
     const section = document.querySelector('.js-works');
     const cards = gsap.utils.toArray('.card');
     const n = cards.length;
+    const tabs = gsap.utils.toArray('.filter');
 
-    // 밝은 판이 둥근 카드처럼 올라오다가 화면을 꽉 채운다 (clip-path inset 의 여백과 모서리를 0 으로)
-    gsap.fromTo(section,
-        { clipPath: 'inset(6vh 5vw 0vh 5vw round 56px)' },
-        {
-            clipPath: 'inset(0vh 0vw 0vh 0vw round 0px)',
-            ease: 'none',
-            scrollTrigger: { trigger: section, start: 'top bottom', end: 'top top', scrub: true }
-        });
-
-    // 헤더 글자색: 주황 소개 화면부터 밝은 작업 판이 헤더 밑을 지나갈 때까지는 어둡게
+    // 헤더 글자색: 틈이 벌어져 밝은 작업 판이 헤더 밑까지 오면, 작업 판이 지나갈 때까지 어둡게
     // lightEnd: 작업 판 아래쪽 끝이 헤더에 닿는 스크롤 위치
     function setupHeader(lightEnd) {
-        const cover = coverTl.scrollTrigger;
+        const cover = riftTl.scrollTrigger;
         const update = () => {
             const y = window.scrollY;
-            const from = cover.start + (cover.end - cover.start) * 0.35;
+            const from = cover.start + (cover.end - cover.start) * 0.6;
             $('.header').toggleClass('is-light', y >= from && y < lightEnd());
         };
         ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update, onRefresh: update });
@@ -622,18 +810,101 @@ $(function () {
     }
 
     if (!isDesktop) {
-        // 모바일: 화면에 들어오는 만큼씩 묶어서 차례로 등장
-        gsap.set(cards, { opacity: 0, y: 40 });
-        ScrollTrigger.batch(cards, {
-            start: 'top 92%',
-            once: true,
-            onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 })
+        // 모바일 1) 대표 작업 겹친 카드: 화면을 잠깐 고정하고, 아래에서 비스듬히 누워 기다리던 카드가
+        //          한 장씩 올라와 똑바로 서고, 지나간 카드는 위로 젖혀지며 사라진다
+        const featIds = WORKS.map((w, i) => i).filter((i) => WORKS[i].featured);
+        const mstack = document.querySelector('.js-mstack');
+        const mstage = mstack.querySelector('.js-mstack-stage');
+        const minfo = mstack.querySelector('.js-mstack-info');
+        // 대표 작업 카드를 복제해 쓴다 (아래 전체 목록에도 같은 카드가 있으므로 화면 읽기 프로그램에는 숨김)
+        featIds.forEach((i) => {
+            const clone = cards[i].cloneNode(true);
+            clone.setAttribute('tabindex', '-1');
+            clone.setAttribute('aria-hidden', 'true');
+            mstage.appendChild(clone);
         });
-        // 회사별 보기를 누르면 남은 카드가 다시 차례로 올라온다
+        $(section).addClass('is-mstack');
+        const mcards = gsap.utils.toArray(mstage.children);
+        const mcount = mcards.length;
+        $(mstage).on('click', '.card', function () { openModal(this); });
+        gsap.set(mcards, { xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
+
+        const mstate = { p: 0 };
+        let mcurrent = -1;
+        function renderStack() {
+            const H = mstage.clientHeight;
+            mcards.forEach((card, i) => {
+                const d = i - mstate.p;
+                let y, z, rotationX, opacity, scale;
+                if (d >= 0) {
+                    // 기다리는 카드: 아래쪽에 뒤로 누운 채 겹쳐 있다
+                    y = d * H * 0.07 + clamp(0, 1, d) * H * 0.08;
+                    z = -d * 140;
+                    rotationX = 48 * clamp(0, 1, d);
+                    opacity = 1 - clamp(0, 1, d - 3);
+                    scale = 1 - clamp(0, 1, d) * 0.06;
+                } else {
+                    // 지나간 카드: 위로 올라가며 앞으로 젖혀져 사라진다
+                    const k = Math.max(d, -1.4);
+                    y = k * H * 0.55;
+                    z = -k * 60;
+                    rotationX = 40 * k;
+                    opacity = clamp(0, 1, 1 + d * 1.4);
+                    scale = 1;
+                }
+                gsap.set(card, {
+                    y: y, z: z, rotationX: rotationX, scale: scale, opacity: opacity,
+                    visibility: opacity < 0.01 ? 'hidden' : 'visible',
+                    zIndex: 100 - Math.round(Math.abs(d) * 2)
+                });
+            });
+            const index = Math.round(clamp(0, mcount - 1, mstate.p));
+            if (index !== mcurrent) {
+                mcurrent = index;
+                const w = WORKS[featIds[index]];
+                minfo.innerHTML = `<p class="mstack__count">${pad(index + 1)} <span>/ ${pad(mcount)}</span> 대표 작업</p>
+                    <h3 class="mstack__title">${w.title}</h3><p class="mstack__meta">${w.company} · ${w.period}</p>`;
+                gsap.fromTo(minfo.children,
+                    { opacity: 0, y: 12, filter: 'blur(6px)' },
+                    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.45, stagger: 0.05, ease: 'power2.out', overwrite: true });
+            }
+        }
+        gsap.timeline({
+            onUpdate: renderStack,
+            scrollTrigger: {
+                trigger: mstack,
+                start: 'top top',
+                end: () => '+=' + window.innerHeight * (0.7 * (mcount - 1) + 0.4),
+                pin: true,
+                pinSpacing: true, // 부모(.works)가 flex 라서 기본값이 false 가 된다. 고정된 동안 아래 목록이 밀려 내려가게
+                scrub: 0.5,
+                invalidateOnRefresh: true,
+                onRefresh: renderStack
+            }
+        })
+            .to(mstate, { p: mcount - 1, duration: mcount - 1, ease: 'none' })
+            .to({}, { duration: 0.5 });
+        renderStack();
+
+        // 모바일 2) 전체 목록: 카드가 아래에서 뒤로 누운 채 들어와, 화면 위로 올라오면서 일어선다
+        cards.forEach((card) => {
+            gsap.fromTo(card,
+                { rotationX: 58, y: 70, z: -160, opacity: 0, transformOrigin: '50% 100%' },
+                {
+                    rotationX: 0, y: 0, z: 0, opacity: 1, ease: 'power2.out',
+                    scrollTrigger: { trigger: card, start: 'top 102%', end: 'top 66%', scrub: 0.5 }
+                });
+        });
+        // 색인 탭: 전체 목록이 화면에 들어오면 아래에서 차례로 올라온다
+        gsap.from(tabs, {
+            yPercent: 110, duration: 0.7, ease: 'power3.out', stagger: 0.08,
+            scrollTrigger: { trigger: '.js-cards', start: 'top 80%', once: true }
+        });
+        // 회사별 보기를 누르면 목록 처음으로 올라간다 (카드 수가 바뀌어 페이지 길이가 달라졌으니 먼저 다시 잰다)
         onFilter = () => {
-            gsap.fromTo(cards.filter((c) => !c.classList.contains('is-off')),
-                { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03, overwrite: true });
             ScrollTrigger.refresh();
+            const top = document.querySelector('.js-cards').getBoundingClientRect().top + window.scrollY - 90;
+            if (window.scrollY > top) window.scrollTo({ top: top, behavior: 'smooth' });
         };
         const sectionEnd = ScrollTrigger.create({ trigger: section, start: 'bottom top+=64' });
         setupHeader(() => sectionEnd.start);
@@ -677,8 +948,10 @@ $(function () {
         });
     }
 
-    // 콜라주 배치: 보이는 카드 수에 맞춰 칸을 나누고, 칸 안에서 위치와 크기를 조금씩 흩트린다
-    // 대표 작업은 크게(다른 카드 밑에 깔리게), 몇 장은 조금 크게
+    // 콜라주 배치: 모든 카드를 같은 높이(h)로 줄지어 놓는다. 가로는 카드마다 비율대로 제각각.
+    // 줄이 영역 안에 다 들어가는 가장 큰 h 를 찾고, 줄마다 남는 공간을 카드 사이에 고르지 않게 나눠
+    // 콜라주처럼 보이게 한다. 위아래로도 조금씩 어긋나게.
+    let stackUnit = 300; // 겹친 카드 단계에서 카드 간격의 기준 (카드 높이의 3/4)
     function layoutCollage(filter, animate) {
         const head = document.querySelector('.js-works-head');
         const filters = document.querySelector('.js-filters');
@@ -686,60 +959,74 @@ $(function () {
         const H = section.clientHeight;
         const side = parseFloat(getComputedStyle(head).left);
         const top = head.offsetTop + head.offsetHeight + 24;
-        const bottom = filters.offsetTop - 16;
+        const bottom = filters.offsetTop - 18;
         const areaW = W - side * 2;
         const areaH = bottom - top;
-        const cardW = cards[0].offsetWidth;
-        const ratio = cards[0].offsetHeight / cardW;
-        const ids = cards.map((c, i) => i).filter((i) => filter === 'all' || WORKS[i].cat === filter);
-        const count = ids.length;
-        // 칸 가로:세로 = 0.68 정도가 되도록 열 수를 정한다
-        const cols = Math.min(count, Math.max(1, Math.round(Math.sqrt(count * (areaW / areaH) / 0.68))));
-        const rows = Math.ceil(count / cols);
-        const cellW = areaW / cols;
-        const cellH = areaH / rows;
-        const base = Math.min(cellW * 0.78, cellH * 0.78 / ratio);
-        const maxW = Math.min(areaW * 0.45, areaH * 0.92 / ratio);
+        const cardH = cards[0].offsetHeight; // 모든 카드 높이가 같다
+        stackUnit = cardH * 0.75;
+        const ids = collageOrder.filter((i) => filter === 'all' || WORKS[i].cat === filter);
+        const gapX = Math.max(10, areaW * 0.011);
+        const gapY = gapX * 1.7;
+
+        // 높이 h 로 왼쪽부터 채우다 넘치면 다음 줄
+        function pack(h) {
+            const rows = [];
+            let row = [];
+            let width = 0;
+            ids.forEach((i) => {
+                const w = h * ratios[i];
+                if (row.length && width + gapX + w > areaW) {
+                    rows.push({ items: row, w: width });
+                    row = [];
+                    width = 0;
+                }
+                width += (row.length ? gapX : 0) + w;
+                row.push(i);
+            });
+            if (row.length) rows.push({ items: row, w: width });
+            return rows;
+        }
+        // 다 들어가는 가장 큰 높이 (이분 탐색). 한두 장일 때 너무 커지지 않게 위쪽 한계를 둔다
+        let lo = 12;
+        let hi = Math.min(areaH * 0.78, cardH * 1.5);
+        for (let k = 0; k < 26; k++) {
+            const mid = (lo + hi) / 2;
+            const rows = pack(mid);
+            const fits = rows.length * mid + (rows.length - 1) * gapY <= areaH && rows.every((r) => r.w <= areaW);
+            if (fits) lo = mid; else hi = mid;
+        }
+        const h = lo;
+        const rows = pack(h);
+        const totalH = rows.length * h + (rows.length - 1) * gapY;
         // 카드의 원래 자리(가운데 기준) = 무대의 left 60%, top 56%
         const baseX = W * 0.6;
         const baseY = H * 0.56;
 
-        // 칸 배정: 큰 대표 작업은 한쪽에 몰리지 않게 대각선으로 흩어 놓고, 나머지는 빈 칸을 차례로 채운다
-        const big = (i) => WORKS[i].featured && count > 6;
-        const feats = ids.filter(big);
-        const slots = new Array(count).fill(-1);
-        feats.forEach((i, j) => {
-            const r = Math.min(rows - 1, Math.floor(j * rows / feats.length));
-            const c = Math.min(cols - 1, Math.floor((j + 0.5) * cols / feats.length));
-            let slot = Math.min(count - 1, r * cols + c);
-            while (slots[slot] !== -1) slot = (slot + 1) % count;
-            slots[slot] = i;
-        });
-        let free = 0;
-        ids.filter((i) => !big(i)).forEach((i) => {
-            while (slots[free] !== -1) free += 1;
-            slots[free] = i;
-        });
-
         // 보기에서 빠지는 카드: 제자리에서 작아지며 사라진다
         const targets = cells.map((c) => ({ x: c.x, y: c.y, s: c.s * 0.6, o: 0, z: c.z, depth: c.depth }));
-        slots.forEach((i, k) => {
-            const rnd = seeded(i * 13 + 5);
-            const row = Math.floor(k / cols);
-            const col = k % cols;
-            const inRow = row === rows - 1 ? count - row * cols : cols;
-            const shift = (cols - inRow) * cellW / 2; // 마지막 줄은 가운데로
-            const isBig = big(i);
-            const factor = isBig ? 2.3 : (rnd() < 0.15 ? 1.4 : gsap.utils.interpolate(0.65, 1, rnd()));
-            const w = Math.min(base * factor, maxW);
-            const h = w * ratio;
-            const cx = clamp(side + w / 2, W - side - w / 2, side + shift + col * cellW + cellW / 2 + (rnd() - 0.5) * cellW * 0.4);
-            const cy = clamp(top + h / 2, bottom - h / 2, top + row * cellH + cellH / 2 + (rnd() - 0.5) * cellH * 0.3);
-            targets[i] = {
-                x: cx - baseX, y: cy - baseY, s: w / cardW, o: 1,
-                z: isBig ? 2 + k : 20 + Math.round(rnd() * 40),
-                depth: gsap.utils.interpolate(0.4, 1.4, rnd())
-            };
+        let rowY = top + (areaH - totalH) / 2 + h / 2;
+        rows.forEach((row, r) => {
+            const rnd = seeded(r * 31 + row.items[0] * 7);
+            const free = areaW - row.w;
+            const gaps = row.items.length - 1;
+            // 남는 가로 공간: 카드 사이에 제각각 나누고(한 칸에 최대 카드 높이의 0.6), 나머지는 줄 양끝 여백
+            const weights = row.items.slice(1).map(() => 0.2 + rnd());
+            const wsum = weights.reduce((a, b) => a + b, 0) || 1;
+            const between = gaps ? Math.min(free * 0.8, gaps * h * 0.6) : 0;
+            const margin = free - between;
+            let x = side + margin * (0.25 + rnd() * 0.5);
+            row.items.forEach((i, k) => {
+                if (k > 0) x += gapX + between * weights[k - 1] / wsum;
+                const w = h * ratios[i];
+                const cy = clamp(top + h / 2, bottom - h / 2, rowY + (rnd() - 0.5) * gapY * 0.9);
+                targets[i] = {
+                    x: x + w / 2 - baseX, y: cy - baseY, s: h / cardH, o: 1,
+                    z: 10 + Math.round(rnd() * 40),
+                    depth: gsap.utils.interpolate(0.4, 1.4, rnd())
+                };
+                x += w;
+            });
+            rowY += h + gapY;
         });
 
         cells.forEach((cell, i) => {
@@ -772,7 +1059,7 @@ $(function () {
 
     function render() {
         needsRender = false;
-        const cardW = cards[0].offsetWidth;
+        const unit = stackUnit;
         const g = state.g;
 
         cards.forEach((card, i) => {
@@ -781,7 +1068,7 @@ $(function () {
 
             if (d >= 0) {
                 // 뒤에서 기다리는 카드: 오른쪽 뒤로 비스듬히 줄 서 있다 (5장 넘게 뒤는 숨김)
-                x = d * cardW * 0.3;
+                x = d * unit * 0.3;
                 y = -d * 14;
                 z = -d * 150;
                 rotationY = -38 * clamp(0, 1, d);
@@ -789,7 +1076,7 @@ $(function () {
             } else {
                 // 넘어간 카드: 왼쪽으로 빠지며 사라진다 (너무 멀리 가지 않게 -1.5장에서 멈춤)
                 const k = Math.max(d, -1.5);
-                x = k * cardW * 1.2;
+                x = k * unit * 1.3;
                 y = 0;
                 z = 0;
                 rotationY = 25 * clamp(0, 1, -k);
@@ -822,8 +1109,9 @@ $(function () {
         const index = Math.round(clamp(0, n - 1, state.p));
         if (index !== current) { current = index; showInfo(index); }
         gsap.set([info, '.js-counter'], { autoAlpha: 1 - clamp(0, 1, g * 4) });
-        // 회사별 보기는 콜라주가 거의 펼쳐졌을 때 나타나고, 바로 가기 버튼은 사라진다
-        gsap.set('.js-filters', { autoAlpha: clamp(0, 1, (g - 0.6) * 4) });
+        // 색인 탭은 콜라주가 거의 펼쳐졌을 때 아래에서 차례로 올라오고, 바로 가기 버튼은 사라진다
+        const rise = clamp(0, 1, (g - 0.55) * 2.5);
+        tabs.forEach((tab, k) => gsap.set(tab, { yPercent: 115 * (1 - clamp(0, 1, rise * 1.6 - k * 0.2)) }));
         gsap.set('.js-skip', { autoAlpha: 1 - clamp(0, 1, g * 3) });
 
         // 단계 표시: Selected(대표 5장) / All works(나머지) / Index(콜라주)

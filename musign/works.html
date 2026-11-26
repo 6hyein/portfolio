@@ -27,7 +27,8 @@
     <main>
         <!-- 1. 인트로 -->
         <section class="intro js-intro">
-            <!-- 첫 화면: 서 있는 이름 위를 꼬마 악마가 뛰어다니다가, 가운데 줄을 밟으면 글자가 전부 쓰러진다 -->
+            <!-- 첫 화면: 꼬마 악마가 Y, H 를 밟으며 화면 쪽으로 다가오다가, H 위로 쾅 내려찍으면
+                 지진이 난 듯 글자가 한꺼번에 무너지고 땅이 갈라진다 -->
             <div class="intro__stage js-stage">
                 <h1 class="intro__name" aria-label="Yook Hyein, Web Publisher and Front-end Developer">
                     <span class="fit-line js-fit js-hop-line" aria-hidden="true">YOOK HYEIN</span>
@@ -35,23 +36,44 @@
                     <span class="fit-line js-fit" aria-hidden="true">&amp; FRONT-END DEVELOPER</span>
                 </h1>
 
-                <!-- 꼬마 악마 (직접 그린 SVG). 위치는 JS 가 정한다 -->
+                <!-- 글자 위에 떨어지는 악마 그림자: 높이 뜰수록 작고 흐려진다 -->
+                <span class="devil-shadow js-devil-shadow" aria-hidden="true"></span>
+
+                <!-- 꼬마 악마 (직접 그린 SVG). 위치와 크기(원근)는 JS 가 정한다 -->
                 <div class="devil js-devil" aria-hidden="true">
                     <svg class="devil__svg" viewBox="0 0 100 120">
+                        <defs>
+                            <!-- 몸통: 왼쪽 위에서 빛이 들어오는 공 모양 -->
+                            <radialGradient id="devilBody" cx="38%" cy="32%" r="72%">
+                                <stop offset="0" stop-color="#ff8a6b"/>
+                                <stop offset=".45" stop-color="#e8492f"/>
+                                <stop offset="1" stop-color="#a82414"/>
+                            </radialGradient>
+                            <linearGradient id="devilHorn" x1="0" y1="1" x2="0" y2="0">
+                                <stop offset="0" stop-color="#e9a73c"/>
+                                <stop offset="1" stop-color="#fff1c4"/>
+                            </linearGradient>
+                            <linearGradient id="devilLimb" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#e0452b"/>
+                                <stop offset="1" stop-color="#9c2212"/>
+                            </linearGradient>
+                        </defs>
                         <g class="devil__bob">
                             <g class="devil__tail">
-                                <path d="M72 92 C 94 98, 100 78, 91 66" fill="none" stroke="#c8331d" stroke-width="5" stroke-linecap="round"/>
-                                <path d="M91 66 L 82 65 L 95 55 L 96 69 Z" fill="#c8331d"/>
+                                <path d="M72 92 C 94 98, 100 78, 91 66" fill="none" stroke="url(#devilLimb)" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M91 66 L 82 65 L 95 55 L 96 69 Z" fill="#b92a17"/>
                             </g>
-                            <rect x="34" y="98" width="11" height="17" rx="5.5" fill="#c8331d"/>
-                            <rect x="55" y="98" width="11" height="17" rx="5.5" fill="#c8331d"/>
+                            <rect x="34" y="98" width="11" height="17" rx="5.5" fill="url(#devilLimb)"/>
+                            <rect x="55" y="98" width="11" height="17" rx="5.5" fill="url(#devilLimb)"/>
                             <ellipse cx="38" cy="116" rx="9" ry="4" fill="#2a1a17"/>
                             <ellipse cx="62" cy="116" rx="9" ry="4" fill="#2a1a17"/>
-                            <path class="devil__arm devil__arm--l" d="M19 76 Q 8 74 6 62" fill="none" stroke="#c8331d" stroke-width="6" stroke-linecap="round"/>
-                            <path class="devil__arm devil__arm--r" d="M81 76 Q 92 74 94 62" fill="none" stroke="#c8331d" stroke-width="6" stroke-linecap="round"/>
-                            <path d="M27 50 C 20 36, 22 22, 29 12 C 33 26, 37 35, 41 43 Z" fill="#ffd27a"/>
-                            <path d="M73 50 C 80 36, 78 22, 71 12 C 67 26, 63 35, 59 43 Z" fill="#ffd27a"/>
-                            <ellipse cx="50" cy="72" rx="34" ry="32" fill="#e8492f"/>
+                            <path class="devil__arm devil__arm--l" d="M19 76 Q 8 74 6 62" fill="none" stroke="url(#devilLimb)" stroke-width="6" stroke-linecap="round"/>
+                            <path class="devil__arm devil__arm--r" d="M81 76 Q 92 74 94 62" fill="none" stroke="url(#devilLimb)" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M27 50 C 20 36, 22 22, 29 12 C 33 26, 37 35, 41 43 Z" fill="url(#devilHorn)"/>
+                            <path d="M73 50 C 80 36, 78 22, 71 12 C 67 26, 63 35, 59 43 Z" fill="url(#devilHorn)"/>
+                            <ellipse cx="50" cy="72" rx="34" ry="32" fill="url(#devilBody)"/>
+                            <!-- 몸통 윗부분 반사광 -->
+                            <ellipse cx="38" cy="52" rx="11" ry="6" fill="#fff" opacity=".28" transform="rotate(-24 38 52)"/>
                             <ellipse cx="29" cy="82" rx="6" ry="4" fill="#ff9a7a" opacity=".55"/>
                             <ellipse cx="71" cy="82" rx="6" ry="4" fill="#ff9a7a" opacity=".55"/>
                             <g class="devil__eyes">
@@ -68,13 +90,20 @@
                     </svg>
                 </div>
 
+                <!-- 쾅 하고 내려찍은 자리에서 사방으로 번지는 잔금 (JS 가 그림) -->
+                <svg class="intro__cracks js-cracks" aria-hidden="true"></svg>
+
                 <button type="button" class="intro__replay js-replay">다시 세우기</button>
                 <p class="intro__scroll js-scroll-hint" aria-hidden="true">Scroll</p>
             </div>
-            <!-- 스크롤하면 악마 자리에서 퍼져 나가 화면을 덮는 주황색 원 -->
-            <span class="intro__cover js-cover" aria-hidden="true"></span>
 
-            <!-- 원이 화면을 덮은 뒤 나타나는 소개 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
+            <!-- 갈라진 틈: 틈 사이로 작업 판이 보이고, 스크롤하면 틈이 벌어지며 작업 판이 확대된다
+                 (모양은 JS 가 clip-path 다각형으로 그림) -->
+            <div class="intro__rift js-rift" aria-hidden="true">
+                <div class="rift__inner js-rift-inner"></div>
+            </div>
+
+            <!-- 글자가 무너진 뒤 빈 자리에 나타나는 소개 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
             <div class="intro__about js-about">
                 <p class="intro__eyebrow">Yook Hyein / Portfolio 2020 - 2026</p>
                 <p class="intro__lead">디자인 시안부터 반응형 퍼블리싱, 신청 폼 검증까지<br>직접 만든 작업을 모았습니다.</p>
@@ -87,9 +116,9 @@
         </section>
 
         <!-- 2. 작업 45개
-             PC: 밝은 판이 둥근 카드처럼 올라와 화면을 채우고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
-                 끝까지 넘기면 45장이 콜라주처럼 흩어져 펼쳐진다.
-             모바일: 처음부터 격자 -->
+             PC: 인트로의 갈라진 틈이 벌어져 이어지고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
+                 끝까지 넘기면 45장이 높이만 같고 가로는 제각각인 콜라주로 펼쳐진다.
+             모바일: 대표 작업 겹친 카드를 아래에서 위로 넘긴 뒤, 전체 목록은 카드가 누운 채 들어와 일어선다 -->
         <section class="works js-works" id="works" aria-labelledby="works-title">
             <div class="works__head js-works-head">
                 <h2 class="section-title" id="works-title">Works</h2>
@@ -106,6 +135,12 @@
                 </div>
             </div>
 
+            <!-- 모바일 대표 작업 겹친 카드 (JS 가 대표 작업 카드를 복제해 넣음) -->
+            <div class="mstack js-mstack">
+                <div class="mstack__stage js-mstack-stage"></div>
+                <div class="mstack__info js-mstack-info" aria-hidden="true"></div>
+            </div>
+
             <div class="works__stage js-cards">
                 <!-- works.js 에서 WORKS 데이터로 카드 45장을 그림 -->
             </div>
@@ -113,12 +148,12 @@
             <!-- PC 겹친 카드 단계: 맨 앞 카드 설명 -->
             <div class="works__info js-info" aria-hidden="true"></div>
 
-            <!-- 회사별 보기 (개수는 works.js 가 넣음) -->
+            <!-- 회사별 보기: 책 옆에 붙이는 색인 탭처럼 아래 가장자리에서 올라온다 (개수는 works.js 가 넣음) -->
             <div class="works__filters js-filters" role="group" aria-label="회사별 보기">
-                <button type="button" class="filter is-active" data-filter="all" aria-pressed="true"><span class="filter__label">전체</span><sup class="js-n"></sup></button>
-                <button type="button" class="filter" data-filter="tnj" aria-pressed="false"><span class="filter__label">티앤제이비즈</span><sup class="js-n"></sup></button>
-                <button type="button" class="filter" data-filter="mypass" aria-pressed="false"><span class="filter__label">마이패스</span><sup class="js-n"></sup></button>
-                <button type="button" class="filter" data-filter="team" aria-pressed="false"><span class="filter__label">팀 프로젝트</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter is-active" data-filter="all" aria-pressed="true"><span class="filter__no">00</span><span class="filter__label">전체</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="tnj" aria-pressed="false"><span class="filter__no">01</span><span class="filter__label">티앤제이비즈</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="mypass" aria-pressed="false"><span class="filter__no">02</span><span class="filter__label">마이패스</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="team" aria-pressed="false"><span class="filter__no">03</span><span class="filter__label">팀 프로젝트</span><sup class="js-n"></sup></button>
             </div>
         </section>
     </main>
