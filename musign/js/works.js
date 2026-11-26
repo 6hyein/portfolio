@@ -4,7 +4,7 @@
 
    0. 데이터(works-data.js)로 화면 그리기
    1. 스크롤 진행 바
-   2. 인트로: 글자를 하나씩 쪼개 차례로 올리고, 숫자 세기
+   2. 인트로: 공이 이름 위를 튕기다가, 스크롤하면 커져서 화면을 덮고 소개로 넘어감
    3. 대표 작업: PC에서 세로 스크롤을 가로 이동으로 바꾸기 (pin + scrub)
    4. 전체 작업: 회사별 필터와 등장 효과
    5. 배너: 끝없이 흐르는 두 줄, 스크롤이 빠를수록 빨라짐
@@ -105,6 +105,27 @@ $(function () {
         $(this).html(imgs(true) + imgs(false));
     });
 
+    // 인트로 글자 준비 (애니메이션을 끈 사용자에게도 필요해서 여기서 처리)
+    // 1) 공이 밟을 줄은 글자마다 <span class="ch"> 로 쪼갠다
+    $('.js-bounce-line, .js-last-line').each(function () {
+        const chars = $(this).text().split('').map((ch) =>
+            ch === ' ' ? '<span class="ch ch--space">&nbsp;</span>' : `<span class="ch">${ch}</span>`
+        ).join('');
+        // 끝에 크기 0짜리 표시를 붙여서 글자 기준선(baseline) 위치를 잴 수 있게 한다
+        $(this).html(chars + '<i class="baseline"></i>');
+    });
+
+    // 2) 줄마다 글자 크기를 화면 너비에 꽉 차게 맞춘다
+    //    100px 로 놓고 잰 너비와 실제 너비의 비율만큼 키우거나 줄인다
+    function fitLines() {
+        const width = $('.intro__name').width();
+        $('.js-fit').each(function () {
+            this.style.fontSize = '100px';
+            this.style.fontSize = (100 * width / this.offsetWidth) + 'px';
+        });
+    }
+    fitLines();
+
     // 6. 이메일 복사 (애니메이션과 상관없어서 먼저 연결)
     $('.js-copy').on('click', async function () {
         const $btn = $(this);
@@ -132,6 +153,7 @@ $(function () {
             setActiveFilter($(this));
             renderArchive($(this).data('filter'));
         });
+        $(window).on('resize', fitLines);
         return; // 아래 애니메이션은 모두 건너뜀
     }
 
@@ -149,19 +171,92 @@ $(function () {
     /* ---------------------------------------------------------
        2. 인트로
        --------------------------------------------------------- */
+    const intro = document.querySelector('.js-intro');
+    const ball = document.querySelector('.js-ball');
+    $(intro).addClass('is-animated'); // 한 화면 고정 레이아웃으로 바꿈 (CSS 참고)
 
-    // WORKS -> <span>W</span><span>O</span>... 로 쪼갠다.
-    // 바깥 span(char-mask)이 위아래를 잘라서 안쪽 글자가 아래에서 올라오는 것처럼 보인다
-    $('.js-split').each(function () {
-        const text = $(this).text();
-        const chars = text.split('').map((ch) =>
-            `<span class="char-mask" aria-hidden="true"><span class="char">${ch}</span></span>`
-        ).join('');
-        $(this).attr('aria-label', text).html(chars);
+    const hopChars = $('.js-bounce-line .ch').not('.ch--space').toArray(); // Y O O K H Y E I N
+    const lastChar = $('.js-last-line .ch').not('.ch--space').last()[0];   // 마지막 줄 끝 글자 R
+    const measure = document.createElement('canvas').getContext('2d');      // 글자 높이 재는 용도
+
+    // 공이 글자 ch 위에 올라섰을 때의 좌표 (인트로 섹션 왼쪽 위 기준)
+    //  - x: 글자 가운데
+    //  - y: 기준선에서 그 글자의 실제 높이만큼 올라간 곳 (O 처럼 둥근 글자는 조금 더 높음)
+    function landing(ch) {
+        const line = ch.parentElement;
+        const style = getComputedStyle(line);
+        measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        const glyphTop = measure.measureText(ch.textContent).actualBoundingBoxAscent;
+
+        const box = intro.getBoundingClientRect();
+        const rect = ch.getBoundingClientRect();
+        const baseline = line.querySelector('.baseline').getBoundingClientRect().top;
+        const size = ball.offsetWidth;
+
+        return {
+            x: rect.left - box.left + rect.width / 2 - size / 2,
+            y: baseline - glyphTop - box.top - size
+        };
+    }
+
+    // 착지: 공은 납작해졌다 돌아오고, 밟힌 글자는 살짝 눌렸다 튀어 오른다
+    function squash(ch) {
+        return gsap.timeline()
+            .to(ball, { scaleX: 1.4, scaleY: 0.6, transformOrigin: '50% 100%', duration: 0.06 })
+            .to(ch, { yPercent: 6, duration: 0.06 }, 0)
+            .to(ball, { scaleX: 1, scaleY: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' })
+            .to(ch, { yPercent: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' }, '<');
+    }
+
+    // 한 번 뛰기: 옆으로는 일정하게(ease none), 위아래는 올라갈 때 느려지고 떨어질 때 빨라지게
+    function hop(ch, duration) {
+        const height = () => ball.offsetWidth * 2.6;
+        // 꼭대기 = 지금 위치와 도착 위치 중 더 높은 쪽에서 height 만큼 위
+        const peak = () => Math.min(gsap.getProperty(ball, 'y'), landing(ch).y) - height();
+
+        return gsap.timeline()
+            .to(ball, { x: () => landing(ch).x, duration: duration, ease: 'none' }, 0)
+            .to(ball, { y: peak, duration: duration / 2, ease: 'power2.out' }, 0)
+            .to(ball, { y: () => landing(ch).y, duration: duration / 2, ease: 'power2.in' }, duration / 2);
+    }
+
+    // 첫 화면 타임라인. 좌표는 함수로 넘겨서 "그 동작이 시작되는 순간" 재도록 했다
+    // (글꼴이 늦게 불러와져 글자 크기가 바뀌어도 맞는 자리에 떨어짐)
+    const bounceTl = gsap.timeline({ paused: true });
+    bounceTl.from('.fit-line', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 });
+
+    // 공이 위에서 첫 글자(Y)로 떨어짐
+    bounceTl.set(ball, { opacity: 1, x: () => landing(hopChars[0]).x, y: -80 }, '-=0.2')
+        .to(ball, { y: () => landing(hopChars[0]).y, duration: 0.55, ease: 'power2.in' });
+
+    // t: 타임라인 위 현재 시간. 뛰기 -> 착지 -> 다음 뛰기 순서로 시간을 직접 쌓는다
+    let t = bounceTl.duration();
+    bounceTl.add(squash(hopChars[0]), t);
+    t += 0.08;
+
+    // 첫 줄 나머지 글자를 차례로 밟고, 마지막엔 크게 뛰어 마지막 줄 끝 글자에 착지
+    hopChars.slice(1).concat(lastChar).forEach((ch) => {
+        const duration = ch === lastChar ? 0.75 : 0.32;
+        bounceTl.add(hop(ch, duration), t);
+        t += duration;
+        bounceTl.add(squash(ch), t);
+        t += 0.08;
+    });
+    bounceTl.from('.js-scroll-hint', { opacity: 0, duration: 0.6 }, t + 0.3);
+
+    // 글꼴이 준비되면 크기를 다시 맞추고 시작 (글꼴이 늦어도 1.5초 뒤엔 시작)
+    const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+    Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 1500))]).then(() => {
+        fitLines();
+        ScrollTrigger.refresh();
+        bounceTl.play();
     });
 
-    // 숫자를 0부터 목표값까지 올린다
+    // 숫자를 0부터 목표값까지 올린다 (한 번만)
+    let counted = false;
     function countUp() {
+        if (counted) return;
+        counted = true;
         $('.js-count').each(function () {
             const $el = $(this);
             const counter = { value: 0 };
@@ -174,20 +269,68 @@ $(function () {
         });
     }
 
-    gsap.timeline({ delay: 0.2 })
-        .from('.intro__title .char', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.07 })
-        // '-=0.7': 앞 동작이 끝나기 0.7초 전에 겹쳐서 시작
-        .from('.intro__eyebrow, .intro__lead, .intro__stats li', {
-            y: 24, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08
-        }, '-=0.7')
-        .add(countUp, '-=0.6');
+    // 스크롤: 인트로를 고정한 채, 공 자리에서 주황색 원이 퍼져 화면을 덮고 소개가 올라온다
+    // 작은 공을 scale 로 키우면 가장자리가 흐려져서, 화면 전체 크기의 덮개(.js-cover)를
+    // clip-path: circle() 로 동그렇게 잘라 두고 반지름을 키우는 방식으로 했다
+    const cover = document.querySelector('.js-cover');
+    const ballCenter = () => {
+        const p = landing(lastChar);
+        const r = ball.offsetWidth / 2;
+        return { x: p.x + r, y: p.y + r, r: r };
+    };
 
-    // 아래로 내리면 큰 제목이 천천히 올라가며 흐려진다 (scrub: 스크롤 위치에 묶임)
-    gsap.to('.intro__title', {
-        yPercent: -25,
-        opacity: 0.15,
-        ease: 'none',
-        scrollTrigger: { trigger: '.intro', start: 'top top', end: 'bottom top', scrub: true }
+    const coverTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: intro,
+            start: 'top top',
+            end: '+=160%',
+            pin: true,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                // 튕기는 중에 스크롤하면 튕기기를 바로 끝내고 스크롤 동작으로 넘어감
+                // (0 이 아니라 0.01 과 비교: 처음 계산할 때 0.0000007 같은 값이 나올 수 있음)
+                if (self.progress > 0.01 && bounceTl.progress() < 1) bounceTl.progress(1);
+                $('.header').toggleClass('is-light', self.progress > 0.35);
+            }
+        }
+    });
+
+    // 고정이 풀린 뒤에도 주황 화면이 헤더 밑을 지나가므로, 다음 섹션이 헤더에 닿을 때 원래 색으로
+    ScrollTrigger.create({
+        trigger: '.featured',
+        start: 'top top+=64',
+        onEnter: () => $('.header').removeClass('is-light'),
+        onLeaveBack: () => $('.header').addClass('is-light')
+    });
+
+    coverTl
+        // 스크롤 0 일 때는 덮개를 숨겨 둔다 (튕기는 동안 원이 미리 보이지 않게)
+        .fromTo(cover, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0)
+        .fromTo(cover,
+            { clipPath: () => { const c = ballCenter(); return `circle(${c.r}px at ${c.x}px ${c.y}px)`; } },
+            {
+                // 화면 대각선 길이를 반지름으로 쓰면 어느 위치에서든 화면이 다 덮인다
+                clipPath: () => `circle(${Math.hypot(window.innerWidth, window.innerHeight)}px at ${window.innerWidth / 2}px ${window.innerHeight / 2}px)`,
+                duration: 1,
+                ease: 'power2.in'
+            }, 0)
+        .to('.js-scroll-hint', { opacity: 0, duration: 0.2 }, 0)
+        .fromTo('.js-about', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.85)
+        .add(countUp, 1)
+        .to({}, { duration: 0.6 }); // 소개 화면을 읽을 시간만큼 고정 유지
+
+    // 창 크기가 바뀌면 글자 크기를 다시 맞추고, 멈춰 있는 공도 새 자리로
+    let resizeTimer;
+    $(window).on('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            fitLines();
+            if (bounceTl.progress() === 1 && coverTl.scrollTrigger.progress === 0) {
+                gsap.set(ball, { x: landing(lastChar).x, y: landing(lastChar).y });
+            }
+            ScrollTrigger.refresh();
+        }, 200);
     });
 
 

@@ -61,34 +61,60 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 /* 1. 인트로 */
-.intro {
+.intro { position: relative; background: var(--bg); }
+.intro__stage {
     position: relative; min-height: 100svh;
-    padding: calc(var(--header-h) + 8vh) var(--pad) 10vh;
+    padding: calc(var(--header-h) + 4vh) var(--pad) 8vh;
     display: flex; flex-direction: column; justify-content: center;
 }
-.intro__eyebrow { color: var(--muted); font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
-.intro__title {
-    margin: 2vh 0 4vh;
-    font-size: clamp(88px, 23vw, 360px); font-weight: 900; line-height: .82; letter-spacing: -.06em;
+.intro__name { font-weight: 900; line-height: .9; letter-spacing: -.045em; }
+/* 줄마다 화면 너비에 꽉 차게: JS(fitLines)가 글자 크기를 다시 계산한다. 아래 clamp 는 JS 가 없을 때 값 */
+.fit-line { display: block; width: max-content; white-space: nowrap; font-size: clamp(36px, 10vw, 180px); }
+.fit-line + .fit-line { margin-top: .06em; }
+.fit-line:last-child { color: #5f5a52; }
+.fit-line .ch { display: inline-block; }
+/* 글자 기준선 위치를 재는 표시 (크기 0) */
+.fit-line .baseline { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+
+/* 튕기는 공: 위치(x, y)와 크기는 JS 가 정한다 */
+.intro__ball {
+    position: absolute; top: 0; left: 0; z-index: 4;
+    width: clamp(16px, 2.2vw, 36px); aspect-ratio: 1; border-radius: 50%;
+    background: var(--accent); opacity: 0; will-change: transform;
 }
-/* 글자 하나씩 아래에서 올라오도록 넘치는 부분을 가린다 */
-.intro__title .char-mask {
-    display: inline-block; vertical-align: top; padding-bottom: .04em;
-    /* overflow:hidden 은 좌우까지 잘라 자간을 좁힌 글자 끝이 깎인다 -> 위아래만 자르도록 clip-path 사용 */
-    clip-path: inset(0 -0.3em 0 -0.3em);
-}
-.intro__title .char { display: inline-block; }
-/* 마지막 글자(S)만 강조색 */
-.intro__title .char-mask:last-child .char { color: var(--accent); }
-.intro__lead { max-width: 560px; font-size: clamp(17px, 1.6vw, 22px); color: #d8d2c7; }
-.intro__stats { display: flex; gap: clamp(28px, 6vw, 80px); margin-top: 6vh; }
-.intro__stats strong { display: block; font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-.intro__stats span { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; }
 .intro__scroll {
     position: absolute; right: var(--pad); bottom: 5vh;
     font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
     writing-mode: vertical-rl;
 }
+
+/* 화면을 덮는 원: 평소엔 숨김, JS 가 clip-path 원 크기를 키운다 */
+.intro__cover { display: none; position: absolute; inset: 0; z-index: 5; background: var(--accent); visibility: hidden; }
+.intro.is-animated .intro__cover { display: block; }
+
+/* 소개: 기본은 첫 화면 아래에 이어서 보임 */
+.intro__about { padding: 10vh var(--pad); }
+.intro__eyebrow { color: var(--muted); font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
+.intro__lead { margin-top: 3vh; font-size: clamp(22px, 3vw, 44px); font-weight: 700; line-height: 1.35; letter-spacing: -.03em; }
+.intro__stats { display: flex; gap: clamp(28px, 6vw, 96px); margin-top: 7vh; }
+.intro__stats strong { display: block; font-size: clamp(40px, 6vw, 88px); font-weight: 900; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.intro__stats span { display: block; margin-top: 10px; color: var(--muted); font-size: 14px; }
+
+/* 애니메이션이 켜졌을 때(JS 가 is-animated 를 붙임): 한 화면 안에서 공이 덮고 소개가 위에 올라온다 */
+.intro.is-animated { height: 100vh; overflow: hidden; }
+.intro.is-animated .intro__stage { height: 100%; min-height: 0; }
+.intro.is-animated .intro__about {
+    position: absolute; inset: 0; z-index: 6;
+    display: flex; flex-direction: column; justify-content: center;
+    color: var(--bg); visibility: hidden;
+}
+.intro.is-animated .intro__eyebrow,
+.intro.is-animated .intro__stats span { color: rgba(18, 17, 16, .62); }
+
+/* 공이 화면을 덮는 동안 헤더 글자를 어둡게 */
+.header { transition: color .3s, background .3s; }
+.header.is-light { color: var(--bg); background: transparent; }
+.header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
 
 /* 2. 대표 작업 */
 .featured { position: relative; padding: 12vh 0 8vh; overflow: hidden; }
@@ -96,7 +122,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
     display: flex; align-items: flex-end; justify-content: space-between;
     padding: 0 var(--pad); margin-bottom: 6vh;
 }
-.featured__counter { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.featured__counter { display: none; font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .featured__counter .js-current { color: var(--text); }
 .featured__track { display: flex; flex-direction: column; gap: 10vh; padding: 0 var(--pad); }
 
@@ -126,6 +152,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (min-width: 1024px) {
     .featured { height: 100vh; padding: calc(var(--header-h) + 4vh) 0 0; }
     .featured__head { margin-bottom: 4vh; }
+    .featured__counter { display: block; }
     .featured__track { flex-direction: row; gap: 4vw; width: max-content; padding-right: 12vw; }
     .work { width: min(74vw, 1180px); grid-template-columns: 1.35fr 1fr; align-items: center; gap: 3.5vw; }
     .work__media { aspect-ratio: auto; height: min(62vh, 600px); }
@@ -193,6 +220,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (max-width: 767px) {
     .header__nav { display: none; }
     .intro__scroll { display: none; }
+    .fit-line + .fit-line { margin-top: .12em; }
     .row { grid-template-columns: 1fr; }
     .row__role { text-align: left; }
     .row__sub, .row__single { grid-column: 1; }
