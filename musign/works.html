@@ -87,20 +87,22 @@
         </section>
 
         <!-- 2. 작업 46개
-             PC: 카드가 비스듬히 겹쳐 서 있다가 스크롤하면 한 장씩 넘어오고, 끝까지 넘기면 격자로 펼쳐진다
+             PC: 밝은 판이 둥근 카드처럼 올라와 화면을 채우고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
+                 끝까지 넘기면 46장이 콜라주처럼 흩어져 펼쳐진다.
              모바일: 처음부터 격자 -->
         <section class="works js-works" id="works" aria-labelledby="works-title">
             <div class="works__head js-works-head">
                 <h2 class="section-title" id="works-title">Works</h2>
-                <p class="works__counter js-counter" aria-hidden="true"><span class="js-current">01</span> / <span class="js-total">46</span></p>
-                <div class="works__tools">
-                    <div class="works__filters js-filters" role="group" aria-label="회사별 보기">
-                        <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">전체</button>
-                        <button type="button" class="filter" data-filter="tnj" aria-pressed="false">티앤제이비즈</button>
-                        <button type="button" class="filter" data-filter="mypass" aria-pressed="false">마이패스</button>
-                        <button type="button" class="filter" data-filter="team" aria-pressed="false">팀 프로젝트</button>
-                    </div>
-                    <button type="button" class="works__skip js-skip">전체 한눈에 보기</button>
+                <p class="works__counter js-counter" aria-hidden="true"><span class="odo js-odo"></span><span class="works__total">/ <span class="js-total">46</span></span></p>
+                <button type="button" class="works__skip js-skip">전체 한눈에 보기</button>
+            </div>
+
+            <!-- 지금 단계 표시 (PC): 지나간 단계와 지금 단계를 글자 채움으로 보여 준다 -->
+            <div class="steps" aria-hidden="true">
+                <div class="steps__track js-steps-track">
+                    <span class="steps__item">Selected</span>
+                    <span class="steps__item">All works</span>
+                    <span class="steps__item">Index</span>
                 </div>
             </div>
 
@@ -110,8 +112,14 @@
 
             <!-- PC 겹친 카드 단계: 맨 앞 카드 설명 -->
             <div class="works__info js-info" aria-hidden="true"></div>
-            <!-- PC 격자 단계: 마우스를 올린 카드 이름 -->
-            <p class="works__tip js-tip" aria-hidden="true"></p>
+
+            <!-- 회사별 보기 (개수는 works.js 가 넣음) -->
+            <div class="works__filters js-filters" role="group" aria-label="회사별 보기">
+                <button type="button" class="filter is-active" data-filter="all" aria-pressed="true"><span class="filter__label">전체</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="tnj" aria-pressed="false"><span class="filter__label">티앤제이비즈</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="mypass" aria-pressed="false"><span class="filter__label">마이패스</span><sup class="js-n"></sup></button>
+                <button type="button" class="filter" data-filter="team" aria-pressed="false"><span class="filter__label">팀 프로젝트</span><sup class="js-n"></sup></button>
+            </div>
         </section>
     </main>
 
@@ -130,6 +138,12 @@
                 <p class="modal__link js-m-link"></p>
             </div>
         </div>
+    </div>
+
+    <!-- 작업 영역 마우스 커서 (PC): 유리 원은 천천히 따라오고, 카드 위에서는 십자선과 작업 이름 -->
+    <div class="cursor js-cursor" aria-hidden="true">
+        <span class="cursor__glass js-cursor-glass"><span class="cursor__ball"><span class="cursor__text js-cursor-text"></span></span></span>
+        <span class="cursor__pin js-cursor-pin"><span class="cursor__cross"></span><span class="cursor__label js-cursor-label"></span></span>
     </div>
 
     <!-- 3. 연락처 -->
