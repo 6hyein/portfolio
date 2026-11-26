@@ -132,7 +132,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .header.is-light { color: var(--bg); background: transparent; }
 .header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
 
-/* 2. 작업 46개: 밝은 종이 위에 작업을 펼쳥 놓은 느낌 */
+/* 2. 작업 46개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
 .works {
     --paper: #efebe4;
     --ink: #1b1a18;

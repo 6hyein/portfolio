@@ -112,7 +112,7 @@ const WORKS = [
   {
     id: 'sobang-professor', company: '마이패스', cat: 'mypass',
     title: '독한소방 교수님 소개 페이지', period: '2021.04 - 2021.06',
-    url: 'https://sobang.dokgong.com/professor',
+    url: 'https://sobang.dokgong.com/professor', thumb: '../images/preview_teacher.png',
     role: '퍼블리싱, 데이터 출력',
     points: ['HTML, CSS, jQuery로 퍼블리싱하고 PHP, MySQL로 카테고리에 맞는 데이터를 출력했습니다.'],
     tech: ['HTML5/CSS3', 'jQuery', 'PHP', 'MySQL']
