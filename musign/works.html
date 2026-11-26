@@ -19,8 +19,7 @@
     <header class="header">
         <a class="header__name" href="./works.html">육혜인<span>Web Publisher</span></a>
         <nav class="header__nav" aria-label="페이지 안 이동">
-            <a href="#featured">대표 작업</a>
-            <a href="#archive">전체 작업</a>
+            <a href="#works">작업</a>
             <a href="#contact">연락처</a>
         </nav>
     </header>
@@ -28,22 +27,56 @@
     <main>
         <!-- 1. 인트로 -->
         <section class="intro js-intro">
-            <!-- 첫 화면: 이름과 직무. 공이 첫 줄 글자 위를 튕기다가 마지막 줄 끝 글자에 멈춘다 -->
-            <div class="intro__stage">
+            <!-- 첫 화면: 서 있는 이름 위를 꼬마 악마가 뛰어다니다가, 가운데 줄을 밟으면 글자가 전부 쓰러진다 -->
+            <div class="intro__stage js-stage">
                 <h1 class="intro__name" aria-label="Yook Hyein, Web Publisher and Front-end Developer">
-                    <span class="fit-line js-fit js-bounce-line" aria-hidden="true">YOOK HYEIN</span>
-                    <span class="fit-line js-fit" aria-hidden="true">WEB PUBLISHER</span>
-                    <span class="fit-line js-fit js-last-line" aria-hidden="true">&amp; FRONT-END DEVELOPER</span>
+                    <span class="fit-line js-fit js-hop-line" aria-hidden="true">YOOK HYEIN</span>
+                    <span class="fit-line js-fit js-stomp-line" aria-hidden="true">WEB PUBLISHER</span>
+                    <span class="fit-line js-fit" aria-hidden="true">&amp; FRONT-END DEVELOPER</span>
                 </h1>
-                <span class="intro__ball js-ball" aria-hidden="true"></span>
+
+                <!-- 꼬마 악마 (직접 그린 SVG). 위치는 JS 가 정한다 -->
+                <div class="devil js-devil" aria-hidden="true">
+                    <svg class="devil__svg" viewBox="0 0 100 120">
+                        <g class="devil__bob">
+                            <g class="devil__tail">
+                                <path d="M72 92 C 94 98, 100 78, 91 66" fill="none" stroke="#c8331d" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M91 66 L 82 65 L 95 55 L 96 69 Z" fill="#c8331d"/>
+                            </g>
+                            <rect x="34" y="98" width="11" height="17" rx="5.5" fill="#c8331d"/>
+                            <rect x="55" y="98" width="11" height="17" rx="5.5" fill="#c8331d"/>
+                            <ellipse cx="38" cy="116" rx="9" ry="4" fill="#2a1a17"/>
+                            <ellipse cx="62" cy="116" rx="9" ry="4" fill="#2a1a17"/>
+                            <path class="devil__arm devil__arm--l" d="M19 76 Q 8 74 6 62" fill="none" stroke="#c8331d" stroke-width="6" stroke-linecap="round"/>
+                            <path class="devil__arm devil__arm--r" d="M81 76 Q 92 74 94 62" fill="none" stroke="#c8331d" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M27 50 C 20 36, 22 22, 29 12 C 33 26, 37 35, 41 43 Z" fill="#ffd27a"/>
+                            <path d="M73 50 C 80 36, 78 22, 71 12 C 67 26, 63 35, 59 43 Z" fill="#ffd27a"/>
+                            <ellipse cx="50" cy="72" rx="34" ry="32" fill="#e8492f"/>
+                            <ellipse cx="29" cy="82" rx="6" ry="4" fill="#ff9a7a" opacity=".55"/>
+                            <ellipse cx="71" cy="82" rx="6" ry="4" fill="#ff9a7a" opacity=".55"/>
+                            <g class="devil__eyes">
+                                <ellipse cx="39" cy="67" rx="8" ry="9" fill="#fff"/>
+                                <ellipse cx="61" cy="67" rx="8" ry="9" fill="#fff"/>
+                                <circle class="devil__pupil" cx="40" cy="68" r="4" fill="#2a1a17"/>
+                                <circle class="devil__pupil" cx="60" cy="68" r="4" fill="#2a1a17"/>
+                            </g>
+                            <path d="M29 54 L 46 60" stroke="#2a1a17" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M71 54 L 54 60" stroke="#2a1a17" stroke-width="4" stroke-linecap="round"/>
+                            <path class="devil__mouth" d="M35 81 Q 50 97 65 81 Q 50 88 35 81 Z" fill="#2a1a17"/>
+                            <path d="M44 84 L 47 90 L 50 85 Z" fill="#fff"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <button type="button" class="intro__replay js-replay">다시 세우기</button>
                 <p class="intro__scroll js-scroll-hint" aria-hidden="true">Scroll</p>
             </div>
-            <!-- 스크롤하면 공 자리에서 퍼져 나가 화면을 덮는 주황색 원 -->
+            <!-- 스크롤하면 악마 자리에서 퍼져 나가 화면을 덮는 주황색 원 -->
             <span class="intro__cover js-cover" aria-hidden="true"></span>
 
-            <!-- 공이 화면을 덮은 뒤 나타나는 소개 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
+            <!-- 원이 화면을 덮은 뒤 나타나는 소개 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
             <div class="intro__about js-about">
-                <p class="intro__eyebrow">Portfolio 2020 - 2026</p>
+                <p class="intro__eyebrow">Yook Hyein / Portfolio 2020 - 2026</p>
                 <p class="intro__lead">디자인 시안부터 반응형 퍼블리싱, 신청 폼 검증까지<br>직접 만든 작업을 모았습니다.</p>
                 <ul class="intro__stats">
                     <li><strong class="js-count" data-count-from="landing">0</strong><span>랜딩페이지</span></li>
@@ -53,35 +86,53 @@
             </div>
         </section>
 
-        <!-- 2. 대표 작업 (PC: 카드가 비스듬히 겹쳐 서 있고, 스크롤하면 한 장씩 앞으로 넘어옴) -->
-        <section class="featured" id="featured" aria-labelledby="featured-title">
-            <div class="featured__head">
-                <h2 class="section-title" id="featured-title">Selected Works</h2>
-                <p class="featured__counter" aria-hidden="true"><span class="js-current">01</span> / <span class="js-total">05</span></p>
-            </div>
-            <div class="featured__track js-track">
-                <!-- works.js 에서 FEATURED 데이터로 그림 -->
-            </div>
-        </section>
-
-        <!-- 3. 전체 작업 -->
-        <section class="archive" id="archive" aria-labelledby="archive-title">
-            <div class="archive__head">
-                <h2 class="section-title" id="archive-title">Archive</h2>
-                <div class="archive__filters" role="group" aria-label="회사별 보기">
-                    <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">전체</button>
-                    <button type="button" class="filter" data-filter="tnj" aria-pressed="false">티앤제이비즈</button>
-                    <button type="button" class="filter" data-filter="mypass" aria-pressed="false">마이패스</button>
-                    <button type="button" class="filter" data-filter="team" aria-pressed="false">팀 프로젝트</button>
+        <!-- 2. 작업 46개
+             PC: 카드가 비스듬히 겹쳐 서 있다가 스크롤하면 한 장씩 넘어오고, 끝까지 넘기면 격자로 펼쳐진다
+             모바일: 처음부터 격자 -->
+        <section class="works js-works" id="works" aria-labelledby="works-title">
+            <div class="works__head js-works-head">
+                <h2 class="section-title" id="works-title">Works</h2>
+                <p class="works__counter js-counter" aria-hidden="true"><span class="js-current">01</span> / <span class="js-total">46</span></p>
+                <div class="works__tools">
+                    <div class="works__filters js-filters" role="group" aria-label="회사별 보기">
+                        <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">전체</button>
+                        <button type="button" class="filter" data-filter="tnj" aria-pressed="false">티앤제이비즈</button>
+                        <button type="button" class="filter" data-filter="mypass" aria-pressed="false">마이패스</button>
+                        <button type="button" class="filter" data-filter="team" aria-pressed="false">팀 프로젝트</button>
+                    </div>
+                    <button type="button" class="works__skip js-skip">전체 한눈에 보기</button>
                 </div>
             </div>
-            <div class="archive__list js-archive">
-                <!-- works.js 에서 ARCHIVE 데이터로 그림 -->
+
+            <div class="works__stage js-cards">
+                <!-- works.js 에서 WORKS 데이터로 카드 46장을 그림 -->
             </div>
+
+            <!-- PC 겹친 카드 단계: 맨 앞 카드 설명 -->
+            <div class="works__info js-info" aria-hidden="true"></div>
+            <!-- PC 격자 단계: 마우스를 올린 카드 이름 -->
+            <p class="works__tip js-tip" aria-hidden="true"></p>
         </section>
     </main>
 
-    <!-- 4. 연락처 -->
+    <!-- 작업 상세 창 -->
+    <div class="modal js-modal" hidden>
+        <div class="modal__backdrop js-close"></div>
+        <div class="modal__panel js-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+            <button type="button" class="modal__close js-close" aria-label="닫기"><span aria-hidden="true">&times;</span></button>
+            <div class="modal__media js-m-media"></div>
+            <div class="modal__body">
+                <p class="modal__meta js-m-meta"></p>
+                <h3 class="modal__title" id="modal-title"></h3>
+                <p class="modal__role js-m-role"></p>
+                <ul class="modal__points js-m-points"></ul>
+                <ul class="modal__tech js-m-tech"></ul>
+                <p class="modal__link js-m-link"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 연락처 -->
     <footer class="contact" id="contact">
         <p class="contact__label">Contact</p>
         <a class="contact__mail" href="mailto:6hyein2013@gmail.com">6hyein2013@gmail.com</a>
@@ -93,6 +144,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="./js/works-data.js"></script>
+    <script src="./js/works-status.js"></script>
     <script src="./js/works.js"></script>
 </body>
 </html>
