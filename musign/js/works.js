@@ -2,109 +2,92 @@
    작업 모음 페이지 스크립트 (뮤자인 지원용)
    jQuery: 화면 그리기, 이벤트 / GSAP + ScrollTrigger: 움직임
 
-   0. 데이터(works-data.js)로 화면 그리기
+   0. 데이터(works-data.js, works-status.js)로 화면 그리기
    1. 스크롤 진행 바
-   2. 인트로: 공이 이름 위를 튕기다가, 스크롤하면 커져서 화면을 덮고 소개로 넘어감
-   3. 대표 작업: PC에서 카드가 비스듬히 겹쳐 있다가 스크롤하면 한 장씩 앞으로 (pin + scrub + snap)
-   4. 전체 작업: 회사별 필터와 등장 효과
-   5. 이메일 복사
+   2. 인트로: 꼬마 악마가 이름 위를 뛰어다니고, 가운데 줄을 밟으면 글자가 전부 쓰러진다
+      스크롤하면 악마 자리에서 원이 퍼져 화면을 덮고 소개로 넘어간다
+   3. 작업 46개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 격자로 펼쳐진다
+   4. 필터, 상세 창, 이메일 복사
    ========================================================= */
 
 $(function () {
     gsap.registerPlugin(ScrollTrigger);
 
-    // 움직임 줄이기 설정을 켠 사용자에게는 애니메이션 없이 내용만 보여 준다
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // 가로 스크롤은 넓은 화면에서만. 모바일은 세로로 쌓인 카드 그대로
     const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    const hasMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     const pad = (n) => String(n).padStart(2, '0');
-    const clamp = gsap.utils.clamp; // clamp(최소, 최대, 값)
+    const clamp = gsap.utils.clamp;           // clamp(최소, 최대, 값)
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const status = (typeof WORK_STATUS !== 'undefined') ? WORK_STATUS : {};
 
 
     /* ---------------------------------------------------------
        0. 데이터로 화면 그리기
        --------------------------------------------------------- */
 
-    // 대표 작업 카드
-    const featuredHtml = FEATURED.map((work, i) => {
-        const media = work.image
-            ? `<img src="${work.image}" alt="${work.title} 화면">`
-            : `<span>${work.title}</span>`;
-
-        return `
-        <article class="work">
-            <a class="work__media ${work.image ? '' : 'work__media--text'}" href="${work.url}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-                <span class="work__no">${pad(i + 1)}</span>${media}
-            </a>
-            <div class="work__body">
-                <p class="work__meta"><span>${work.company}</span><span>${work.period}</span></p>
-                <h3 class="work__title">${work.title}</h3>
-                <ul class="work__lines">${work.lines.map((line) => `<li>${line}</li>`).join('')}</ul>
-                <ul class="work__tech">${work.tech.map((t) => `<li>${t}</li>`).join('')}</ul>
-                <a class="work__link" href="${work.url}" target="_blank" rel="noopener">사이트 보기 <span aria-hidden="true">&rarr;</span></a>
-            </div>
-        </article>`;
-    }).join('');
-
-    $('.js-track').html(featuredHtml);
-    $('.js-total').text(pad(FEATURED.length));
-
-    // 전체 작업 목록 (필터를 누를 때마다 다시 그림)
-    function renderArchive(filter) {
-        const items = filter === 'all' ? ARCHIVE : ARCHIVE.filter((item) => item.key === filter);
-
-        const html = items.map((item) => {
-            let body;
-
-            if (item.sub) {
-                // 시리즈 작업: 하위 목록을 펼쳐서 전부 보여 준다
-                const links = item.sub.map((s) => s.url
-                    ? `<a href="${s.url}" target="_blank" rel="noopener">${s.title}<em>${s.period}</em></a>`
-                    : `<span class="is-off">${s.title}<em>${s.period}</em></span>`
-                ).join('');
-                body = `<div class="row__sub">${links}</div>`;
-            } else {
-                const link = item.url
-                    ? `<a href="${item.url}" target="_blank" rel="noopener">사이트 보기</a>`
-                    : `<span>${item.note}</span>`;
-                body = `<p class="row__single"><span>${item.period}</span>${link}</p>`;
-            }
-
-            return `
-            <article class="row">
-                <p class="row__company">${item.company}</p>
-                <h3 class="row__title">${item.title}${item.sub ? `<small>${item.sub.length}</small>` : ''}</h3>
-                <p class="row__role">${item.role}</p>
-                ${body}
-            </article>`;
-        }).join('');
-
-        $('.js-archive').html(html);
+    // 썸네일: 직접 고른 이미지 > 캡처 프로그램이 찍은 이미지 > 없으면 제목 카드
+    function thumbOf(work) {
+        if (work.thumb) return work.thumb;
+        if (status[work.id] && status[work.id].thumb) return `./images/works/${work.id}.jpg`;
+        return '';
     }
-    renderArchive('all');
 
-    // 인트로 숫자: 직접 세지 않고 데이터 개수로 계산한다
-    //  - landing: 랜딩페이지 시리즈들의 하위 항목 수
-    //  - total: 전체 작업 목록의 항목 수 (시리즈는 하위 항목 수, 단일 작업은 1)
+    // 링크 상태: live(사이트로 이동) / dead(사이트가 바뀜) / none(로그인, 관리자 페이지)
+    function linkOf(work) {
+        if (!work.url) return 'none';
+        if (work.dead) return 'dead';
+        if (status[work.id] && status[work.id].ok === false) return 'dead';
+        return 'live';
+    }
+
+    const textCard = (work) =>
+        `<span class="card__text"><em>${work.company}</em><strong>${work.title}</strong></span>`;
+
+    function mediaHtml(work) {
+        const src = thumbOf(work);
+        return src
+            ? `<img src="${src}" alt="" loading="lazy" decoding="async">`
+            : textCard(work);
+    }
+
+    const cardsHtml = WORKS.map((work, i) => `
+        <button type="button" class="card" data-index="${i}" data-cat="${work.cat}" aria-label="${work.title} 자세히 보기">
+            <span class="card__inner">${mediaHtml(work)}<span class="card__no">${pad(i + 1)}</span></span>
+            <span class="card__cap">${work.title}<small>${work.company}</small></span>
+        </button>`).join('');
+
+    $('.js-cards').html(cardsHtml);
+    $('.js-total').text(pad(WORKS.length));
+
+    // 이미지 파일이 없으면 제목 카드로 바꾼다
+    $('.js-cards img').on('error', function () {
+        const work = WORKS[$(this).closest('.card').data('index')];
+        $(this).replaceWith(textCard(work));
+    });
+
+    // 인트로 숫자: 데이터 개수로 계산 (직접 세지 않음)
     const counts = {
-        landing: ARCHIVE.filter((g) => g.landing).reduce((sum, g) => sum + g.sub.length, 0),
-        total: ARCHIVE.reduce((sum, item) => sum + (item.sub ? item.sub.length : 1), 0),
-        featured: FEATURED.length
+        landing: WORKS.filter((w) => w.series).length,
+        total: WORKS.length,
+        featured: WORKS.filter((w) => w.featured).length
     };
 
-    // 인트로 글자 준비 (애니메이션을 끈 사용자에게도 필요해서 여기서 처리)
-    // 1) 공이 밟을 줄은 글자마다 <span class="ch"> 로 쪼갠다
-    $('.js-bounce-line, .js-last-line').each(function () {
-        const chars = $(this).text().split('').map((ch) =>
-            ch === ' ' ? '<span class="ch ch--space">&nbsp;</span>' : `<span class="ch">${ch}</span>`
+    // 인트로 글자 준비: 글자마다 <span class="ch"><span class="ch__in">
+    //  - .ch     : 쓰러질 때 움직이는 바깥 상자
+    //  - .ch__in : 마우스에 반응하고, 밟히면 색이 바뀌는 안쪽 글자
+    // 바깥과 안쪽을 나눠서, 쓰러진 글자도 마우스에 반응하게 했다
+    const escapeChar = (c) => (c === '&' ? '&amp;' : c);
+    $('.js-fit').each(function () {
+        const chars = $(this).text().split('').map((c) =>
+            c === ' ' ? '<span class="ch ch--space">&nbsp;</span>' : `<span class="ch"><span class="ch__in">${escapeChar(c)}</span></span>`
         ).join('');
-        // 끝에 크기 0짜리 표시를 붙여서 글자 기준선(baseline) 위치를 잴 수 있게 한다
+        // 끝에 크기 0짜리 표시를 붙여 글자 기준선(baseline) 위치를 잰다
         $(this).html(chars + '<i class="baseline"></i>');
     });
 
-    // 2) 줄마다 글자 크기를 화면 너비에 꽉 차게 맞춘다
-    //    100px 로 놓고 잰 너비와 실제 너비의 비율만큼 키우거나 줄인다
+    // 줄마다 글자 크기를 화면 너비에 꽉 차게: 100px 로 놓고 잰 너비 비율만큼 키운다
     function fitLines() {
         const width = $('.intro__name').width();
         $('.js-fit').each(function () {
@@ -114,7 +97,7 @@ $(function () {
     }
     fitLines();
 
-    // 5. 이메일 복사 (애니메이션과 상관없어서 먼저 연결)
+    // 이메일 복사
     $('.js-copy').on('click', async function () {
         const $btn = $(this);
         try {
@@ -126,27 +109,125 @@ $(function () {
         setTimeout(() => $btn.text('이메일 복사'), 2000);
     });
 
-    // 필터 버튼 상태 바꾸기 (애니메이션 유무와 상관없이 공통)
-    function setActiveFilter($btn) {
-        $('.filter').removeClass('is-active').attr('aria-pressed', 'false');
-        $btn.addClass('is-active').attr('aria-pressed', 'true');
+
+    /* ---------------------------------------------------------
+       4-1. 상세 창
+       --------------------------------------------------------- */
+    const $modal = $('.js-modal');
+    const panel = document.querySelector('.js-panel');
+    let lastCard = null;
+
+    function fillModal(work) {
+        const meta = [`<span>${work.company}</span>`, `<span>${work.period}</span>`];
+        if (work.seriesName) {
+            const total = WORKS.filter((w) => w.seriesName === work.seriesName).length;
+            meta.push(`<span class="is-series">${work.seriesName} ${total}개 중 하나</span>`);
+        }
+        $('.js-m-meta').html(meta.join(''));
+        $('#modal-title').text(work.title);
+
+        const role = work.role || (work.series && work.series.role) || '';
+        const points = (work.points && work.points.length) ? work.points : (work.series ? work.series.points : []);
+        const tech = (work.tech && work.tech.length) ? work.tech : (work.series ? work.series.tech : []);
+        $('.js-m-role').text(role).toggle(!!role);
+        $('.js-m-points').html(points.map((p) => `<li>${p}</li>`).join(''));
+        $('.js-m-tech').html(tech.map((t) => `<li>${t}</li>`).join(''));
+
+        const src = thumbOf(work);
+        $('.js-m-media').html(src ? `<img src="${src}" alt="${work.title} 화면">` : textCard(work));
+        $('.js-m-media img').on('error', function () { $(this).replaceWith(textCard(work)); });
+
+        // 링크는 한 줄 따로. 살아 있으면 사이트로, 아니면 이유만 적는다
+        const state = linkOf(work);
+        let link;
+        if (state === 'live') {
+            link = `<a href="${work.url}" target="_blank" rel="noopener">사이트 보기 <span aria-hidden="true">&rarr;</span></a>`;
+        } else if (state === 'dead') {
+            link = '<span class="is-off">지금은 사이트가 바뀌어 링크를 걸지 않았습니다.</span>';
+        } else {
+            link = `<span class="is-off">${work.note || '공개되지 않은 페이지'}라 링크 대신 작업 내용을 정리했습니다.</span>`;
+        }
+        $('.js-m-link').html(link);
     }
 
+    function openModal(card) {
+        const work = WORKS[$(card).data('index')];
+        lastCard = card;
+        fillModal(work);
+        $modal.prop('hidden', false);
+        $('html').addClass('is-modal');
+        panel.scrollTop = 0;
+        panel.focus();
+
+        if (reduceMotion) return;
+        // 누른 카드 자리에서 창이 커지며 열린다
+        const from = card.getBoundingClientRect();
+        const to = panel.getBoundingClientRect();
+        gsap.fromTo('.modal__backdrop', { opacity: 0 }, { opacity: 1, duration: 0.4 });
+        gsap.fromTo(panel,
+            {
+                x: (from.left + from.width / 2) - (to.left + to.width / 2),
+                y: (from.top + from.height / 2) - (to.top + to.height / 2),
+                scale: Math.max(0.15, from.width / to.width),
+                opacity: 0.3
+            },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' }
+        );
+        gsap.fromTo('.modal__body > *', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, delay: 0.25, ease: 'power2.out' });
+    }
+
+    function closeModal() {
+        if ($modal.prop('hidden')) return;
+        const done = () => {
+            $modal.prop('hidden', true);
+            $('html').removeClass('is-modal');
+            if (lastCard) lastCard.focus({ preventScroll: true });
+        };
+        if (reduceMotion) return done();
+        gsap.to('.modal__backdrop', { opacity: 0, duration: 0.3 });
+        gsap.to(panel, { y: 40, opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: done });
+    }
+
+    $('.js-cards').on('click', '.card', function () { openModal(this); });
+    $modal.on('click', '.js-close', closeModal);
+    $(document).on('keydown', (e) => {
+        if ($modal.prop('hidden')) return;
+        if (e.key === 'Escape') closeModal();
+        // 창 안에서만 Tab 이 돌게
+        if (e.key === 'Tab') {
+            const items = $(panel).find('a, button').filter(':visible').toArray();
+            const first = items[0];
+            const last = items[items.length - 1];
+            if (e.shiftKey && (document.activeElement === first || document.activeElement === panel)) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    });
+
+
+    /* ---------------------------------------------------------
+       4-2. 필터: 맞지 않는 카드는 흐리게 (자리는 그대로)
+       --------------------------------------------------------- */
+    $('.filter').on('click', function () {
+        const filter = $(this).data('filter');
+        $('.filter').removeClass('is-active').attr('aria-pressed', 'false');
+        $(this).addClass('is-active').attr('aria-pressed', 'true');
+        $('.card').each(function () {
+            const dim = filter !== 'all' && $(this).data('cat') !== filter;
+            $(this).toggleClass('is-dim', dim).attr('tabindex', dim ? -1 : null);
+        });
+    });
+
+
     if (reduceMotion) {
-        $('.js-count').each(function () {
-            $(this).text(counts[$(this).data('count-from')]);
-        });
-        $('.filter').on('click', function () {
-            setActiveFilter($(this));
-            renderArchive($(this).data('filter'));
-        });
+        $('.js-count').each(function () { $(this).text(counts[$(this).data('count-from')]); });
+        $('.js-replay').hide();
         $(window).on('resize', fitLines);
         return; // 아래 애니메이션은 모두 건너뜀
     }
 
 
     /* ---------------------------------------------------------
-       1. 스크롤 진행 바: 문서 맨 위 0%, 맨 아래 100%
+       1. 스크롤 진행 바
        --------------------------------------------------------- */
     gsap.to('.progress__bar', {
         scaleX: 1,
@@ -159,87 +240,259 @@ $(function () {
        2. 인트로
        --------------------------------------------------------- */
     const intro = document.querySelector('.js-intro');
-    const ball = document.querySelector('.js-ball');
-    $(intro).addClass('is-animated'); // 한 화면 고정 레이아웃으로 바꿈 (CSS 참고)
+    const stage = document.querySelector('.js-stage');
+    const devil = document.querySelector('.js-devil');
+    const devilSvg = devil.querySelector('.devil__svg');
+    $(intro).addClass('is-animated');
 
-    const hopChars = $('.js-bounce-line .ch').not('.ch--space').toArray(); // Y O O K H Y E I N
-    const lastChar = $('.js-last-line .ch').not('.ch--space').last()[0];   // 마지막 줄 끝 글자 R
-    const measure = document.createElement('canvas').getContext('2d');      // 글자 높이 재는 용도
+    const outers = $('.js-fit .ch').not('.ch--space').toArray();   // 쓰러지는 상자
+    const inners = outers.map((o) => o.firstChild);                // 안쪽 글자
+    const hopChars = $('.js-hop-line .ch').not('.ch--space').toArray();     // Y O O K H Y E I N
+    const stompLine = $('.js-stomp-line .ch').not('.ch--space').toArray();  // W E B P U B L I S H E R
+    const measure = document.createElement('canvas').getContext('2d');
 
-    // 공이 글자 ch 위에 올라섰을 때의 좌표 (인트로 섹션 왼쪽 위 기준)
-    //  - x: 글자 가운데
-    //  - y: 기준선에서 그 글자의 실제 높이만큼 올라간 곳 (O 처럼 둥근 글자는 조금 더 높음)
-    function landing(ch) {
+    // 위치는 offsetLeft/offsetTop 으로 잰다 (무대 .intro__stage 기준)
+    // transform 의 영향을 받지 않아서, 글자가 움직이는 중에 재도 원래 자리가 나온다
+    function glyph(ch) {
         const line = ch.parentElement;
         const style = getComputedStyle(line);
         measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-        const glyphTop = measure.measureText(ch.textContent).actualBoundingBoxAscent;
-
-        const box = intro.getBoundingClientRect();
-        const rect = ch.getBoundingClientRect();
-        const baseline = line.querySelector('.baseline').getBoundingClientRect().top;
-        const size = ball.offsetWidth;
-
+        const ascent = measure.measureText(ch.textContent).actualBoundingBoxAscent; // 글자 실제 높이
+        const baseline = line.offsetTop + line.querySelector('.baseline').offsetTop;
         return {
-            x: rect.left - box.left + rect.width / 2 - size / 2,
-            y: baseline - glyphTop - box.top - size
+            cx: line.offsetLeft + ch.offsetLeft + ch.offsetWidth / 2,
+            top: baseline - ascent,
+            baseline: baseline,
+            ascent: ascent,
+            w: ch.offsetWidth,
+            boxTop: line.offsetTop + ch.offsetTop,
+            boxH: ch.offsetHeight
         };
     }
 
-    // 착지: 공은 납작해졌다 돌아오고, 밟힌 글자는 살짝 눌렸다 튀어 오른다
-    function squash(ch) {
-        return gsap.timeline()
-            .to(ball, { scaleX: 1.4, scaleY: 0.6, transformOrigin: '50% 100%', duration: 0.06 })
-            .to(ch, { yPercent: 6, duration: 0.06 }, 0)
-            .to(ball, { scaleX: 1, scaleY: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' })
-            .to(ch, { yPercent: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' }, '<');
+    // 악마가 글자 위에 섰을 때의 좌표 (발바닥 = 글자 꼭대기)
+    function landing(ch) {
+        const g = glyph(ch);
+        return { x: g.cx - devil.offsetWidth / 2, y: g.top - devil.offsetHeight };
     }
 
-    // 한 번 뛰기: 옆으로는 일정하게(ease none), 위아래는 올라갈 때 느려지고 떨어질 때 빨라지게
-    function hop(ch, duration) {
-        const height = () => ball.offsetWidth * 2.6;
-        // 꼭대기 = 지금 위치와 도착 위치 중 더 높은 쪽에서 height 만큼 위
-        const peak = () => Math.min(gsap.getProperty(ball, 'y'), landing(ch).y) - height();
+    // 악마가 계속 하는 동작: 숨쉬기, 눈 깜빡임, 꼬리 흔들기
+    gsap.to('.devil__bob', { scaleY: 0.96, scaleX: 1.03, transformOrigin: '50% 100%', duration: 0.7, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    gsap.to('.devil__tail', { rotation: 14, transformOrigin: '0% 100%', duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    gsap.timeline({ repeat: -1, repeatDelay: 2.4 })
+        .to('.devil__eyes', { scaleY: 0.1, transformOrigin: '50% 60%', duration: 0.08, yoyo: true, repeat: 1 });
 
+    // 착지: 악마가 납작해졌다 돌아온다
+    function squash(power) {
         return gsap.timeline()
-            .to(ball, { x: () => landing(ch).x, duration: duration, ease: 'none' }, 0)
-            .to(ball, { y: peak, duration: duration / 2, ease: 'power2.out' }, 0)
-            .to(ball, { y: () => landing(ch).y, duration: duration / 2, ease: 'power2.in' }, duration / 2);
+            .to(devilSvg, { scaleX: 1 + 0.35 * power, scaleY: 1 - 0.4 * power, transformOrigin: '50% 100%', duration: 0.06 })
+            .to(devilSvg, { scaleX: 1, scaleY: 1, duration: 0.45, ease: 'elastic.out(1, 0.4)' });
     }
 
-    // 첫 화면 타임라인. 좌표는 함수로 넘겨서 "그 동작이 시작되는 순간" 재도록 했다
-    // (글꼴이 늦게 불러와져 글자 크기가 바뀌어도 맞는 자리에 떨어짐)
-    const bounceTl = gsap.timeline({ paused: true });
-    bounceTl.from('.fit-line', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 });
+    // 밟힌 글자: 주황색으로 바뀌고 눌렸다 튄다
+    function stepOn(ch) {
+        const inner = ch.firstChild;
+        return gsap.timeline()
+            .to(inner, { color: '#f0a63a', scaleY: 0.82, transformOrigin: '50% 100%', duration: 0.06 })
+            .to(inner, { scaleY: 1, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+    }
 
-    // 공이 위에서 첫 글자(Y)로 떨어짐
-    bounceTl.set(ball, { opacity: 1, x: () => landing(hopChars[0]).x, y: -80 }, '-=0.2')
-        .to(ball, { y: () => landing(hopChars[0]).y, duration: 0.55, ease: 'power2.in' });
+    // 한 번 뛰기: 옆으로는 일정하게, 위아래는 올라갈 때 느려지고 떨어질 때 빨라지게
+    // 뛰는 방향으로 몸을 기울이고 팔을 든다
+    function hop(ch, duration, height) {
+        const to = () => landing(ch);
+        const peak = () => Math.min(gsap.getProperty(devil, 'y'), to().y) - height();
+        const dir = () => (to().x >= gsap.getProperty(devil, 'x') ? 1 : -1);
+        return gsap.timeline()
+            .to(devil, { x: () => to().x, duration: duration, ease: 'none' }, 0)
+            .to(devil, { y: peak, duration: duration / 2, ease: 'power2.out' }, 0)
+            .to(devil, { y: () => to().y, duration: duration / 2, ease: 'power2.in' }, duration / 2)
+            .to(devil, { rotation: () => dir() * 10, duration: duration / 2, ease: 'sine.out' }, 0)
+            .to(devil, { rotation: 0, duration: duration / 2, ease: 'sine.in' }, duration / 2)
+            .to('.devil__arm--l', { rotation: 30, svgOrigin: '19 76', duration: duration / 2, yoyo: true, repeat: 1 }, 0)
+            .to('.devil__arm--r', { rotation: -30, svgOrigin: '81 76', duration: duration / 2, yoyo: true, repeat: 1 }, 0);
+    }
 
-    // t: 타임라인 위 현재 시간. 뛰기 -> 착지 -> 다음 뛰기 순서로 시간을 직접 쌓는다
-    let t = bounceTl.duration();
-    bounceTl.add(squash(hopChars[0]), t);
-    t += 0.08;
+    // 와장창 계획: 글자마다 어느 쪽으로, 몇 도로, 어디까지 떨어질지 미리 정한다
+    // (악마가 쓰러진 글자 더미 위에 앉을 높이도 여기서 계산)
+    function planCollapse(impactCh) {
+        const hit = glyph(impactCh);
+        const floor = stage.clientHeight - Math.max(28, window.innerHeight * 0.07); // 바닥선
+        const plan = outers.map((ch) => {
+            const g = glyph(ch);
+            const side = g.cx < hit.cx ? -1 : 1;                       // 밟힌 곳에서 멀어지는 쪽으로
+            const rot = side * gsap.utils.random(72, 108);
+            const rad = rot * Math.PI / 180;
+            // 돌아간 글자가 차지하는 세로 절반, 가로 절반
+            const halfH = Math.abs(Math.cos(rad)) * g.ascent / 2 + Math.abs(Math.sin(rad)) * g.w / 2;
+            const halfW = Math.abs(Math.sin(rad)) * g.ascent / 2 + Math.abs(Math.cos(rad)) * g.w / 2;
+            const centerY = g.baseline - g.ascent / 2;                 // 글자 가운데 (회전 기준점)
+            const dx = side * gsap.utils.random(0, g.w * 0.9);
+            const dist = Math.hypot(g.cx - hit.cx, centerY - hit.top);
+            return {
+                x: dx,
+                y: floor - halfH - centerY,
+                rotation: rot,
+                origin: `50% ${((centerY - g.boxTop) / g.boxH) * 100}%`,
+                delay: dist / 2600,
+                left: g.cx + dx - halfW,
+                right: g.cx + dx + halfW,
+                top: floor - halfH * 2
+            };
+        });
 
-    // 첫 줄 나머지 글자를 차례로 밟고, 마지막엔 크게 뛰어 마지막 줄 끝 글자에 착지
-    hopChars.slice(1).concat(lastChar).forEach((ch) => {
-        const duration = ch === lastChar ? 0.75 : 0.32;
-        bounceTl.add(hop(ch, duration), t);
-        t += duration;
-        bounceTl.add(squash(ch), t);
-        t += 0.08;
-    });
-    bounceTl.from('.js-scroll-hint', { opacity: 0, duration: 0.6 }, t + 0.3);
+        // 악마가 앉을 자리: 밟은 글자가 쓰러진 자리에서, 그 아래 쌓인 글자 중 가장 높은 곳
+        // (밟은 곳 바로 아래는 글자가 양쪽으로 갈라져 비어 있을 수 있어서)
+        const restCx = hit.cx + plan[outers.indexOf(impactCh)].x;
+        const below = plan.filter((p) => p.left < restCx && p.right > restCx);
+        const pileTop = below.length ? Math.min(...below.map((p) => p.top)) : floor;
+        const rest = { x: restCx - devil.offsetWidth / 2, y: pileTop - devil.offsetHeight * 0.92 };
+        return { plan, rest };
+    }
 
-    // 글꼴이 준비되면 크기를 다시 맞추고 시작 (글꼴이 늦어도 1.5초 뒤엔 시작)
+    // 화면 흔들기
+    function shake() {
+        const tl = gsap.timeline();
+        [-16, 13, -10, 7, -4, 2, 0].forEach((x, i) => tl.to(stage, { x: x, y: i % 2 ? -x / 2 : x / 3, duration: 0.045 }));
+        return tl;
+    }
+
+    // 첫 등장 (한 번만): 글자가 아래에서 올라온다
+    const entranceTl = gsap.timeline({ paused: true })
+        .from('.fit-line', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 });
+
+    // 악마 공연 타임라인. 다시 세우기를 누를 때마다 새로 만든다
+    let playTl = gsap.timeline({ paused: true });
+    let collapse = null;
+
+    function buildPlay() {
+        const tl = gsap.timeline({ paused: true });
+        const impactCh = stompLine.reduce((best, ch) =>
+            Math.abs(glyph(ch).cx - stage.clientWidth / 2) < Math.abs(glyph(best).cx - stage.clientWidth / 2) ? ch : best
+        );
+        collapse = planCollapse(impactCh);
+        const size = () => devil.offsetHeight;
+
+        // 위에서 첫 글자(Y)로 떨어짐
+        tl.set(devil, { opacity: 1, rotation: 0, x: () => landing(hopChars[0]).x, y: () => -size() * 1.5 })
+            .to(devil, { y: () => landing(hopChars[0]).y, duration: 0.55, ease: 'power2.in' });
+
+        let t = tl.duration();
+        tl.add(squash(1), t).add(stepOn(hopChars[0]), t);
+        t += 0.1;
+
+        // 첫 줄을 차례로 밟는다
+        hopChars.slice(1).forEach((ch) => {
+            tl.add(hop(ch, 0.34, () => size() * 0.9), t);
+            t += 0.34;
+            tl.add(squash(0.8), t).add(stepOn(ch), t);
+            t += 0.08;
+        });
+
+        // 마지막 글자에서 한 번 웅크렸다가 높이 뛰어, 한 바퀴 돌며 가운데 줄로 내려찍는다
+        tl.to(devilSvg, { scaleY: 0.7, scaleX: 1.2, transformOrigin: '50% 100%', duration: 0.25, ease: 'power2.out' }, t + 0.15);
+        t += 0.4;
+        tl.to(devilSvg, { scaleY: 1, scaleX: 1, duration: 0.2 }, t)
+            .to(devil, { x: () => landing(impactCh).x, duration: 0.9, ease: 'power1.inOut' }, t)
+            .to(devil, { y: () => Math.min(0, landing(hopChars[0]).y) - size() * 1.2, duration: 0.5, ease: 'power2.out' }, t)
+            .to(devil, { rotation: -360, duration: 0.9, ease: 'power1.inOut' }, t)
+            .to(devil, { y: () => landing(impactCh).y, duration: 0.4, ease: 'power3.in' }, t + 0.5)
+            .set(devil, { rotation: 0 }, t + 0.9);
+        t += 0.9;
+
+        // 쾅: 악마 납작, 화면 흔들림, 글자가 밟힌 곳에서부터 차례로 쓰러져 바닥에 쌓인다
+        tl.add(squash(1.3), t).add(shake(), t);
+        outers.forEach((ch, i) => {
+            const p = collapse.plan[i];
+            tl.set(ch, { transformOrigin: p.origin }, t)
+                .to(ch, { x: p.x, y: p.y, rotation: p.rotation, duration: gsap.utils.random(0.9, 1.3), ease: 'bounce.out' }, t + 0.05 + p.delay);
+        });
+
+        // 악마는 튕겨 올랐다가 쓰러진 글자 더미 위에 앉는다
+        const up = t + 0.12;
+        tl.to(devil, { y: () => landing(impactCh).y - size() * 2.2, duration: 0.45, ease: 'power2.out' }, up)
+            .to(devil, { rotation: 25, duration: 0.45 }, up)
+            .to(devil, { y: collapse.rest.y, x: collapse.rest.x, duration: 0.6, ease: 'power2.in' }, up + 0.45)
+            .to(devil, { rotation: 0, duration: 0.6 }, up + 0.45)
+            .add(squash(1), up + 1.05)
+            // 장난스럽게 좌우로 흔들며 웃기
+            .to(devil, { rotation: 8, duration: 0.12, yoyo: true, repeat: 5, ease: 'sine.inOut' }, up + 1.5)
+            .fromTo('.js-replay', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5 }, up + 1.6)
+            .fromTo('.js-scroll-hint', { opacity: 0 }, { opacity: 1, duration: 0.6 }, up + 1.6);
+
+        return tl;
+    }
+
+    // 글꼴이 준비되면 크기를 다시 맞추고 시작 (늦어도 1.5초 뒤엔 시작)
+    let ready = false;
     const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
     Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 1500))]).then(() => {
         fitLines();
         ScrollTrigger.refresh();
-        bounceTl.play();
+        ready = true;
+        entranceTl.play();
+        playTl = buildPlay();
+        playTl.delay(0.9).play();
     });
 
-    // 숫자를 0부터 목표값까지 올린다 (한 번만)
+    // 다시 세우기: 쓰러진 글자가 일어서고, 악마가 다시 위에서 떨어진다
+    $('.js-replay').on('click', function () {
+        if (coverTl.scrollTrigger.progress > 0.01) return; // 0 이 아니라 0.01: 처음 계산 때 아주 작은 값이 나올 수 있음
+        playTl.kill();
+        gsap.to(this, { autoAlpha: 0, duration: 0.2 });
+        gsap.to(devil, { y: '-=' + (devil.offsetHeight * 3), opacity: 0, rotation: -40, duration: 0.45, ease: 'power2.in' });
+        gsap.to(outers, {
+            x: 0, y: 0, rotation: 0, duration: 0.9, ease: 'back.out(1.4)',
+            stagger: { each: 0.012, from: 'random' }
+        });
+        gsap.to(hopChars.map((c) => c.firstChild), { color: getComputedStyle(hopChars[0].parentElement).color, duration: 0.6 });
+        gsap.delayedCall(1.3, () => {
+            playTl = buildPlay();
+            playTl.play();
+        });
+    });
+
+    // 마우스: 가까운 글자가 마우스를 피해 밀려나고 기울어진다. 악마 눈동자는 마우스를 따라본다
+    if (hasMouse) {
+        let mouse = null;
+        let frame = 0;
+        const pushed = outers.map(() => false);
+        const pupils = gsap.utils.toArray('.devil__pupil');
+
+        function react() {
+            frame = 0;
+            if (!mouse) return;
+            const radius = Math.max(120, window.innerWidth * 0.11);
+            outers.forEach((ch, i) => {
+                const r = ch.getBoundingClientRect();
+                const dx = (r.left + r.width / 2) - mouse.x;
+                const dy = (r.top + r.height / 2) - mouse.y;
+                const d = Math.hypot(dx, dy) || 1;
+                const f = Math.max(0, 1 - d / radius);
+                if (f === 0 && !pushed[i]) return;
+                pushed[i] = f > 0;
+                gsap.to(inners[i], {
+                    x: dx / d * f * 26, y: dy / d * f * 26 - f * 12, rotation: dx / d * f * 22,
+                    duration: 0.5, ease: 'power3.out', overwrite: 'auto'
+                });
+            });
+            const box = devil.getBoundingClientRect();
+            const angle = Math.atan2(mouse.y - (box.top + box.height * 0.55), mouse.x - (box.left + box.width / 2));
+            gsap.to(pupils, { x: Math.cos(angle) * 2.6, y: Math.sin(angle) * 2.6, duration: 0.3, overwrite: 'auto' });
+        }
+
+        $(stage).on('mousemove', (e) => {
+            mouse = { x: e.clientX, y: e.clientY };
+            if (!frame) frame = requestAnimationFrame(react);
+        }).on('mouseleave', () => {
+            mouse = null;
+            pushed.fill(false);
+            gsap.to(inners, { x: 0, y: 0, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.4)', overwrite: 'auto' });
+            gsap.to(pupils, { x: 0, y: 0, duration: 0.4 });
+        });
+    }
+
+    // 숫자를 0부터 목표값까지 (한 번만)
     let counted = false;
     function countUp() {
         if (counted) return;
@@ -248,23 +501,26 @@ $(function () {
             const $el = $(this);
             const counter = { value: 0 };
             gsap.to(counter, {
-                value: counts[$el.data('count-from')],
-                duration: 1.4,
-                ease: 'power2.out',
+                value: counts[$el.data('count-from')], duration: 1.4, ease: 'power2.out',
                 onUpdate: () => $el.text(Math.round(counter.value))
             });
         });
     }
 
-    // 스크롤: 인트로를 고정한 채, 공 자리에서 주황색 원이 퍼져 화면을 덮고 소개가 올라온다
-    // 작은 공을 scale 로 키우면 가장자리가 흐려져서, 화면 전체 크기의 덮개(.js-cover)를
-    // clip-path: circle() 로 동그럗게 잘라 두고 반지름을 키우는 방식으로 했다
+    // 스크롤: 인트로를 고정한 채, 악마 자리에서 주황색 원이 퍼져 화면을 덮는다
+    // 원 크기(0~1)만 트윈하고, 그릴 때마다 악마의 지금 위치를 읽어 clip-path 를 만든다
     const cover = document.querySelector('.js-cover');
-    const ballCenter = () => {
-        const p = landing(lastChar);
-        const r = ball.offsetWidth / 2;
-        return { x: p.x + r, y: p.y + r, r: r };
-    };
+    const coverState = { p: 0 };
+    function drawCover() {
+        const cx = gsap.getProperty(devil, 'x') + devil.offsetWidth / 2;
+        const cy = gsap.getProperty(devil, 'y') + devil.offsetHeight / 2;
+        const w = intro.clientWidth;
+        const h = intro.clientHeight;
+        const far = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy)); // 가장 먼 모서리까지
+        const r = lerp(devil.offsetWidth * 0.3, far, coverState.p);
+        cover.style.clipPath = `circle(${r}px at ${cx}px ${cy}px)`;
+        cover.style.visibility = coverState.p > 0.001 ? 'visible' : 'hidden';
+    }
 
     const coverTl = gsap.timeline({
         scrollTrigger: {
@@ -275,46 +531,45 @@ $(function () {
             scrub: 0.6,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-                // 튕기는 중에 스크롤하면 튕기기를 바로 끝내고 스크롤 동작으로 넘어감
-                // (0 이 아니라 0.01 과 비교: 처음 계산할 때 0.0000007 같은 값이 나올 수 있음)
-                if (self.progress > 0.01 && bounceTl.progress() < 1) bounceTl.progress(1);
+                // 공연 중에 스크롤하면 공연을 바로 끝내고(글자가 쓰러진 상태) 스크롤 동작으로
+                if (self.progress > 0.01 && ready) {
+                    if (entranceTl.progress() < 1) entranceTl.progress(1);
+                    if (playTl.progress() < 1) playTl.progress(1);
+                }
                 $('.header').toggleClass('is-light', self.progress > 0.35);
+                $(intro).toggleClass('is-covered', self.progress > 0.02);
             }
         }
     });
 
-    // 고정이 풀린 뒤에도 주황 화면이 헤더 밑을 지나가므로, 다음 섹션이 헤더에 닿을 때 원래 색으로
+    // 고정이 풀린 뒤 다음 섹션이 헤더에 닿으면 헤더 색을 원래대로
     ScrollTrigger.create({
-        trigger: '.featured',
+        trigger: '.js-works',
         start: 'top top+=64',
         onEnter: () => $('.header').removeClass('is-light'),
         onLeaveBack: () => $('.header').addClass('is-light')
     });
 
     coverTl
-        // 스크롤 0 일 때는 덮개를 숨겨 둔다 (튕기는 동안 원이 미리 보이지 않게)
-        .fromTo(cover, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0)
-        .fromTo(cover,
-            { clipPath: () => { const c = ballCenter(); return `circle(${c.r}px at ${c.x}px ${c.y}px)`; } },
-            {
-                // 화면 대각선 길이를 반지름으로 쓰면 어느 위치에서든 화면이 다 덮인다
-                clipPath: () => `circle(${Math.hypot(window.innerWidth, window.innerHeight)}px at ${window.innerWidth / 2}px ${window.innerHeight / 2}px)`,
-                duration: 1,
-                ease: 'power2.in'
-            }, 0)
-        .to('.js-scroll-hint', { opacity: 0, duration: 0.2 }, 0)
+        .to(coverState, { p: 1, duration: 1, ease: 'power2.in', onUpdate: drawCover }, 0)
         .fromTo('.js-about', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.85)
         .add(countUp, 1)
-        .to({}, { duration: 0.6 }); // 소개 화면을 읽을 시간만큼 고정 유지
+        .to({}, { duration: 0.6 });
 
-    // 창 크기가 바뀌면 글자 크기를 다시 맞추고, 멈춰 있는 공도 새 자리로
+    // 창 크기가 바뀌면 글자 크기를 다시 맞추고, 공연이 끝난 상태라면 새 크기로 다시 쌓는다
     let resizeTimer;
+    let lastWidth = window.innerWidth;
     $(window).on('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
+            if (window.innerWidth === lastWidth) return; // 모바일 주소창 때문에 높이만 바뀐 경우
+            lastWidth = window.innerWidth;
             fitLines();
-            if (bounceTl.progress() === 1 && coverTl.scrollTrigger.progress === 0) {
-                gsap.set(ball, { x: landing(lastChar).x, y: landing(lastChar).y });
+            if (ready) {
+                playTl.kill();
+                gsap.set(outers, { x: 0, y: 0, rotation: 0 });
+                playTl = buildPlay();
+                playTl.progress(1);
             }
             ScrollTrigger.refresh();
         }, 200);
@@ -322,126 +577,191 @@ $(function () {
 
 
     /* ---------------------------------------------------------
-       3. 대표 작업: 겹친 카드
+       3. 작업 46개
        --------------------------------------------------------- */
-    if (isDesktop) {
-        const works = gsap.utils.toArray('.work');
-        const cards = works.map((work) => work.querySelector('.work__media'));
-        const bodies = works.map((work) => work.querySelector('.work__body'));
-        const last = works.length - 1;
+    const cards = gsap.utils.toArray('.card');
+    const inner = cards.map((c) => c.querySelector('.card__inner'));
+    const n = cards.length;
 
-        // state.p: 지금 앞에 나와 있는 카드 번호 (0 ~ 4). 스크롤에 따라 0.37 처럼 중간값도 가진다
-        const state = { p: 0 };
-        let current = -1;
-
-        // 카드 가운데를 기준점으로, 원근감(transformPerspective)을 준다
-        gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
-        gsap.set(bodies, { autoAlpha: 0 });
-
-        // p 값으로 카드마다 위치를 계산해서 그린다
-        function render() {
-            const cardW = cards[0].offsetWidth;
-
-            cards.forEach((card, i) => {
-                const d = i - state.p; // 0: 맨 앞, 1: 바로 뒤, -1: 이미 지나간 카드
-                let x, z, rotationY, opacity;
-
-                if (d >= 0) {
-                    // 뒤에 기다리는 카드: 오른쪽으로 조금씩 밀리고, 비스듬히 돌아 있고, 멀어진다
-                    x = d * cardW * 0.32;
-                    z = -d * 140;
-                    rotationY = -38 * clamp(0, 1, d);
-                    opacity = 1 - clamp(0, 1, d - 3.5); // 너무 뒤(4장째 뒤)는 흐리게
-                } else {
-                    // 지나간 카드: 왼쪽으로 빠지면서 사라진다
-                    x = d * cardW * 1.2;
-                    z = 0;
-                    rotationY = 25 * clamp(0, 1, -d);
-                    opacity = clamp(0, 1, 1 + d * 1.5);
-                }
-
-                gsap.set(card, {
-                    x: x, z: z, rotationY: rotationY, opacity: opacity,
-                    zIndex: 100 - Math.round(Math.abs(d) * 10) // 앞 카드가 위에 오도록
-                });
-            });
-
-            // 맨 앞 카드가 바뀌면 왼쪽 설명도 바꾼다
-            const index = Math.round(state.p);
-            if (index !== current) {
-                if (current > -1) gsap.to(bodies[current], { autoAlpha: 0, y: -16, duration: 0.25, overwrite: true });
-                gsap.fromTo(bodies[index], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.5, delay: 0.1, ease: 'power3.out', overwrite: true });
-                $('.js-current').text(pad(index + 1));
-                current = index;
-            }
-        }
-
-        // 스크롤하는 동안 섹션을 고정하고 state.p 를 0 -> 4 로 바꾼다
-        gsap.to(state, {
-            p: last,
-            ease: 'none',
-            onUpdate: render,
-            scrollTrigger: {
-                trigger: '.featured',
-                start: 'top top',
-                end: () => '+=' + window.innerHeight * 0.8 * last, // 카드 한 장에 화면 높이의 80% 만큼 스크롤
-                pin: true,
-                scrub: 0.8,
-                snap: { snapTo: 1 / last, duration: { min: 0.2, max: 0.6 }, ease: 'power1.inOut' }, // 손을 떼면 가까운 카드에 멈춤
-                invalidateOnRefresh: true
-            }
+    if (!isDesktop) {
+        // 모바일: 화면에 들어오는 만큼씩 묶어서 차례로 등장
+        gsap.set(cards, { opacity: 0, y: 40 });
+        ScrollTrigger.batch(cards, {
+            start: 'top 92%',
+            once: true,
+            onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 })
         });
+        $(window).on('load', () => ScrollTrigger.refresh());
+        return;
+    }
 
-        render();
-        $(window).on('resize', render); // 카드 너비가 바뀌면 간격도 다시 계산
-    } else {
-        // 모바일: 카드가 화면에 들어올 때 하나씩 올라온다
-        gsap.utils.toArray('.work').forEach((work) => {
-            gsap.from(work, {
-                y: 60, opacity: 0, duration: 0.9, ease: 'power3.out',
-                scrollTrigger: { trigger: work, start: 'top 85%' }
-            });
+    const section = document.querySelector('.js-works');
+    const info = document.querySelector('.js-info');
+    const tip = document.querySelector('.js-tip');
+    const featuredCount = WORKS.filter((w) => w.featured).length; // 앞쪽 대표 작업 5장은 천천히
+
+    // state.p: 맨 앞 카드 번호 (0 ~ 45, 중간값 있음) / state.g: 격자로 펼쳐진 정도 (0 ~ 1)
+    const state = { p: 0, g: 0 };
+    let current = -1;
+    let gridOn = false;
+    let grid = [];
+
+    gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
+
+    // 격자 칸 계산: 제목 영역 아래부터 화면 아래까지, 46장이 다 들어가게
+    function layoutGrid() {
+        const head = document.querySelector('.js-works-head');
+        const W = section.clientWidth;
+        const H = section.clientHeight;
+        const sidePad = parseFloat(getComputedStyle(head).left);
+        const top = head.offsetTop + head.offsetHeight + 24;
+        const bottom = H - 28;
+        const cols = W >= 1360 ? 12 : 10;
+        const rows = Math.ceil(n / cols);
+        const gap = 12;
+        const cardW = cards[0].offsetWidth;
+        const cardH = cards[0].offsetHeight;
+        // 칸 하나 크기: 가로, 세로 중 좁은 쪽에 맞춘다 (카드 비율 3:4 유지)
+        const cellW = Math.min((W - sidePad * 2 - gap * (cols - 1)) / cols, ((bottom - top - gap * (rows - 1)) / rows) * (cardW / cardH));
+        const cellH = cellW * cardH / cardW;
+        const gridW = cols * cellW + (cols - 1) * gap;
+        const left = (W - gridW) / 2;
+        // 카드의 원래 자리(가운데 기준) = 무대의 left 60%, top 56%
+        const baseX = W * 0.6;
+        const baseY = H * 0.56;
+        grid = cards.map((c, i) => {
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            return {
+                x: left + col * (cellW + gap) + cellW / 2 - baseX,
+                y: top + row * (cellH + gap) + cellH / 2 - baseY,
+                scale: cellW / cardW
+            };
         });
     }
 
+    // 맨 앞 카드 설명 바꾸기
+    function showInfo(index) {
+        const w = WORKS[index];
+        const badge = w.featured ? '<span class="info__badge">대표 작업</span>' : '';
+        const role = w.role || (w.series && w.series.role) || '';
+        info.innerHTML = `${badge}<p class="info__meta"><span>${w.company}</span><span>${w.period}</span></p>
+            <h3 class="info__title">${w.title}</h3><p class="info__role">${role}</p>
+            <p class="info__hint">카드를 누르면 작업 내용을 볼 수 있습니다</p>`;
+        gsap.fromTo(info.children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: 'power2.out', overwrite: true });
+        $('.js-current').text(pad(index + 1));
+    }
 
-    /* ---------------------------------------------------------
-       4. 전체 작업
-       --------------------------------------------------------- */
+    function render() {
+        const cardW = cards[0].offsetWidth;
+        const g = state.g;
 
-    // 처음: 줄이 화면에 들어오는 만큼씩 묶어서 차례로 등장
-    gsap.set('.js-archive .row', { opacity: 0, y: 30 });
-    ScrollTrigger.batch('.js-archive .row', {
-        start: 'top 90%',
-        once: true,
-        onEnter: (rows) => gsap.to(rows, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.08 })
-    });
+        cards.forEach((card, i) => {
+            const d = i - state.p; // 0: 맨 앞, 1: 바로 뒤, -1: 이미 넘어간 카드
+            let x, y, z, rotationY, opacity;
 
-    // 필터: 지금 목록을 위로 살짝 빼고 -> 새로 그린 뒤 -> 아래에서 올림
-    let isFiltering = false;
-    $('.filter').on('click', function () {
-        const $btn = $(this);
-        if (isFiltering || $btn.hasClass('is-active')) return; // 연타 방지
-        isFiltering = true;
-        setActiveFilter($btn);
-
-        gsap.to('.js-archive .row', {
-            opacity: 0, y: -12, duration: 0.25, stagger: 0.02,
-            onComplete: () => {
-                renderArchive($btn.data('filter'));
-                gsap.fromTo('.js-archive .row',
-                    { opacity: 0, y: 24 },
-                    {
-                        opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.05,
-                        onComplete: () => { isFiltering = false; }
-                    }
-                );
-                ScrollTrigger.refresh(); // 목록 길이가 바뀌어서 아래 섹션 위치를 다시 잡음
+            if (d >= 0) {
+                // 뒤에서 기다리는 카드: 오른쪽 뒤로 비스듬히 줄 서 있다 (5장 넘게 뒤는 숨김)
+                x = d * cardW * 0.3;
+                y = -d * 14;
+                z = -d * 150;
+                rotationY = -38 * clamp(0, 1, d);
+                opacity = 1 - clamp(0, 1, d - 4);
+            } else {
+                // 넘어간 카드: 왼쪽으로 빠지며 사라진다 (너무 멀리 가지 않게 -1.5장에서 멈춤)
+                const k = Math.max(d, -1.5);
+                x = k * cardW * 1.2;
+                y = 0;
+                z = 0;
+                rotationY = 25 * clamp(0, 1, -k);
+                opacity = clamp(0, 1, 1 + d * 1.5);
             }
+            let scale = 1;
+
+            // 격자로 펼치기: 왼쪽 위 카드부터 차례로 제 칸에 들어간다
+            if (g > 0) {
+                const t = gsap.parseEase('power3.inOut')(clamp(0, 1, (g - (i / (n - 1)) * 0.5) / 0.5));
+                const cell = grid[i];
+                x = lerp(x, cell.x, t);
+                y = lerp(y, cell.y, t);
+                z = lerp(z, 0, t);
+                rotationY = lerp(rotationY, 0, t);
+                opacity = lerp(opacity, 1, t);
+                scale = lerp(1, cell.scale, t);
+            }
+
+            gsap.set(card, {
+                x: x, y: y, z: z, rotationY: rotationY, scale: scale, opacity: opacity,
+                visibility: opacity < 0.01 ? 'hidden' : 'visible',
+                zIndex: g > 0.98 ? 1 : 100 - Math.round(Math.abs(d) * 2)
+            });
         });
+
+        // 겹친 카드 단계: 맨 앞 카드 설명
+        const index = Math.round(clamp(0, n - 1, state.p));
+        if (index !== current) { current = index; showInfo(index); }
+        gsap.set(info, { autoAlpha: 1 - clamp(0, 1, g * 4) });
+        gsap.set('.js-counter', { autoAlpha: 1 - clamp(0, 1, g * 4) });
+        // 필터는 격자가 거의 펼쳐졌을 때 나타나고, 건너뛰기 버튼은 사라진다
+        gsap.set('.js-filters', { autoAlpha: clamp(0, 1, (g - 0.6) * 4) });
+        gsap.set('.js-skip', { autoAlpha: 1 - clamp(0, 1, g * 3) });
+
+        const on = g > 0.98;
+        if (on !== gridOn) {
+            gridOn = on;
+            $(section).toggleClass('is-grid', on);
+            if (!on) gsap.to(tip, { opacity: 0, duration: 0.2 });
+        }
+    }
+
+    // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 나머지는 0.09, 격자 펼치기 1.6, 멈춤 0.5
+    const SPEED = { featured: 0.55, rest: 0.09, grid: 1.6, hold: 0.5 };
+    const TOTAL = (featuredCount - 1) * SPEED.featured + (n - featuredCount) * SPEED.rest + SPEED.grid + SPEED.hold;
+    const worksTl = gsap.timeline({
+        onUpdate: render,
+        scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: () => '+=' + window.innerHeight * TOTAL,
+            pin: true,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            onRefresh: () => { layoutGrid(); render(); }
+        }
+    });
+    worksTl
+        .to(state, { p: featuredCount - 1, duration: (featuredCount - 1) * SPEED.featured, ease: 'none' })
+        .to(state, { p: n - 1, duration: (n - featuredCount) * SPEED.rest, ease: 'none' })
+        .addLabel('grid')
+        .to(state, { g: 1, duration: SPEED.grid, ease: 'none' })
+        .addLabel('gridDone')
+        .to({}, { duration: SPEED.hold });
+
+    // 전체 한눈에 보기: 격자가 다 펼쳐진 위치로 스크롤
+    $('.js-skip').on('click', () => {
+        const st = worksTl.scrollTrigger;
+        const top = st.start + (st.end - st.start) * (worksTl.labels.gridDone / worksTl.duration());
+        window.scrollTo({ top: top + 2, behavior: 'smooth' });
     });
 
+    // 격자에서 마우스를 올린 카드 이름을 마우스 옆에 띄운다
+    $(section).on('mouseenter focusin', '.card', function () {
+        if (!gridOn) return;
+        const w = WORKS[$(this).data('index')];
+        tip.innerHTML = `${w.title}<small>${w.company}, ${w.period}</small>`;
+        gsap.to(tip, { opacity: 1, duration: 0.2 });
+    }).on('mouseleave focusout', '.card', () => {
+        gsap.to(tip, { opacity: 0, duration: 0.2 });
+    }).on('mousemove', (e) => {
+        if (!gridOn) return;
+        const box = section.getBoundingClientRect();
+        let x = e.clientX - box.left + 16;
+        const y = e.clientY - box.top + 18;
+        if (x + tip.offsetWidth > box.width - 16) x = e.clientX - box.left - tip.offsetWidth - 16; // 오른쪽 끝이면 왼쪽에
+        gsap.to(tip, { x: x, y: y, duration: 0.25, ease: 'power3.out' });
+    });
 
-    // 이미지가 다 불러와지면 높이가 바뀌므로 위치 다시 계산
+    layoutGrid();
+    render();
     $(window).on('load', () => ScrollTrigger.refresh());
 });
