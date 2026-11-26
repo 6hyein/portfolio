@@ -12,6 +12,7 @@
     --text: #f2ede4;
     --muted: #8f897f;
     --accent: #f0a63a;
+    --paper: #efebe4;
     --header-h: 64px;
     --pad: clamp(20px, 4vw, 56px);
 }
@@ -76,13 +77,25 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* 글자 기준선 위치를 재는 표시 (크기 0) */
 .fit-line .baseline { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
 
-/* 꼬마 악마: 위치(x, y)는 JS 가 정한다. 발바닥이 요소 아래쪽 끝 */
+/* 꼬마 악마: 위치(x, y)와 크기(화면 쪽으로 다가오는 원근)는 JS 가 정한다.
+   발바닥(아래쪽 가운데)을 기준으로 커지고 작아진다 */
 .devil {
     position: absolute; top: 0; left: 0; z-index: 4;
     width: clamp(54px, 6.4vw, 108px); aspect-ratio: 100 / 120;
     opacity: 0; will-change: transform; pointer-events: none;
+    transform-origin: 50% 100%;
 }
-.devil__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.devil__svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35)); }
+/* 그림자: 악마 발밑 글자 윗면에 깔린다 */
+.devil-shadow {
+    position: absolute; top: 0; left: 0; z-index: 3;
+    width: clamp(54px, 6.4vw, 108px); height: 14px; margin: -7px 0 0 calc(clamp(54px, 6.4vw, 108px) / -2);
+    border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0));
+    opacity: 0; pointer-events: none; will-change: transform, opacity;
+}
+/* 잔금: 내려찍은 자리에서 번지는 밝은 금 */
+.intro__cracks { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.intro__cracks path { fill: none; stroke: var(--paper); stroke-linecap: round; stroke-linejoin: round; }
 
 /* 밟힌 글자 (색은 JS 가 바꾼다) */
 .fit-line .ch__in { will-change: transform; }
@@ -104,9 +117,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
     writing-mode: vertical-rl;
 }
 
-/* 화면을 덮는 원: 평소엔 숨김, JS 가 clip-path 원 크기를 키운다 */
-.intro__cover { display: none; position: absolute; inset: 0; z-index: 5; background: var(--accent); visibility: hidden; }
-.intro.is-animated .intro__cover { display: block; }
+/* 갈라진 틈: 평소엔 숨김. JS 가 clip-path 다각형으로 틈 모양을 그리고, 스크롤하면 벌린다 */
+.intro__rift { display: none; position: absolute; inset: 0; z-index: 5; overflow: hidden; background: var(--paper); visibility: hidden; }
+.intro.is-animated .intro__rift { display: block; }
+.rift__inner { position: absolute; inset: 0; will-change: transform; }
+.rift__img {
+    position: absolute; display: block; object-fit: cover; object-position: top center;
+    border-radius: 4px; box-shadow: 0 18px 40px rgba(27, 26, 24, .18);
+}
 
 /* 소개: 기본은 첫 화면 아래에 이어서 보임 */
 .intro__about { padding: 10vh var(--pad); }
@@ -116,23 +134,24 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .intro__stats strong { display: block; font-size: clamp(40px, 6vw, 88px); font-weight: 900; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .intro__stats span { display: block; margin-top: 10px; color: var(--muted); font-size: 14px; }
 
-/* 애니메이션이 켜졌을 때(JS 가 is-animated 를 붙임): 한 화면 안에서 공이 덮고 소개가 위에 올라온다 */
-.intro.is-animated { height: 100vh; overflow: hidden; }
+/* 애니메이션이 켜졌을 때(JS 가 is-animated 를 붙임): 한 화면 안에서 글자가 무너지고,
+   빈 위쪽에 소개가 나타난 뒤, 스크롤하면 틈이 벌어진다 */
+.intro.is-animated { height: 100vh; height: 100svh; overflow: hidden; }
 .intro.is-animated .intro__stage { height: 100%; min-height: 0; }
 .intro.is-animated .intro__about {
-    position: absolute; inset: 0; z-index: 6;
-    display: flex; flex-direction: column; justify-content: center;
-    color: var(--bg); visibility: hidden;
+    position: absolute; top: calc(var(--header-h) + 3vh + 68px); left: var(--pad); z-index: 2;
+    width: min(46vw, 620px); padding: 0; visibility: hidden; pointer-events: none;
 }
-.intro.is-animated .intro__eyebrow,
-.intro.is-animated .intro__stats span { color: rgba(18, 17, 16, .62); }
+.intro.is-animated .intro__lead { margin-top: 2vh; font-size: clamp(19px, 2.1vw, 32px); }
+.intro.is-animated .intro__stats { margin-top: 4vh; }
+.intro.is-animated .intro__stats strong { font-size: clamp(34px, 4.2vw, 68px); }
 
-/* 공이 화면을 덮는 동안 헤더 글자를 어둡게 */
+/* 틈이 벌어져 밝은 작업 판이 헤더 밑을 지나가는 동안 헤더 글자를 어둡게 */
 .header { transition: color .3s, background .3s; }
 .header.is-light { color: var(--bg); background: transparent; }
 .header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
 
-/* 2. 작업 46개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
+/* 2. 작업 45개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
 .works {
     --paper: #efebe4;
     --ink: #1b1a18;
@@ -158,21 +177,39 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* 단계 표시: PC 에서만 */
 .steps { display: none; }
 
-/* 회사별 보기: 글자 + 위첨자 개수 */
-.works__filters { display: flex; flex-wrap: wrap; margin-bottom: 5vh; font-size: 15px; }
-.filter { padding: 4px 0; border: 0; background: none; color: var(--ink-2); font-size: inherit; transition: color .25s; }
-.filter + .filter::before { content: "/"; margin: 0 10px; color: var(--ink-2); }
-.filter sup { margin-left: 2px; font-size: .62em; font-variant-numeric: tabular-nums; }
-.filter:hover, .filter.is-active { color: var(--ink); }
-.filter.is-active .filter__label { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+/* 회사별 보기: 책 옆에 붙이는 색인 탭. 회사마다 색이 다르고, 고른 탭은 위로 올라온다
+   (올라오는 양은 translate 로: GSAP 이 쓰는 transform 과 따로 움직이게) */
+.works__filters { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
+.filter {
+    --tab: #d9d2c6; --tab-ink: var(--ink); --lift: 12px;
+    position: relative; display: inline-flex; align-items: baseline; gap: 8px;
+    padding: 13px 20px 16px; border: 0; border-radius: 12px 12px 0 0;
+    background: var(--tab); color: var(--tab-ink); font-size: 14px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap;
+    box-shadow: 0 -8px 22px rgba(27, 26, 24, .1);
+    translate: 0 var(--lift); transition: translate .5s cubic-bezier(.19, 1, .22, 1);
+}
+/* 탭 아랫부분: 탭이 올라가도 아래가 비지 않게 같은 색으로 길게 이어 둔다 */
+.filter::after { content: ""; position: absolute; left: 0; right: 0; top: calc(100% - 1px); height: 48px; background: inherit; }
+.filter__no { font-size: 11px; font-weight: 600; opacity: .55; font-variant-numeric: tabular-nums; }
+.filter sup { margin-left: -4px; font-size: .68em; font-weight: 600; opacity: .7; font-variant-numeric: tabular-nums; }
+.filter:hover { --lift: 5px; }
+.filter.is-active { --lift: -4px; box-shadow: 0 -10px 26px rgba(27, 26, 24, .18); }
+.filter[data-filter="all"] { --tab: var(--ink); --tab-ink: var(--paper); }
+.filter[data-filter="tnj"] { --tab: #f0a63a; }
+.filter[data-filter="mypass"] { --tab: #a9bcac; }
+.filter[data-filter="team"] { --tab: #bcc6da; }
 
-/* 카드 (모바일 기본: 격자) */
-.works__stage { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 14px; }
+/* 카드: 높이는 모두 같고 가로는 작업마다 다르다 (--r = 가로 / 세로, works.js 가 넣음)
+   모바일 기본: 한 줄씩 높이를 맞춰 가로를 늘리는 줄 맞춤 격자 */
+.works__stage { display: flex; flex-wrap: wrap; gap: 26px 10px; }
+.works__stage::after { content: ""; flex: 999 1 0; }
 .card {
-    display: block; width: 100%; padding: 0; border: 0; background: none; text-align: left; color: inherit;
+    --r: .75;
+    display: block; flex: calc(var(--r) * 100) 1 calc(var(--r) * 30vw); min-width: 0;
+    padding: 0; border: 0; background: none; text-align: left; color: inherit;
 }
 .card__inner {
-    position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden;
+    position: relative; display: block; aspect-ratio: var(--r); overflow: hidden;
     border-radius: 4px; background: #dcd6cc;
     transition: opacity .35s, filter .35s, transform .5s cubic-bezier(.19, 1, .22, 1);
 }
@@ -197,19 +234,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .works__info { display: none; }
 
 @media (min-width: 640px) {
-    .works__stage { grid-template-columns: repeat(3, 1fr); }
+    .card { flex-basis: calc(var(--r) * 22vw); }
 }
 @media (max-width: 1023px) {
-    /* 회사별 보기를 카드 목록 위로 */
-    .works { display: flex; flex-direction: column; }
-    .works__filters { order: 1; }
-    .works__stage { order: 2; }
+    /* 색인 탭은 화면 아래에 붙어 있다가 작업 영역을 보는 동안 계속 따라온다 */
+    .works { display: flex; flex-direction: column; padding-bottom: 0; }
+    .works__head { order: 1; }
+    .works__stage { order: 2; padding-bottom: 6vh; }
+    .works__filters {
+        order: 3; position: sticky; bottom: 0; z-index: 20;
+        margin: 0 calc(var(--pad) * -1); padding: 14px 6px 0; overflow: hidden;
+    }
+    .filter { gap: 4px; padding: 11px 11px 14px; font-size: 13px; }
     .card.is-off { display: none; }
+}
+@media (max-width: 479px) {
+    .filter__no { display: none; }
+    .filter { padding: 11px 9px 14px; font-size: 12.5px; }
 }
 
 /* PC: 한 화면에 고정된 무대. 카드 위치, 회전, 크기는 works.js(render)가 정한다 */
 @media (min-width: 1024px) {
-    .works { height: 100vh; padding: 0; overflow: hidden; }
+    .works { --card-h: min(44vh, 25vw); height: 100vh; padding: 0; overflow: hidden; }
     .works__head {
         position: absolute; top: calc(var(--header-h) + 2vh); left: var(--pad); right: var(--pad); z-index: 120;
         margin: 0; align-items: center;
@@ -237,7 +283,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
     }
 
     .works__stage { position: absolute; inset: 0; display: block; }
-    .card { position: absolute; top: 56%; left: 60%; width: min(23vw, 360px); }
+    .works__stage::after { display: none; }
+    .card { position: absolute; top: 56%; left: 60%; flex: none; width: calc(var(--card-h) * var(--r)); }
     .card__cap { display: none; }
     .card__text strong { font-size: clamp(22px, 2.2vw, 34px); }
     .card__text em { font-size: 13px; }
@@ -262,16 +309,18 @@ button { font: inherit; color: inherit; cursor: pointer; }
     .info__hint { margin-top: 22px; font-size: 13px; color: var(--ink-2); }
     .info__hint::before { content: "\2192"; margin-right: 8px; color: var(--ink); }
 
-    /* 회사별 보기: 화면 아래 가운데. 콜라주 단계에서 나타남 */
-    .works__filters { position: absolute; left: 0; right: 0; bottom: 3.4vh; z-index: 120; justify-content: center; margin: 0; }
+    /* 색인 탭: 화면 아래 가장자리. 콜라주 단계에서 아래에서 올라온다 */
+    .works__filters { position: absolute; left: 0; right: 0; bottom: 0; z-index: 120; height: 58px; margin: 0; overflow: hidden; }
+    .filter { font-size: 15px; padding: 15px 26px 18px; }
 
     /* 움직임 줄이기 사용자: 고정 무대 대신 평범한 격자 */
     .works.is-static { display: flex; flex-direction: column; height: auto; padding: 14vh var(--pad) 10vh; overflow: visible; }
     .works.is-static .works__head { position: static; margin-bottom: 3vh; }
     .works.is-static .steps, .works.is-static .works__info, .works.is-static .works__skip { display: none; }
-    .works.is-static .works__filters { position: static; order: 1; justify-content: flex-start; margin-bottom: 5vh; }
-    .works.is-static .works__stage { position: static; order: 2; display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px 16px; }
-    .works.is-static .card { position: static; width: auto; }
+    .works.is-static .works__filters { position: static; order: 1; height: auto; justify-content: flex-start; margin-bottom: 5vh; }
+    .works.is-static .works__stage { position: static; order: 2; display: flex; }
+    .works.is-static .works__stage::after { display: block; }
+    .works.is-static .card { position: static; width: auto; flex: calc(var(--r) * 100) 1 calc(var(--r) * 240px); }
     .works.is-static .card__cap { display: block; }
     .works.is-static .card.is-off { display: none; }
 }
@@ -381,6 +430,11 @@ html { scrollbar-gutter: stable; }
     .header__nav { display: none; }
     .intro__scroll { display: none; }
     .fit-line + .fit-line { margin-top: .12em; }
+    .intro.is-animated .intro__about { top: calc(var(--header-h) + 3vh + 58px); right: var(--pad); width: auto; }
+    .intro.is-animated .intro__lead { font-size: 18px; }
+    .intro.is-animated .intro__stats { gap: 26px; margin-top: 2.6vh; }
+    .intro.is-animated .intro__stats strong { font-size: 34px; }
+    .intro.is-animated .intro__stats span { font-size: 12px; margin-top: 6px; }
 }
 
 /* 움직임 줄이기를 켠 사용자: 전환 효과를 끈다 (JS 쪽에서도 애니메이션을 건너뜀) */
