@@ -1,0 +1,12 @@
+{
+  "name": "musign-works-capture",
+  "private": true,
+  "type": "module",
+  "description": "작업 46개 사이트를 열어 보고 캡처하는 프로그램 (뮤자인 포트폴리오용)",
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
