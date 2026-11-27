@@ -243,10 +243,23 @@
         </div>
     </div>
 
-    <!-- 작업 영역 마우스 커서 (PC): 유리 원은 천천히 따라오고, 카드 위에서는 십자선과 작업 이름 -->
+    <!-- 작업 영역 마우스 커서 (PC)
+         - Scroll: 어두운 원 안에서 노란 점이 위에서 아래로 내려가며 스크롤을 알려 준다
+         - View: 카드 위에서는 가운데가 흰 물방울 원으로 바뀌어 눌러 보라고 알려 준다
+         - 콜라주 카드 위: 돋보기와 작업 이름 -->
     <div class="cursor js-cursor" aria-hidden="true">
-        <span class="cursor__glass js-cursor-glass"><span class="cursor__ball"><span class="cursor__text js-cursor-text"></span></span></span>
-        <span class="cursor__pin js-cursor-pin"><span class="cursor__cross"></span><span class="cursor__label js-cursor-label"></span></span>
+        <span class="cursor__glass js-cursor-glass"><span class="cursor__ball"><span class="cursor__wheel"><i></i></span><span class="cursor__text js-cursor-text"></span></span></span>
+        <span class="cursor__pin js-cursor-pin">
+            <svg class="cursor__zoom" viewBox="0 0 40 40" width="40" height="40">
+                <g fill="none" stroke-linecap="round">
+                    <g stroke="#fff" stroke-width="6"><circle cx="17" cy="17" r="10"/><path d="M24.5 24.5 33 33"/></g>
+                    <circle cx="17" cy="17" r="10" fill="rgba(255,255,255,.35)" stroke="#1b1a18" stroke-width="2.5"/>
+                    <path d="M24.5 24.5 33 33" stroke="#1b1a18" stroke-width="3.5"/>
+                    <path d="M17 12.5v9M12.5 17h9" stroke="#f0a63a" stroke-width="2.5"/>
+                </g>
+            </svg>
+            <span class="cursor__label js-cursor-label"></span>
+        </span>
     </div>
 
     <!-- 4. 연락처 -->
