@@ -78,9 +78,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .fit-line .baseline { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
 
 /* 꼬마 악마: 위치(x, y)와 크기(화면 쪽으로 다가오는 원근)는 JS 가 정한다.
-   발바닥(아래쪽 가운데)을 기준으로 커지고 작아진다 */
+   발바닥(아래쪽 가운데)을 기준으로 커지고 작아진다. 구멍(z-index 5)보다 위에 그린다 */
 .devil {
-    position: absolute; top: 0; left: 0; z-index: 4;
+    position: absolute; top: 0; left: 0; z-index: 7;
     width: clamp(54px, 6.4vw, 108px); aspect-ratio: 100 / 120;
     opacity: 0; will-change: transform; pointer-events: none;
     transform-origin: 50% 100%;
@@ -109,22 +109,32 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .intro__replay::before { content: "\21BB"; font-size: 16px; line-height: 1; }
 .intro__replay:hover { border-color: var(--text); }
-/* 스크롤을 시작하면 버튼과 안내를 숨긴다 */
-.intro.is-covered .intro__replay, .intro.is-covered .intro__scroll { opacity: 0 !important; pointer-events: none; }
-.intro__scroll {
-    position: absolute; right: var(--pad); top: calc(var(--header-h) + 3vh);
-    font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
-    writing-mode: vertical-rl;
-}
+/* 스크롤을 시작하면 버튼을 숨긴다 */
+.intro.is-covered .intro__replay { opacity: 0 !important; pointer-events: none; }
 
-/* 갈라진 틈: 평소엔 숨김. JS 가 clip-path 다각형으로 틈 모양을 그리고, 스크롤하면 벌린다 */
-.intro__rift { display: none; position: absolute; inset: 0; z-index: 5; overflow: hidden; background: var(--paper); visibility: hidden; }
-.intro.is-animated .intro__rift { display: block; }
-.rift__inner { position: absolute; inset: 0; will-change: transform; }
-.rift__img {
-    position: absolute; display: block; object-fit: cover; object-position: top center;
-    border-radius: 4px; box-shadow: 0 18px 40px rgba(27, 26, 24, .18);
+/* 구멍: 평소엔 숨김, JS 가 clip-path 원 크기를 키운다 */
+.intro__cover { display: none; position: absolute; inset: 0; z-index: 5; background: var(--accent); visibility: hidden; }
+.intro.is-animated .intro__cover { display: block; }
+
+/* 공연하는 동안 스크롤 잠금 (JS 가 is-locked 를 붙였다 떼다) */
+html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: none; touch-action: none; }
+
+/* 스크롤 안내: 마우스 포인터 자리(터치 화면은 가운데)에서 동그라미가 퍼지고 글자가 붙는다 */
+.scroll-cue { position: fixed; top: 0; left: 0; z-index: 95; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.scroll-cue.is-on { opacity: 1; }
+.scroll-cue__ring {
+    position: absolute; top: -32px; left: -32px; width: 64px; height: 64px;
+    border: 1.5px solid var(--accent); border-radius: 50%; opacity: 0;
 }
+.scroll-cue__label {
+    position: absolute; top: 22px; left: 24px; display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px 6px 14px; border-radius: 99px; background: var(--accent); color: var(--bg);
+    font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;
+}
+.scroll-cue__label i { display: inline-block; font-style: normal; animation: cue-bounce 1.2s ease-in-out infinite; }
+.scroll-cue__label i::before { content: "\2193"; }
+.scroll-cue.is-touch .scroll-cue__label { left: 0; top: 44px; transform: translateX(-50%); }
+@keyframes cue-bounce { 50% { transform: translateY(3px); } }
 
 /* 소개: 기본은 첫 화면 아래에 이어서 보임 */
 .intro__about { padding: 10vh var(--pad); }
@@ -135,18 +145,18 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .intro__stats span { display: block; margin-top: 10px; color: var(--muted); font-size: 14px; }
 
 /* 애니메이션이 켜졌을 때(JS 가 is-animated 를 붙임): 한 화면 안에서 글자가 무너지고,
-   빈 위쪽에 소개가 나타난 뒤, 스크롤하면 틈이 벌어진다 */
+   스크롤하면 구멍이 커지며 그 뒤에 있던 소개가 드러난다 (소개도 구멍과 같은 원으로 잘린다) */
 .intro.is-animated { height: 100vh; height: 100svh; overflow: hidden; }
 .intro.is-animated .intro__stage { height: 100%; min-height: 0; }
 .intro.is-animated .intro__about {
-    position: absolute; top: calc(var(--header-h) + 3vh + 68px); left: var(--pad); z-index: 2;
-    width: min(46vw, 620px); padding: 0; visibility: hidden; pointer-events: none;
+    position: absolute; inset: 0; z-index: 6;
+    display: flex; flex-direction: column; justify-content: center;
+    color: var(--bg); visibility: hidden; pointer-events: none;
 }
-.intro.is-animated .intro__lead { margin-top: 2vh; font-size: clamp(19px, 2.1vw, 32px); }
-.intro.is-animated .intro__stats { margin-top: 4vh; }
-.intro.is-animated .intro__stats strong { font-size: clamp(34px, 4.2vw, 68px); }
+.intro.is-animated .intro__eyebrow,
+.intro.is-animated .intro__stats span { color: rgba(18, 17, 16, .62); }
 
-/* 틈이 벌어져 밝은 작업 판이 헤더 밑을 지나가는 동안 헤더 글자를 어둡게 */
+/* 주황 구멍이 화면을 덮는 동안, 밝은 작업 판이 헤더 밑을 지나가는 동안 헤더 글자를 어둡게 */
 .header { transition: color .3s, background .3s; }
 .header.is-light { color: var(--bg); background: transparent; }
 .header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
@@ -258,7 +268,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 @media (max-width: 1023px) {
     /* 색인 탭은 화면 아래에 붙어 있다가 작업 영역을 보는 동안 계속 따라온다 */
-    .works { display: flex; flex-direction: column; padding-bottom: 0; }
+    .works { display: flex; flex-direction: column; padding-bottom: 0; overflow-x: clip; }
     /* 순서는 HTML 그대로: 제목, (대표 작업 겹친 카드), 전체 목록, 색인 탭 */
     .works__stage { padding-bottom: 6vh; }
     .works.is-mstack .works__stage { padding-top: 6vh; }
@@ -450,13 +460,7 @@ html { scrollbar-gutter: stable; }
 /* 모바일 */
 @media (max-width: 767px) {
     .header__nav { display: none; }
-    .intro__scroll { display: none; }
     .fit-line + .fit-line { margin-top: .12em; }
-    .intro.is-animated .intro__about { top: calc(var(--header-h) + 3vh + 58px); right: var(--pad); width: auto; }
-    .intro.is-animated .intro__lead { font-size: 18px; }
-    .intro.is-animated .intro__stats { gap: 26px; margin-top: 2.6vh; }
-    .intro.is-animated .intro__stats strong { font-size: 34px; }
-    .intro.is-animated .intro__stats span { font-size: 12px; margin-top: 6px; }
 }
 
 /* 움직임 줄이기를 켠 사용자: 전환 효과를 끈다 (JS 쪽에서도 애니메이션을 건너뜀) */

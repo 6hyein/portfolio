@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="./css/works.css">
 </head>
 <body>
+    <!-- 스크롤 안내: 인트로에서 가만히 있으면 마우스 포인터 주변으로 동그라미가 퍼지며 나타난다 -->
+    <div class="scroll-cue js-scroll-cue" aria-hidden="true">
+        <span class="scroll-cue__ring"></span><span class="scroll-cue__ring"></span><span class="scroll-cue__ring"></span>
+        <span class="scroll-cue__label">Scroll<i></i></span>
+    </div>
+
     <!-- 스크롤 진행 바 -->
     <div class="progress" aria-hidden="true"><span class="progress__bar"></span></div>
 
@@ -27,8 +33,8 @@
     <main>
         <!-- 1. 인트로 -->
         <section class="intro js-intro">
-            <!-- 첫 화면: 꼬마 악마가 Y, H 를 밟으며 화면 쪽으로 다가오다가, H 위로 쾅 내려찍으면
-                 지진이 난 듯 글자가 한꺼번에 무너지고 땅이 갈라진다 -->
+            <!-- 첫 화면: 꼬마 악마가 Y, H 를 밟다가 H 위로 쾅 내려찍으면 지진이 난 듯 글자가 한꺼번에 무너지고,
+                 악마가 착지한 자리에 동그란 구멍이 생긴다 -->
             <div class="intro__stage js-stage">
                 <h1 class="intro__name" aria-label="Yook Hyein, Web Publisher and Front-end Developer">
                     <span class="fit-line js-fit js-hop-line" aria-hidden="true">YOOK HYEIN</span>
@@ -94,16 +100,13 @@
                 <svg class="intro__cracks js-cracks" aria-hidden="true"></svg>
 
                 <button type="button" class="intro__replay js-replay">다시 세우기</button>
-                <p class="intro__scroll js-scroll-hint" aria-hidden="true">Scroll</p>
             </div>
 
-            <!-- 갈라진 틈: 틈 사이로 작업 판이 보이고, 스크롤하면 틈이 벌어지며 작업 판이 확대된다
-                 (모양은 JS 가 clip-path 다각형으로 그림) -->
-            <div class="intro__rift js-rift" aria-hidden="true">
-                <div class="rift__inner js-rift-inner"></div>
-            </div>
+            <!-- 구멍: 악마가 착지한 자리의 주황 원. 스크롤하면 커져 화면을 덮는다 (JS 가 clip-path 원으로 그림) -->
+            <span class="intro__cover js-cover" aria-hidden="true"></span>
 
-            <!-- 글자가 무너진 뒤 빈 자리에 나타나는 소개 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
+            <!-- 구멍 뒤에 있는 소개: 구멍과 같은 원으로 잘려서 구멍이 커질수록 드러난다
+                 (JS 가 없으면 첫 화면 아래에 그냥 보임) -->
             <div class="intro__about js-about">
                 <p class="intro__eyebrow">Yook Hyein / Portfolio 2020 - 2026</p>
                 <p class="intro__lead">디자인 시안부터 반응형 퍼블리싱, 신청 폼 검증까지<br>직접 만든 작업을 모았습니다.</p>
@@ -116,9 +119,9 @@
         </section>
 
         <!-- 2. 작업 45개
-             PC: 인트로의 갈라진 틈이 벌어져 이어지고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
-                 끝까지 넘기면 45장이 높이만 같고 가로는 제각각인 콜라주로 펼쳐진다.
-             모바일: 대표 작업 겹친 카드를 아래에서 위로 넘긴 뒤, 전체 목록은 카드가 누운 채 들어와 일어선다 -->
+             PC: 밝은 판이 둥근 카드처럼 올라와 화면을 채우고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
+                 끝까지 넘기면 45장이 크기와 기울기가 제각각인 콜라주로 흩어진다.
+             모바일: 대표 작업 겹친 카드를 아래에서 위로 넘긴 뒤, 전체 목록은 카드마다 다른 방향에서 들어온다 -->
         <section class="works js-works" id="works" aria-labelledby="works-title">
             <div class="works__head js-works-head">
                 <h2 class="section-title" id="works-title">Works</h2>
