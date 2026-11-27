@@ -187,8 +187,9 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
 /* 단계 표시: PC 에서만 */
 .steps { display: none; }
 
-/* 회사별 보기: 책 옆에 붙이는 색인 탭. 회사마다 색이 다르고, 고른 탭은 위로 올라온다
-   (올라오는 양은 translate 로: GSAP 이 쓰는 transform 과 따로 움직이게) */
+/* 회사별 보기: 책 옆에 붙이는 색인 탭. 회사마다 색이 다르고, 고른 탭과 마우스를 올린 탭은 위로 올라온다
+   (올라오는 양은 top 으로: GSAP 이 쓰는 transform 과 따로 움직이게.
+    CSS translate 는 GSAP 3.12 이후 버전이 none 으로 덮어써서 쓰지 않는다) */
 .works__filters { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
 .filter {
     --tab: #d9d2c6; --tab-ink: var(--ink); --lift: 18px;
@@ -196,13 +197,13 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     padding: 13px 20px 16px; border: 0; border-radius: 12px 12px 0 0;
     background: var(--tab); color: var(--tab-ink); font-size: 14px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap;
     box-shadow: 0 -8px 22px rgba(27, 26, 24, .1);
-    translate: 0 var(--lift); transition: translate .5s cubic-bezier(.19, 1, .22, 1);
+    top: var(--lift); transition: top .5s cubic-bezier(.19, 1, .22, 1);
 }
 /* 탭 아랫부분: 탭이 올라가도 아래가 비지 않게 같은 색으로 길게 이어 둔다 */
 .filter::after { content: ""; position: absolute; left: 0; right: 0; top: calc(100% - 1px); height: 48px; background: inherit; }
 .filter__no { font-size: 11px; font-weight: 600; opacity: .55; font-variant-numeric: tabular-nums; }
 .filter sup { margin-left: -4px; font-size: .68em; font-weight: 600; opacity: .7; font-variant-numeric: tabular-nums; }
-.filter:hover { --lift: 11px; }
+.filter:hover, .filter:focus-visible { --lift: 0px; }
 .filter.is-active { --lift: -6px; box-shadow: 0 -10px 26px rgba(27, 26, 24, .18); }
 .filter.is-active:hover { --lift: -6px; }
 .filter[data-filter="all"] { --tab: var(--ink); --tab-ink: var(--paper); }
