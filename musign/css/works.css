@@ -116,7 +116,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .intro__cover { display: none; position: absolute; inset: 0; z-index: 5; background: var(--accent); visibility: hidden; }
 .intro.is-animated .intro__cover { display: block; }
 
-/* 공연하는 동안 스크롤 잠금 (JS 가 is-locked 를 붙였다 딐다) */
+/* 공연하는 동안 스크롤 잠금 (JS 가 is-locked 를 붙였다 뗀다) */
 html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: none; touch-action: none; }
 
 /* 스크롤 안내: 마우스 포인터 자리(터치 화면은 가운데)에서 동그라미가 퍼지고 글자가 붙는다 */
@@ -520,7 +520,7 @@ html { scrollbar-gutter: stable; }
     .fit-line + .fit-line { margin-top: .12em; }
 }
 
-/* 움직임 줄이기를 켜 사용자: 전환 효과를 끈다 (JS 쪽에서도 애니메이션을 건너뜀) */
+/* 움직임 줄이기를 켠 사용자: 전환 효과를 끈다 (JS 쪽에서도 애니메이션을 건너뜀) */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; }
 }
