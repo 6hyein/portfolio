@@ -1393,10 +1393,44 @@ $(function () {
         const onCard = overCard > -1;
         $(cursor)
             .toggleClass('is-card', onCard && gridOn)
+            .toggleClass('is-view', onCard && !gridOn && !overButton)
             .toggleClass('is-hidden', overButton)
             .toggleClass('is-small', gridOn && !onCard && !overButton);
         cursorText.textContent = gridOn ? '' : (onCard ? 'View' : 'Scroll');
         if (onCard && gridOn) cursorLabel.textContent = WORKS[overCard].title;
+    }
+
+    // View 물방울이 닿은 카드: 수면처럼 울렁이다 잦아든다 (SVG 물결 필터를 잠깐 씌웠다가 뗀다)
+    //  feTurbulence 로 만든 무늬만큼 그림을 밀어내고(feDisplacementMap), 미는 세기를 0 으로 줄인다
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const rippleSvg = document.createElementNS(svgNS, 'svg');
+    rippleSvg.setAttribute('aria-hidden', 'true');
+    rippleSvg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    rippleSvg.innerHTML = `<filter id="ripple" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>`;
+    document.body.appendChild(rippleSvg);
+    const rippleNoise = rippleSvg.querySelector('feTurbulence');
+    const rippleMap = rippleSvg.querySelector('feDisplacementMap');
+    const rippleState = { scale: 0, freq: 0.012 };
+    let rippleTarget = null;
+    let rippleTl = null;
+    function ripple(card) {
+        const target = card.querySelector('.card__inner');
+        if (rippleTl) rippleTl.kill();
+        if (rippleTarget && rippleTarget !== target) rippleTarget.style.filter = '';
+        rippleTarget = target;
+        target.style.filter = 'url(#ripple)';
+        rippleTl = gsap.timeline({
+            onUpdate: () => {
+                rippleMap.setAttribute('scale', rippleState.scale.toFixed(2));
+                rippleNoise.setAttribute('baseFrequency', `${rippleState.freq.toFixed(4)} ${(rippleState.freq * 2.5).toFixed(4)}`);
+            },
+            onComplete: () => { target.style.filter = ''; }
+        })
+            .fromTo(rippleState, { scale: 0, freq: 0.006 }, { scale: 26, freq: 0.014, duration: 0.18, ease: 'power2.out' })
+            .to(rippleState, { scale: 0, freq: 0.02, duration: 1.1, ease: 'elastic.out(1, 0.35)' });
     }
 
     if (hasMouse) {
@@ -1420,6 +1454,7 @@ $(function () {
             const idx = cardEl ? Number(cardEl.dataset.index) : -1;
             const btn = !cardEl && !!(el && el.closest('button'));
             if (idx !== overCard || btn !== overButton) {
+                if (idx > -1 && idx !== overCard && !gridOn) ripple(cards[idx]);
                 overCard = idx;
                 overButton = btn;
                 setHovered(gridOn ? idx : -1);
