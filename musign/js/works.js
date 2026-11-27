@@ -983,6 +983,26 @@ $(function () {
     let phase = -1;
     let hovered = -1;
 
+    // 콜라주에서 마우스를 올린 카드: 2배로 커지고 주변 카드는 비켜난다
+    // focus[i].k: 확대된 정도 (0 ~ 1). 다른 카드로 옮겨 가도 이전 카드가 부드럽게 돌아가게 카드마다 따로 둔다
+    const focus = cards.map(() => ({ k: 0 }));
+    const focusing = new Set(); // k 가 0 보다 큰 카드 번호
+    function setHovered(idx) {
+        if (idx === hovered) return;
+        hovered = idx;
+        focus.forEach((f, i) => {
+            const to = i === idx ? 1 : 0;
+            if (!to && !focusing.has(i)) return;
+            focusing.add(i);
+            gsap.to(f, {
+                k: to, duration: to ? 0.55 : 0.45, ease: 'power3.out', overwrite: true,
+                onUpdate: requestRender,
+                onComplete: () => { if (!to) focusing.delete(i); }
+            });
+        });
+        requestRender();
+    }
+
     // 한 프레임에 한 번만 그리기: 스크롤, 필터, 마우스가 동시에 그려 달라고 해도 묶어서 처리
     let needsRender = false;
     const requestRender = () => { needsRender = true; };
@@ -1008,6 +1028,7 @@ $(function () {
     // 콜라주 배치: 보이는 카드 수에 맞춰 칸을 나누고, 칸 안에서 위치와 크기, 기울기를 조금씩 흩트린다.
     // 카드 비율은 작업마다 그대로 두고(넓이를 기준으로 크기를 정함), 대표 작업은 크게(다른 카드 밑에 깔리게)
     let stackUnit = 300; // 겹친 카드 단계에서 카드 간격의 기준 (카드 높이의 3/4)
+    let box = null;      // 콜라주 무대 크기 (확대한 카드가 화면 밖으로 나가지 않게 render 에서 씀)
     function layoutCollage(filter, animate) {
         const head = document.querySelector('.js-works-head');
         const filters = document.querySelector('.js-filters');
@@ -1031,6 +1052,7 @@ $(function () {
         // 카드의 원래 자리(가운데 기준) = 무대의 left 60%, top 56%
         const baseX = W * 0.6;
         const baseY = H * 0.56;
+        box = { W, side, top, bottom, baseX, baseY, cardH };
 
         // 칸 배정: 큰 대표 작업은 한쪽에 몰리지 않게 대각선으로 흩어 놓고, 나머지는 빈 칸을 차례로 채운다
         const big = (i) => WORKS[i].featured && count > 6;
@@ -1145,11 +1167,46 @@ $(function () {
                 rotation = c.rot * t;
                 opacity = lerp(opacity, c.o, t);
                 scale = lerp(1, c.s, t);
-                if (g > 0.95) zIndex = i === hovered ? 500 : c.z;
+                if (g > 0.95) zIndex = i === hovered ? 500 : (focus[i].k > 0.02 ? 400 : c.z);
+
+                // 마우스를 올린 카드와 그 주변
+                if (g > 0.95 && focusing.size && box) {
+                    const f = focus[i].k;
+                    if (f > 0) {
+                        // 2배로 (무대에 다 들어오는 만큼만). 커져도 무대 밖으로 나가지 않게 안쪽으로 당긴다
+                        const w = card.offsetWidth * c.s;
+                        const h = box.cardH * c.s;
+                        const to = Math.max(1, Math.min(2, (box.bottom - box.top) * 0.92 / h, (box.W - box.side * 2) * 0.6 / w));
+                        const ax = box.baseX + x;
+                        const ay = box.baseY + y;
+                        const hw = w * to / 2;
+                        const hh = h * to / 2;
+                        x += (clamp(box.side + hw, box.W - box.side - hw, ax) - ax) * f;
+                        y += (clamp(box.top + hh, box.bottom - hh, ay) - ay) * f;
+                        scale *= lerp(1, to, f);
+                        rotation *= 1 - f;
+                    }
+                    // 커지는 카드 옆에 있으면: 그 카드에서 멀어지는 쪽으로, 주로 좌우로 밀리며 살짝 작아진다
+                    focusing.forEach((j) => {
+                        if (j === i) return;
+                        const fj = focus[j].k;
+                        const cj = cells[j];
+                        const wj = cards[j].offsetWidth * cj.s;
+                        const hj = box.cardH * cj.s;
+                        const dx = c.x - cj.x;
+                        const dy = c.y - cj.y;
+                        const near = clamp(0, 1, 1 - Math.hypot(dx / (wj * 1.4), dy / (hj * 1.4)) / 2.2);
+                        if (!near) return;
+                        const amt = fj * near;
+                        x += (dx < 0 ? -1 : 1) * wj * 0.75 * amt;
+                        y += Math.sign(dy) * hj * 0.3 * amt;
+                        scale *= 1 - 0.12 * amt;
+                    });
+                }
             }
 
             gsap.set(card, {
-                x: x, y: y, z: z, rotationY: rotationY, rotation: i === hovered ? 0 : rotation, scale: scale, opacity: opacity,
+                x: x, y: y, z: z, rotationY: rotationY, rotation: rotation, scale: scale, opacity: opacity,
                 visibility: opacity < 0.01 ? 'hidden' : 'visible',
                 zIndex: zIndex
             });
@@ -1183,7 +1240,7 @@ $(function () {
         if (on !== gridOn) {
             gridOn = on;
             $(section).toggleClass('is-grid', on);
-            if (!on) hovered = -1;
+            if (!on) setHovered(-1);
             updateCursor();
         }
     }
@@ -1266,7 +1323,7 @@ $(function () {
             if (idx !== overCard || btn !== overButton) {
                 overCard = idx;
                 overButton = btn;
-                hovered = gridOn ? idx : -1;
+                setHovered(gridOn ? idx : -1);
                 requestRender();
                 updateCursor();
             }
@@ -1282,7 +1339,7 @@ $(function () {
             cursor.classList.remove('is-on');
             mouse = null;
             overCard = -1;
-            hovered = -1;
+            setHovered(-1);
             requestRender();
         }).on('mousemove', (e) => {
             mouse = { x: e.clientX, y: e.clientY };
