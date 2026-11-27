@@ -32,10 +32,12 @@ const SERIES = {
 };
 
 // 시리즈 묶음을 카드 여러 장으로 펼치는 함수 (아이디: 접두어-01, 접두어-02 ...)
-function seriesCards(prefix, series, seriesName, company, cat, list) {
+// lead: 같은 설명이 반복되지 않게 시리즈마다 맨 위에 붙이는 한 줄 (그 시리즈에서 특히 신경 쓴 점)
+function seriesCards(prefix, series, seriesName, company, cat, list, lead) {
   return list.map(([title, period, url], i) => ({
     id: `${prefix}-${String(i + 1).padStart(2, '0')}`,
-    company, cat, title, period, url, series, seriesName
+    company, cat, title, period, url, series, seriesName,
+    points: lead ? [lead, ...series.points] : undefined
   }));
 }
 
@@ -73,7 +75,7 @@ const WORKS = [
       '병뚜껑이 날아가고 물줄기가 솟는 인트로를 영상 없이 CSS 트랜지션과 상태 클래스로 구현했습니다.',
       '본문은 모바일 기준으로 만들고, PC에서는 오른쪽 여백에 SNS 채널을 두는 2열 레이아웃으로 나눴습니다.'
     ],
-    tech: ['HTML5/CSS3','HTML5/CSS3', 'jQuery', 'CSS Keyframes', 'Slick.js', 'AOS.js', 'animateNumber.js']
+    tech: ['HTML5/CSS3', 'jQuery', 'CSS Keyframes', 'Slick.js', 'AOS.js', 'animateNumber.js']
   },
   {
     id: 'tnjbiz-home', company: '티앤제이비즈', cat: 'tnj', featured: true,
@@ -220,7 +222,7 @@ const WORKS = [
     ['상조 랜딩페이지 3', '2024.05', 'https://thedbpro.co.kr/intro/6771716867573/'],
     ['상조 랜딩페이지 2', '2024.05', 'https://thedbpro.co.kr/intro/6751715845637/'],
     ['상조 랜딩페이지 1', '2024.02', 'https://thedbpro.co.kr/intro/6741715845618/']
-  ])
+  ], '상조 광고를 볼 연령대 높은 고객층을 고려해 글씨 크기를 크게 구성했습니다.')
 ];
 
 // Node(캡처 프로그램)에서도 이 파일을 읽을 수 있게
