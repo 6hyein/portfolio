@@ -116,7 +116,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .intro__cover { display: none; position: absolute; inset: 0; z-index: 5; background: var(--accent); visibility: hidden; }
 .intro.is-animated .intro__cover { display: block; }
 
-/* 공연하는 동안 스크롤 잠금 (JS 가 is-locked 를 붙였다 떼다) */
+/* 공연하는 동안 스크롤 잠금 (JS 가 is-locked 를 붙였다 뗀다) */
 html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: none; touch-action: none; }
 
 /* 스크롤 안내: 마우스 포인터 자리(터치 화면은 가운데)에서 동그라미가 퍼지고 글자가 붙는다 */
@@ -161,7 +161,7 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
 .header.is-light { color: var(--bg); background: transparent; }
 .header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
 
-/* 2. 작업 45개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
+/* 2. 작업 44개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
 .works {
     --paper: #efebe4;
     --ink: #1b1a18;
@@ -191,7 +191,7 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
    (올라오는 양은 translate 로: GSAP 이 쓰는 transform 과 따로 움직이게) */
 .works__filters { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
 .filter {
-    --tab: #d9d2c6; --tab-ink: var(--ink); --lift: 12px;
+    --tab: #d9d2c6; --tab-ink: var(--ink); --lift: 18px;
     position: relative; display: inline-flex; align-items: baseline; gap: 8px;
     padding: 13px 20px 16px; border: 0; border-radius: 12px 12px 0 0;
     background: var(--tab); color: var(--tab-ink); font-size: 14px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap;
@@ -202,8 +202,9 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
 .filter::after { content: ""; position: absolute; left: 0; right: 0; top: calc(100% - 1px); height: 48px; background: inherit; }
 .filter__no { font-size: 11px; font-weight: 600; opacity: .55; font-variant-numeric: tabular-nums; }
 .filter sup { margin-left: -4px; font-size: .68em; font-weight: 600; opacity: .7; font-variant-numeric: tabular-nums; }
-.filter:hover { --lift: 5px; }
-.filter.is-active { --lift: -4px; box-shadow: 0 -10px 26px rgba(27, 26, 24, .18); }
+.filter:hover { --lift: 11px; }
+.filter.is-active { --lift: -6px; box-shadow: 0 -10px 26px rgba(27, 26, 24, .18); }
+.filter.is-active:hover { --lift: -6px; }
 .filter[data-filter="all"] { --tab: var(--ink); --tab-ink: var(--paper); }
 .filter[data-filter="tnj"] { --tab: #f0a63a; }
 .filter[data-filter="mypass"] { --tab: #a9bcac; }
@@ -224,13 +225,11 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     transition: opacity .35s, filter .35s, transform .5s cubic-bezier(.19, 1, .22, 1);
 }
 .card__inner img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+/* 썸네일 위 번호는 보여 주지 않는다 */
+.card__no { display: none; }
 /* 몇 장은 사진 액자처럼 흰 여백을 두른다 */
 .card--mat .card__inner { padding: 8%; background: #fbf9f5; box-shadow: 0 0 0 1px var(--rule); }
 .card--mat .card__text { inset: 8%; }
-.card__no {
-    position: absolute; top: 7%; left: 8%; font-size: 12px; font-weight: 700;
-    color: #f2ede4; mix-blend-mode: difference;
-}
 /* 썸네일이 없는 작업: 제목을 크게 써서 카드로 */
 .card__text {
     position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
@@ -274,7 +273,7 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     .works.is-mstack .works__stage { padding-top: 6vh; }
     .works__filters {
         position: sticky; bottom: 0; z-index: 20;
-        margin: 0 calc(var(--pad) * -1); padding: 14px 6px 0; overflow: hidden;
+        margin: 0 calc(var(--pad) * -1); padding: 26px 6px 0; overflow: hidden;
     }
     .filter { gap: 4px; padding: 11px 11px 14px; font-size: 13px; }
     .card.is-off { display: none; }
@@ -320,7 +319,6 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     .card__cap { display: none; }
     .card__text strong { font-size: clamp(22px, 2.2vw, 34px); }
     .card__text em { font-size: 13px; }
-    .card__no { font-size: 13px; }
     .card__inner { box-shadow: 0 30px 60px rgba(27, 26, 24, .22); }
     .card--mat .card__inner { box-shadow: 0 30px 60px rgba(27, 26, 24, .16), 0 0 0 1px var(--rule); }
     .card.is-off { pointer-events: none; }
@@ -342,7 +340,7 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     .info__hint::before { content: "\2192"; margin-right: 8px; color: var(--ink); }
 
     /* 색인 탭: 화면 아래 가장자리. 콜라주 단계에서 아래에서 올라온다 */
-    .works__filters { position: absolute; left: 0; right: 0; bottom: 0; z-index: 120; height: 58px; margin: 0; overflow: hidden; }
+    .works__filters { position: absolute; left: 0; right: 0; bottom: 0; z-index: 120; height: 82px; margin: 0; overflow: hidden; }
     .filter { font-size: 15px; padding: 15px 26px 18px; }
 
     /* 움직임 줄이기 사용자: 고정 무대 대신 평범한 격자 */

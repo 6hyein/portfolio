@@ -1,7 +1,9 @@
 /* =========================================================
    작업 데이터 (뮤자인 지원용)
-   - 카드 45장과 상세 창에 들어가는 내용.
+   - 카드 44장과 상세 창에 들어가는 내용.
    - 설명(points)은 노션 '작업내역' 페이지에 정리한 내용에서 옮겼다.
+   - 뮤자인 공고에 맞춰 퍼블리싱, 반응형, 인터랙션, 디자인, 유지보수, 커머스에 해당하는 내용만 남겼다.
+     (PHP, MySQL, 메일 발송, 서버 쪽 내용은 넣지 않음)
    - 썸네일은 tools/capture.mjs 를 돌리면 images/works/아이디.jpg 로 저장되고,
      링크가 살아 있는지는 js/works-status.js 에 기록된다.
    - thumb: 캡처가 없을 때 대신 쓸 이미지 (레포에 이미 있는 것)
@@ -23,7 +25,7 @@ const SERIES = {
     role: '디자인, 퍼블리싱, 신청 폼 검증',
     points: [
       '모모성형외과 서울점 남성 모발이식 랜딩페이지 시리즈를 디자인하고 퍼블리싱했습니다.',
-      '급한 기간안에 이루어져야하는 작업이여서 신청 폼 이외에는 이미지로 처리했습니다.'
+      '짧은 기간 안에 끝내야 하는 작업이라 신청 폼을 뺀 나머지는 이미지로 처리했습니다.'
     ],
     tech: ['Adobe XD', 'Photoshop', 'HTML5/CSS3', 'jQuery']
   }
@@ -43,35 +45,33 @@ const WORKS = [
     id: 'dokgong', company: '마이패스', cat: 'mypass', featured: true,
     title: '독한공무원 반응형 리뉴얼', period: '2021.02 - 2021.06',
     url: 'https://www.dokgong.com/', thumb: '../images/preview_main.png',
-    role: '반응형 화면 전담, CI 보드 뷰에서 PHP, MySQL 작업',
+    role: '반응형 화면 전담',
     points: [
       '1200px 고정 폭 사이트에 반응형을 입히고(메인 2주), 교수진 목록과 교수님 홈, 수강후기, Q&A를 운영 중에 차례로 바꿨습니다.',
-      'PC는 표, 모바일은 목록인 수강후기를 같은 마크업과 미디어쿼리로 나눠 같은 데이터를 두 번 불러오지 않게 했습니다.',
-      'CI 보드 뷰 파일에서 PHP, MySQL로 검색과 후기 등록(AJAX)을 처리했습니다.'
+      'PC는 표, 모바일은 목록인 수강후기를 같은 마크업과 미디어쿼리로 나눠 같은 데이터를 두 번 불러오지 않게 했습니다.'
     ],
-    tech: ['HTML5/CSS3', 'jQuery', 'AJAX', '반응형', 'PHP', 'MySQL']
+    tech: ['HTML5/CSS3', 'jQuery', '반응형']
   },
   {
     id: 'bareunbiz-landing', company: '티앤제이비즈', cat: 'tnj', featured: true,
     title: '바른비즈 정책자금 랜딩페이지', period: '2026.04',
     url: 'https://bareunbiz.co.kr/basic', thumb: '../images/bareunbiz_thumb.jpg',
-    role: 'Adobe XD 시안, 반응형 마크업, 신청 폼 검증, 메일 발송 연동',
+    role: 'Adobe XD 시안, 반응형 마크업, 신청 폼 검증',
     points: [
       'Adobe XD 시안부터 Tailwind CSS v4 반응형 마크업까지 맡았습니다. (기획은 제외)',
-      '이름 한글 검증, 전화번호 다음 칸 자동 이동, 행정구역 JSON을 fetch로 불러온 시/도, 구/군 선택을 만들었습니다.',
-      'PHPMailer와 하이웍스 SMTP(465, SSL)로 신청 메일이 담당자에게 발송되게 연결했습니다.'
+      '이름 한글 검증, 전화번호 다음 칸 자동 이동, 행정구역 JSON을 fetch로 불러온 시/도, 구/군 선택을 만들었습니다.'
     ],
-    tech: ['Adobe XD', 'Tailwind CSS v4', 'jQuery', 'Fetch API', 'PHP', 'PHPMailer', 'AOS.js', 'WebP']
+    tech: ['Adobe XD', 'Tailwind CSS v4', 'jQuery', 'Fetch API', 'AOS.js']
   },
   {
     id: 'tnjad', company: '티앤제이비즈', cat: 'tnj', featured: true,
     title: 'T&J AD 병원 마케팅 랜딩페이지', period: '2024.04 - 2024.05',
     url: 'https://tnjbiz1.mycafe24.com/intro/6811772779117/', thumb: '../images/preview_tnjad.png',
-    role: '사내 디자이너 시안 기반 인터랙션 퍼블리싱, 신청 폼 DB 저장',
+    role: '사내 디자이너 시안 기반 인터랙션 퍼블리싱',
     points: [
       '사내 디자이너의 시안을 받아 약 2주 동안 퍼블리싱했습니다.',
       '병뚜껑이 날아가고 물줄기가 솟는 인트로를 영상 없이 CSS 트랜지션과 상태 클래스로 구현했습니다.',
-      '본문은 모바일 기준으로, PC에서는 오른쪽 여백에 SNS 채널을 두는 2열 레이아웃을 만들고 신청 값을 DB에 저장했습니다.'
+      '본문은 모바일 기준으로 만들고, PC에서는 오른쪽 여백에 SNS 채널을 두는 2열 레이아웃으로 나눴습니다.'
     ],
     tech: ['HTML5/CSS3', 'jQuery', 'CSS Keyframes', 'Slick.js', 'AOS.js', 'animateNumber.js']
   },
@@ -79,13 +79,12 @@ const WORKS = [
     id: 'tnjbiz-home', company: '티앤제이비즈', cat: 'tnj', featured: true,
     title: '티앤제이비즈 홈페이지', period: '2025.04 - 2025.05',
     url: 'http://www.tnjbiz.co.kr/', thumb: '../images/preview_tnjbiz.png',
-    role: 'XD 시안 디자인, 반응형 퍼블리싱, PHP 공통 템플릿, 문의 메일, 카카오맵',
+    role: 'XD 시안 디자인, 반응형 퍼블리싱',
     points: [
       'XD 시안 2종을 만들고, 확정된 시안으로 약 1개월 동안 사이트를 다시 구축했습니다.',
-      'PC는 왼쪽 타이틀이 고정된 채 카드가 지그재그로 올라오고, 모바일은 같은 내용을 Swiper 슬라이더로 보여 주게 나눴습니다.',
-      'header, footer를 PHP include로 나누고 AJAX 문의 메일과 카카오맵을 연결했습니다.'
+      'PC는 왼쪽 타이틀이 고정된 채 카드가 지그재그로 올라오고, 모바일은 같은 내용을 Swiper 슬라이더로 보여 주게 나눴습니다.'
     ],
-    tech: ['Adobe XD', 'jQuery', 'Swiper 11', 'AOS.js', 'PHP', 'AJAX', 'Kakao Maps API']
+    tech: ['Adobe XD', 'jQuery', 'Swiper 11', 'AOS.js']
   },
   {
     id: 'fruit-mbti', company: '팀 프로젝트 (4인)', cat: 'team', featured: true,
@@ -104,68 +103,52 @@ const WORKS = [
     id: 'webtest', company: '마이패스', cat: 'mypass',
     title: '웹테스트+ 온라인 모의고사', period: '2021.06 - 2022.04',
     url: 'https://job.dokgong.com/webtest/sample', thumb: '../images/preview_webtest.png',
-    role: '수험생 화면, 답안 저장, 채점 (프론트, 백엔드)',
+    role: '수험생 화면 퍼블리싱과 인터랙션',
     points: [
-      '3인 팀에서 수험생 화면을 화면부터 PHP, MySQL까지 맡았습니다. (약 10개월)',
-      '화면 설정 10가지, 원형 타이머, 스크롤을 따라오는 OMR, AJAX 답안 임시 저장을 만들었습니다.',
-      '종이 OMR과 엑셀 채점에 1~2일 걸리던 성적 산출을 시험 종료 즉시로 바꿨습니다.'
+      '3인 팀에서 수험생 화면을 맡았습니다. (약 10개월)',
+      '화면 설정 10가지, 원형 타이머, 스크롤을 따라오는 OMR, AJAX 답안 임시 저장을 만들었습니다.'
     ],
-    tech: ['jQuery', 'Chart.js', 'AJAX', '반응형', 'PHP', 'MySQL']
+    tech: ['jQuery', 'Chart.js', 'AJAX', '반응형']
   },
   {
     id: 'sobang-professor', company: '마이패스', cat: 'mypass',
     title: '독한소방 교수님 소개 페이지', period: '2021.04 - 2021.06',
     url: 'https://sobang.dokgong.com/professor', thumb: '../images/preview_teacher.png',
-    role: '퍼블리싱, 데이터 출력',
-    points: ['HTML, CSS, jQuery로 퍼블리싱하고 PHP, MySQL로 카테고리에 맞는 데이터를 출력했습니다.'],
-    tech: ['HTML5/CSS3', 'jQuery', 'PHP', 'MySQL']
+    role: '퍼블리싱',
+    points: ['HTML, CSS, jQuery로 퍼블리싱했습니다.'],
+    tech: ['HTML5/CSS3', 'jQuery']
   },
   {
     id: 'lecture-room', company: '마이패스', cat: 'mypass',
     title: '교육 사이트 6곳 내 강의실 개편', period: '2022.03 - 2022.09',
     url: '', note: '로그인 후 사용하는 페이지', thumb: '../images/preview_mypage.png',
-    role: '수강 기록, 수강확인증 기능 (프론트, 백엔드)',
+    role: '수강확인증, 영수증, 교재 배송 내역 화면',
     points: [
-      '실제 시청 시간 기록과 수강률 판정 로직을 새로 만들었습니다.',
-      '수강 기록에 구매 번호를 연결해 재구매, 과목 중복으로 강의가 막히던 문제를 줄였습니다.',
       '수강생이 직접 발급하는 수강확인증과 영수증, 교재 배송 내역을 만들어 6개 사이트에 적용했습니다.'
     ],
-    tech: ['jQuery', 'AJAX', 'Video.js', 'PHP', 'MySQL']
+    tech: ['jQuery']
   },
   {
     id: 'univ-solution', company: '마이패스', cat: 'mypass',
     title: '대학 콘텐츠 솔루션 구축', period: '2022.03 - 2023.03',
     url: '', note: '로그인 후 사용하는 페이지',thumb: '../images/preview_solution.jpg',
-    role: '기획서, XD 시안 기반 학생 화면과 학교별 관리자 구현',
+    role: '기획서, XD 시안 기반 학생 화면과 학교별 관리자 화면 구현',
     points: [
-      '기획서와 사내 디자이너의 XD 시안을 받아 학교 코드 구조, 학생 화면, 학교별 관리자를 화면부터 PHP, MySQL까지 구현했습니다.',
-      '학교 코드로 메뉴와 데이터를 나눠, 학교가 늘어도 등록만 하면 되게 했습니다.',
-      '학습왕, 성적왕 순위 자동 집계를 만들고, 디자이너가 없던 때라 카드 디자인과 퍼블리싱도 맡았습니다.'
+      '기획서와 사내 디자이너의 XD 시안을 받아 학생 화면과 학교별 관리자 화면을 구현했습니다.',
+      '디자이너가 없던 때에는 카드 디자인과 퍼블리싱도 맡았습니다.'
     ],
-    tech: ['HTML5/CSS3', 'jQuery', 'PHP', 'MySQL']
+    tech: ['HTML5/CSS3', 'jQuery']
   },
   {
     id: 'payment-alimtalk', company: '마이패스', cat: 'mypass',
-    title: '결제, 환불 관리자와 알림톡', period: '2022.07 - 2022.09',
-    url: '', note: '관리자 페이지', thumb: '../images/preview_payment.png',
-    role: '결제 대행사 교체, 환불액 자동 계산, 알림톡 연동',
+    title: '강의 결제, 환불 관리자', period: '2022.07 - 2022.09',
+    url: '', note: '관리자 페이지', thumb: '../images/preview_payment.PNG',
+    role: '결제 대행사 교체, 환불액 자동 계산',
     points: [
       '결제 대행사를 이니시스에서 토스페이먼츠로 바꾸고, 이전 결제 기록도 함께 보이게 했습니다.',
-      '환불 규정에 맞게 환불액이 자동 계산되게 고치고, 구글 시트로 하던 환불 기록을 관리자 페이지로 옮겼습니다.',
-      '퍼플북 알림톡 템플릿을 만들고, 결제 시 구매자와 관리자에게 알림톡이 가게 연결했습니다.'
+      '환불 규정에 맞게 환불액이 자동 계산되게 고치고, 구글 시트로 하던 환불 기록을 관리자 페이지로 옮겼습니다.'
     ],
-    tech: ['jQuery', 'AJAX', 'PHP', 'MySQL', 'API']
-  },
-  {
-    id: 's3-banner', company: '마이패스', cat: 'mypass',
-    title: 'AWS S3 배너 업로드', period: '2022.06 - 2022.08',
-    url: '', note: '관리자 페이지', thumb: '../images/preview_s3.png',
-    role: '관리자 배너 S3 업로드, 6개 사이트 적용',
-    points: [
-      'AWS SDK for PHP 문서를 찾아가며 관리자 배너 업로드를 S3에 연결했습니다.',
-      '관리자 페이지에서 따로 테스트한 뒤 실제 배너 등록에 붙여 6개 사이트에 적용했습니다.'
-    ],
-    tech: ['PHP', 'AWS S3', 'MySQL']
+    tech: ['jQuery', 'AJAX', 'API']
   },
 
   /* ---------- 티앤제이비즈 사이트 ---------- */
@@ -173,13 +156,12 @@ const WORKS = [
     id: 'brbiz-marketing', company: '티앤제이비즈', cat: 'tnj',
     title: '바른비즈 마케팅 원페이지', period: '2026.06',
     url: 'http://brbiz.co.kr/', dead: true, thumb: '../images/bareunbiz_marketing_thumb.jpg',
-    role: '기획, 디자인, 퍼블리싱, PHP 도메인 분기',
+    role: '기획, 디자인, 퍼블리싱',
     points: [
       '기획, 디자인, 퍼블리싱을 맡아 약 1주 만에 오픈했습니다.',
-      'PC는 fullPage.js 원페이지 스크롤, 모바일은 IntersectionObserver로 같은 애니메이션이 실행되게 나눴습니다.',
-      '호스팅을 추가하지 않고 한 Cafe24 계정에서 두 도메인을 다른 사이트로 보여 주도록 PHP로 분기했습니다.'
+      'PC는 fullPage.js 원페이지 스크롤, 모바일은 IntersectionObserver로 같은 애니메이션이 실행되게 나눴습니다.'
     ],
-    tech: ['PHP', 'fullPage.js', 'Slick.js', 'IntersectionObserver', 'SEO/OG']
+    tech: ['fullPage.js', 'Slick.js', 'IntersectionObserver']
   },
   {
     id: 'tnjt', company: '티앤제이비즈', cat: 'tnj',
