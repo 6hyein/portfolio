@@ -1401,33 +1401,99 @@ $(function () {
     }
 
     // View 물방울이 닿은 카드: 수면처럼 울렁이다 잦아든다 (SVG 물결 필터를 잠깐 씌웠다가 뗀다)
-    //  feTurbulence 로 만든 무늬만큼 그림을 밀어내고(feDisplacementMap), 미는 세기를 0 으로 줄인다
+    //  - 맨 앞에 똑바로 선 대표 작업 카드: 마우스가 닿은 자리에서 동그란 물결이 퍼져 나간다 (#ripple-ring)
+    //  - 기울어진 카드, 덩어리 카드: 카드 전체가 일렁인다 (#ripple). 3D 로 기울어 있으면 마우스 자리를 카드 안 좌표로 정확히 못 바꿔서
+    //  두 필터 모두 무늬만큼 그림을 밀어내고(feDisplacementMap), 미는 세기를 0 으로 줄인다
     const svgNS = 'http://www.w3.org/2000/svg';
+
+    // 동그란 물결 무늬: 가운데에서 바깥으로 갈수록 약해지는 고리 5개. 빨강 = 가로로 미는 양, 초록 = 세로로 미는 양
+    // (128 이 '안 밀기'. 고리마다 바깥쪽 / 안쪽으로 번갈아 밀어서 물결처럼 보인다)
+    function ringMap() {
+        const S = 256;
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = S;
+        const ctx = canvas.getContext('2d');
+        const img = ctx.createImageData(S, S);
+        for (let y = 0; y < S; y++) {
+            for (let x = 0; x < S; x++) {
+                const dx = x - S / 2;
+                const dy = y - S / 2;
+                const r = Math.hypot(dx, dy) / (S / 2); // 0 ~ 1
+                const wave = r < 1 ? Math.sin(r * Math.PI * 10) * (1 - r) : 0;
+                const k = (y * S + x) * 4;
+                img.data[k] = 128 + 127 * wave * (r ? dx / (r * S / 2) : 0);
+                img.data[k + 1] = 128 + 127 * wave * (r ? dy / (r * S / 2) : 0);
+                img.data[k + 2] = 128;
+                img.data[k + 3] = 255;
+            }
+        }
+        ctx.putImageData(img, 0, 0);
+        return canvas.toDataURL();
+    }
+
     const rippleSvg = document.createElementNS(svgNS, 'svg');
     rippleSvg.setAttribute('aria-hidden', 'true');
     rippleSvg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
     rippleSvg.innerHTML = `<filter id="ripple" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3" result="noise"/>
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="ripple-ring" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feFlood flood-color="rgb(128,128,128)" result="flat"/>
+        <feImage href="${ringMap()}" x="0" y="0" width="0" height="0" preserveAspectRatio="none" result="ring"/>
+        <feMerge result="map"><feMergeNode in="flat"/><feMergeNode in="ring"/></feMerge>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
     </filter>`;
     document.body.appendChild(rippleSvg);
-    const rippleNoise = rippleSvg.querySelector('feTurbulence');
-    const rippleMap = rippleSvg.querySelector('feDisplacementMap');
-    const rippleState = { scale: 0, freq: 0.012 };
+    const rippleNoise = rippleSvg.querySelector('#ripple feTurbulence');
+    const rippleMap = rippleSvg.querySelector('#ripple feDisplacementMap');
+    const ringImage = rippleSvg.querySelector('#ripple-ring feImage');
+    const ringMapEl = rippleSvg.querySelector('#ripple-ring feDisplacementMap');
+    const rippleState = { scale: 0, freq: 0.012, r: 0 };
     let rippleTarget = null;
     let rippleTl = null;
-    function ripple(card) {
+
+    // 맨 앞에 똑바로 서 있는 대표 작업 카드인지 (넘어가는 중이거나 덩어리 단계면 아니다)
+    const isFrontFlat = (i) => state.k === 0 && i === Math.round(state.p) && Math.abs(state.p - i) < 0.35;
+
+    function ripple(card, mouse) {
         const target = card.querySelector('.card__inner');
         if (rippleTl) rippleTl.kill();
         if (rippleTarget && rippleTarget !== target) rippleTarget.style.filter = '';
         rippleTarget = target;
+        const done = () => { target.style.filter = ''; };
+
+        if (mouse && isFrontFlat(Number(card.dataset.index))) {
+            // 마우스가 닿은 자리(카드 안 좌표)를 가운데로 고리가 커지며 퍼진다
+            const rect = target.getBoundingClientRect();
+            const lx = (mouse.x - rect.left) * target.offsetWidth / rect.width;
+            const ly = (mouse.y - rect.top) * target.offsetHeight / rect.height;
+            const far = Math.hypot(target.offsetWidth, target.offsetHeight);
+            target.style.filter = 'url(#ripple-ring)';
+            rippleTl = gsap.timeline({
+                onUpdate: () => {
+                    const r = rippleState.r;
+                    ringImage.setAttribute('x', (lx - r).toFixed(1));
+                    ringImage.setAttribute('y', (ly - r).toFixed(1));
+                    ringImage.setAttribute('width', (r * 2).toFixed(1));
+                    ringImage.setAttribute('height', (r * 2).toFixed(1));
+                    ringMapEl.setAttribute('scale', rippleState.scale.toFixed(2));
+                },
+                onComplete: done
+            })
+                .fromTo(rippleState, { r: far * 0.08 }, { r: far * 0.9, duration: 1.4, ease: 'power2.out' }, 0)
+                .fromTo(rippleState, { scale: 0 }, { scale: 24, duration: 0.15, ease: 'power2.out' }, 0)
+                .to(rippleState, { scale: 0, duration: 1.25, ease: 'power2.in' }, 0.15);
+            return;
+        }
+
         target.style.filter = 'url(#ripple)';
         rippleTl = gsap.timeline({
             onUpdate: () => {
                 rippleMap.setAttribute('scale', rippleState.scale.toFixed(2));
                 rippleNoise.setAttribute('baseFrequency', `${rippleState.freq.toFixed(4)} ${(rippleState.freq * 2.5).toFixed(4)}`);
             },
-            onComplete: () => { target.style.filter = ''; }
+            onComplete: done
         })
             .fromTo(rippleState, { scale: 0, freq: 0.006 }, { scale: 26, freq: 0.014, duration: 0.18, ease: 'power2.out' })
             .to(rippleState, { scale: 0, freq: 0.02, duration: 1.1, ease: 'elastic.out(1, 0.35)' });
@@ -1454,7 +1520,7 @@ $(function () {
             const idx = cardEl ? Number(cardEl.dataset.index) : -1;
             const btn = !cardEl && !!(el && el.closest('button'));
             if (idx !== overCard || btn !== overButton) {
-                if (idx > -1 && idx !== overCard && !gridOn) ripple(cards[idx]);
+                if (idx > -1 && idx !== overCard && !gridOn) ripple(cards[idx], mouse);
                 overCard = idx;
                 overButton = btn;
                 setHovered(gridOn ? idx : -1);
