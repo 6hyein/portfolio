@@ -31,6 +31,8 @@
     padding: 6px 13px; border: 1px solid var(--sk-ink); border-radius: 99px;
     font-size: 14px; font-weight: 600; line-height: 1.3; white-space: nowrap;
 }
+/* 여러 라이브러리를 한 칩에 묶을 때: 이름은 작게 */
+.skills__chips small { margin-left: 4px; font-size: 12px; font-weight: 500; opacity: .75; }
 /* 실무에서 쓴 기술은 꽉 찬 칩, 나머지는 테두리만 */
 .skills__tier:first-child .skills__chips li { background: var(--sk-ink); color: var(--accent); }
 
