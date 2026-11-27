@@ -14,7 +14,7 @@ const WORK_STATUS = {
     's3-banner': {"ok":null,"thumb":false,"note":"관리자 페이지","checked":"2026-11-26"},
     'brbiz-marketing': {"ok":false,"thumb":false,"http":200,"checked":"2026-11-26"},
     'tnjt': {"ok":true,"thumb":true,"http":200,"checked":"2026-11-26"},
-    'hankyungbiz': {"ok":false,"thumb":false,"note":"page.goto: net::ERR_CERT_DATE_INVALID at https://www.hankyungbiz.co.kr/","checked":"2026-11-26"},
+    'tnj-sites': {"ok":true,"thumb":false,"note":"http 로는 열리지만 https 인증서가 만료돼 캡처는 실패했다","checked":"2026-11-27"},
     'policy-01': {"ok":true,"thumb":true,"http":200,"checked":"2026-11-26"},
     'policy-02': {"ok":true,"thumb":true,"http":200,"checked":"2026-11-26"},
     'policy-03': {"ok":true,"thumb":true,"http":200,"checked":"2026-11-26"},
