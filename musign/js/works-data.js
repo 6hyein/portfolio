@@ -19,7 +19,7 @@ const SERIES = {
       '숫자 카운팅(animateNumber.js, IntersectionObserver), 후기 슬라이더(Slick.js), 스크롤 모션(AOS.js)을 페이지에 맞춰 넣었습니다.',
       '하단 고정 접이식 신청 폼과 이름, 전화번호 검증을 만들고, 공통 파일(reset, rem, 애니메이션 설정)을 재사용해 새 캠페인을 빠르게 만들었습니다.'
     ],
-    tech: ['Adobe XD', 'Photoshop', 'HTML5/CSS3', 'jQuery', 'AOS.js', 'Slick.js', 'animateNumber.js']
+    tech: ['Adobe XD', 'Photoshop', 'HTML5/CSS3', 'jQuery', 'js 라이브러리']
   },
   momo: {
     role: '디자인, 퍼블리싱, 신청 폼 검증',
@@ -61,7 +61,7 @@ const WORKS = [
       'Adobe XD 시안부터 Tailwind CSS v4 반응형 마크업까지 맡았습니다. (기획은 제외)',
       '이름 한글 검증, 전화번호 다음 칸 자동 이동, 행정구역 JSON을 fetch로 불러온 시/도, 구/군 선택을 만들었습니다.'
     ],
-    tech: ['Adobe XD', 'Tailwind CSS v4', 'jQuery', 'Fetch API', 'AOS.js']
+    tech: ['Adobe XD','HTML5/CSS3', 'Tailwind CSS v4', 'jQuery', 'Fetch API', 'AOS.js']
   },
   {
     id: 'tnjad', company: '티앤제이비즈', cat: 'tnj', featured: true,
@@ -73,7 +73,7 @@ const WORKS = [
       '병뚜껑이 날아가고 물줄기가 솟는 인트로를 영상 없이 CSS 트랜지션과 상태 클래스로 구현했습니다.',
       '본문은 모바일 기준으로 만들고, PC에서는 오른쪽 여백에 SNS 채널을 두는 2열 레이아웃으로 나눴습니다.'
     ],
-    tech: ['HTML5/CSS3', 'jQuery', 'CSS Keyframes', 'Slick.js', 'AOS.js', 'animateNumber.js']
+    tech: ['HTML5/CSS3','HTML5/CSS3', 'jQuery', 'CSS Keyframes', 'Slick.js', 'AOS.js', 'animateNumber.js']
   },
   {
     id: 'tnjbiz-home', company: '티앤제이비즈', cat: 'tnj', featured: true,
@@ -84,7 +84,7 @@ const WORKS = [
       'XD 시안 2종을 만들고, 확정된 시안으로 약 1개월 동안 사이트를 다시 구축했습니다.',
       'PC는 왼쪽 타이틀이 고정된 채 카드가 지그재그로 올라오고, 모바일은 같은 내용을 Swiper 슬라이더로 보여 주게 나눴습니다.'
     ],
-    tech: ['Adobe XD', 'jQuery', 'Swiper 11', 'AOS.js']
+    tech: ['Adobe XD','HTML5/CSS3', 'jQuery', 'Swiper 11', 'AOS.js']
   },
   {
     id: 'fruit-mbti', company: '팀 프로젝트 (4인)', cat: 'team', featured: true,
@@ -108,14 +108,17 @@ const WORKS = [
       '3인 팀에서 수험생 화면을 맡았습니다. (약 10개월)',
       '화면 설정 10가지, 원형 타이머, 스크롤을 따라오는 OMR, AJAX 답안 임시 저장을 만들었습니다.'
     ],
-    tech: ['jQuery', 'Chart.js', 'AJAX', '반응형']
+    tech: ['HTML5/CSS3','jQuery', 'Chart.js', 'AJAX', '반응형']
   },
   {
     id: 'sobang-professor', company: '마이패스', cat: 'mypass',
-    title: '독한소방 교수님 소개 페이지', period: '2021.04 - 2021.06',
+    title: '교수님 소개 페이지', period: '2021.04 - 2021.06',
     url: 'https://sobang.dokgong.com/professor', thumb: '../images/preview_teacher.png',
     role: '퍼블리싱',
-    points: ['HTML, CSS, jQuery로 퍼블리싱했습니다.'],
+    points: [
+      '교수님 소개, 강의, 수강후기, Q&A 화면을 퍼블리싱했습니다.',
+      '데이터가 많은 페이지의 특성을 고려해, PC는 3열, 모바일은 1열로 나눠 같은 데이터를 두 번 불러오지 않게 했습니다.'
+    ],
     tech: ['HTML5/CSS3', 'jQuery']
   },
   {
@@ -124,9 +127,10 @@ const WORKS = [
     url: '', note: '로그인 후 사용하는 페이지', thumb: '../images/preview_mypage.png',
     role: '수강확인증, 영수증, 교재 배송 내역 화면',
     points: [
+      '수강하고 있는 강의 리스트, 수강 완료한 강의 비율 등을 Chart.js로 한눈에 볼 수 있게 만들었습니다.',
       '수강생이 직접 발급하는 수강확인증과 영수증, 교재 배송 내역을 만들어 6개 사이트에 적용했습니다.'
     ],
-    tech: ['jQuery']
+    tech: ['HTML5/CSS3','jQuery', 'Chart.js', 'AJAX', '반응형']
   },
   {
     id: 'univ-solution', company: '마이패스', cat: 'mypass',
@@ -137,7 +141,7 @@ const WORKS = [
       '기획서와 사내 디자이너의 XD 시안을 받아 학생 화면과 학교별 관리자 화면을 구현했습니다.',
       '디자이너가 없던 때에는 카드 디자인과 퍼블리싱도 맡았습니다.'
     ],
-    tech: ['HTML5/CSS3', 'jQuery']
+    tech: ['HTML5/CSS3', 'jQuery', 'AJAX', '반응형']
   },
   {
     id: 'payment-alimtalk', company: '마이패스', cat: 'mypass',
@@ -148,7 +152,7 @@ const WORKS = [
       '결제 대행사를 이니시스에서 토스페이먼츠로 바꾸고, 이전 결제 기록도 함께 보이게 했습니다.',
       '환불 규정에 맞게 환불액이 자동 계산되게 고치고, 구글 시트로 하던 환불 기록을 관리자 페이지로 옮겼습니다.'
     ],
-    tech: ['jQuery', 'AJAX', 'API']
+    tech: ['HTML5/CSS3', 'jQuery', 'AJAX', 'API']
   },
 
   /* ---------- 티앤제이비즈 사이트 ---------- */
@@ -161,7 +165,7 @@ const WORKS = [
       '기획, 디자인, 퍼블리싱을 맡아 약 1주 만에 오픈했습니다.',
       'PC는 fullPage.js 원페이지 스크롤, 모바일은 IntersectionObserver로 같은 애니메이션이 실행되게 나눴습니다.'
     ],
-    tech: ['fullPage.js', 'Slick.js', 'IntersectionObserver']
+    tech: ['HTML5/CSS3', 'fullPage.js', 'Slick.js', 'IntersectionObserver']
   },
   {
     id: 'tnjt', company: '티앤제이비즈', cat: 'tnj',
