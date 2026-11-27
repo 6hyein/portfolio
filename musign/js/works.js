@@ -471,7 +471,7 @@ $(function () {
         });
 
         // 악마가 설 자리: 내려찍은 글자가 떨어진 자리에서, 그 아래 쌓인 글자 중 가장 높은 곳
-        const restCx = hit.cx + plan[outers.indexOf(impactCh)].x;
+        const restCx =  hit.cx;
         const below = plan.filter((p) => p.left < restCx && p.right > restCx);
         const pileTop = below.length ? Math.min(...below.map((p) => p.top)) : floor;
         const rest = { x: restCx - devil.offsetWidth / 2, y: pileTop - devil.offsetHeight * 0.92, floor: pileTop + devil.offsetHeight * 0.08 };
@@ -575,7 +575,7 @@ $(function () {
         holeAt = { x: collapse.rest.x + devil.offsetWidth / 2, y: collapse.rest.floor };
         hole.r0 = 0;
         drawHole();
-        const crackPaths = drawCracks(hit.cx, hit.top);
+        const crackPaths = drawCracks(holeAt.x, holeAt.y);
         const size = () => devil.offsetHeight;
         // 원근: 멀리(조금 작게) → 가까이(제 크기) → 높이 뛸 때 조금 더 크게
         const FAR = 0.78;

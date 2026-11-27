@@ -20,9 +20,12 @@ const SERIES = {
     tech: ['Adobe XD', 'Photoshop', 'HTML5/CSS3', 'jQuery', 'AOS.js', 'Slick.js', 'animateNumber.js']
   },
   momo: {
-    role: '디자인, 퍼블리싱',
-    points: ['모모성형외과 서울점 남성 모발이식 랜딩페이지 시리즈를 디자인하고 퍼블리싱했습니다.'],
-    tech: []
+    role: '디자인, 퍼블리싱, 신청 폼 검증',
+    points: [
+      '모모성형외과 서울점 남성 모발이식 랜딩페이지 시리즈를 디자인하고 퍼블리싱했습니다.',
+      '급한 기간안에 이루어져야하는 작업이여서 신청 폼 이외에는 이미지로 처리했습니다.'
+    ],
+    tech: ['Adobe XD', 'Photoshop', 'HTML5/CSS3', 'jQuery']
   }
 };
 
@@ -75,7 +78,7 @@ const WORKS = [
   {
     id: 'tnjbiz-home', company: '티앤제이비즈', cat: 'tnj', featured: true,
     title: '티앤제이비즈 홈페이지', period: '2025.04 - 2025.05',
-    url: 'http://www.tnjbiz.co.kr/',
+    url: 'http://www.tnjbiz.co.kr/', thumb: '../images/preview_tnjbiz.png',
     role: 'XD 시안 디자인, 반응형 퍼블리싱, PHP 공통 템플릿, 문의 메일, 카카오맵',
     points: [
       'XD 시안 2종을 만들고, 확정된 시안으로 약 1개월 동안 사이트를 다시 구축했습니다.',
@@ -120,7 +123,7 @@ const WORKS = [
   {
     id: 'lecture-room', company: '마이패스', cat: 'mypass',
     title: '교육 사이트 6곳 내 강의실 개편', period: '2022.03 - 2022.09',
-    url: '', note: '로그인 후 사용하는 페이지',
+    url: '', note: '로그인 후 사용하는 페이지', thumb: '../images/preview_mypage.png',
     role: '수강 기록, 수강확인증 기능 (프론트, 백엔드)',
     points: [
       '실제 시청 시간 기록과 수강률 판정 로직을 새로 만들었습니다.',
@@ -132,7 +135,7 @@ const WORKS = [
   {
     id: 'univ-solution', company: '마이패스', cat: 'mypass',
     title: '대학 콘텐츠 솔루션 구축', period: '2022.03 - 2023.03',
-    url: '', note: '로그인 후 사용하는 페이지',
+    url: '', note: '로그인 후 사용하는 페이지',thumb: '../images/preview_solution.jpg',
     role: '기획서, XD 시안 기반 학생 화면과 학교별 관리자 구현',
     points: [
       '기획서와 사내 디자이너의 XD 시안을 받아 학교 코드 구조, 학생 화면, 학교별 관리자를 화면부터 PHP, MySQL까지 구현했습니다.',
@@ -144,19 +147,19 @@ const WORKS = [
   {
     id: 'payment-alimtalk', company: '마이패스', cat: 'mypass',
     title: '결제, 환불 관리자와 알림톡', period: '2022.07 - 2022.09',
-    url: '', note: '관리자 페이지',
+    url: '', note: '관리자 페이지', thumb: '../images/preview_payment.png',
     role: '결제 대행사 교체, 환불액 자동 계산, 알림톡 연동',
     points: [
       '결제 대행사를 이니시스에서 토스페이먼츠로 바꾸고, 이전 결제 기록도 함께 보이게 했습니다.',
       '환불 규정에 맞게 환불액이 자동 계산되게 고치고, 구글 시트로 하던 환불 기록을 관리자 페이지로 옮겼습니다.',
       '퍼플북 알림톡 템플릿을 만들고, 결제 시 구매자와 관리자에게 알림톡이 가게 연결했습니다.'
     ],
-    tech: ['jQuery', 'AJAX', 'PHP', 'MySQL', '토스페이먼츠', '퍼플북']
+    tech: ['jQuery', 'AJAX', 'PHP', 'MySQL', 'API']
   },
   {
     id: 's3-banner', company: '마이패스', cat: 'mypass',
     title: 'AWS S3 배너 업로드', period: '2022.06 - 2022.08',
-    url: '', note: '관리자 페이지',
+    url: '', note: '관리자 페이지', thumb: '../images/preview_s3.png',
     role: '관리자 배너 S3 업로드, 6개 사이트 적용',
     points: [
       'AWS SDK for PHP 문서를 찾아가며 관리자 배너 업로드를 S3에 연결했습니다.',
