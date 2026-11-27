@@ -6,7 +6,8 @@
    1. 스크롤 진행 바
    2. 인트로: 꼬마 악마가 Y, H 를 밟다가 H 에 쾅 내려찍으면 지진이 난 듯 글자가 무너진다.
       착지한 자리에 구멍이 생기고, 스크롤하면 구멍이 커지며 그 뒤의 소개와 숫자가 드러난다
-   3. 작업 45개: PC에서 겹친 카드를 한 장씩 넘기다가, 끝까지 넘기면 콜라주로 흩어진다
+   3. 작업 45개: PC에서 대표 작업을 한 장씩 넘긴 뒤, 나머지 카드가 한 덩어리로 뭉쳐 나타나
+      마우스를 따라다니다가, 더 스크롤하면 덩어리가 풀리며 콜라주로 흩어진다
       (카드 가로 세로 비율은 작업마다 다르다)
    4. 회사별 보기(색인 탭), 상세 창, 이메일 복사
    ========================================================= */
@@ -974,9 +975,11 @@ $(function () {
     const stepItems = gsap.utils.toArray('.steps__item');
     const featuredCount = WORKS.filter((w) => w.featured).length; // 앞쪽 대표 작업 5장은 천천히
     const easeMorph = gsap.parseEase('power3.inOut');
+    const easeIn = gsap.parseEase('power3.out'); // 덩어리로 날아와 포개질 때
 
-    // state.p: 맨 앞 카드 번호 (0 ~ 45, 중간값 있음) / state.g: 콜라주로 펼쳐진 정도 (0 ~ 1)
-    const state = { p: 0, g: 0 };
+    // state.p: 맨 앞 대표 작업 번호 (0 ~ 4, 중간값 있음)
+    // state.k: 나머지 카드가 덩어리로 모인 정도 (0 ~ 1) / state.g: 콜라주로 펼쳐진 정도 (0 ~ 1)
+    const state = { p: 0, k: 0, g: 0 };
     const par = { x: 0, y: 0 };   // 마우스 위치에 따라 콜라주가 살짝 움직이는 양 (카드마다 깊이가 달라 입체감)
     let current = -1;
     let gridOn = false;
@@ -1010,6 +1013,25 @@ $(function () {
 
     // 콜라주 칸: 카드마다 목표 위치(x, y), 크기(s), 투명도(o), 겹침 순서(z), 깊이(depth)
     const cells = cards.map(() => ({ x: 0, y: 0, s: 0.3, o: 1, z: 1, depth: 1, rot: 0 }));
+
+    // 덩어리: 대표 작업이 아닌 카드가 화면 가운데에 비스듬히 포개진 자리 (layoutCollage 가 크기에 맞춰 채움)
+    //  from: 덩어리로 모이기 전 자리 (줄 서 있던 카드는 그 자리에서, 나머지는 화면 밖에서 날아온다)
+    //  lag: 마우스를 따라가는 빠르기 (카드마다 달라서 덩어리가 출렁이며 따라온다)
+    const isRest = (i) => !WORKS[i].featured;
+    const clump = cards.map((card, i) => {
+        const rnd = seeded(i * 31 + 7);
+        return {
+            x: 0, y: 0, s: 0.6, rot: 0, z: 1,
+            fromX: 0, fromY: 0,
+            delay: rnd() * 0.45,
+            lag: gsap.utils.interpolate(0.05, 0.16, rnd()),
+            angle: rnd() * Math.PI * 2,
+            fx: 0, fy: 0 // 지금 따라온 만큼
+        };
+    });
+    const aim = { x: 0, y: 0 }; // 마우스가 가리키는 덩어리 중심 (무대 기준)
+    const clumpOn = () => state.k > 0 && state.g < 1;
+    let recheckCursor = null; // 마우스가 가만히 있어도 카드가 움직이면 커서 모양을 다시 정한다 (아래 커서 코드가 채움)
 
     gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
 
@@ -1053,6 +1075,28 @@ $(function () {
         const baseX = W * 0.6;
         const baseY = H * 0.56;
         box = { W, side, top, bottom, baseX, baseY, cardH };
+
+        // 덩어리 자리: 무대 가운데 조금 오른쪽에 타원 모양으로 포갠다. 대표 작업이 아닌 카드만
+        const cx0 = W * 0.54 - baseX;
+        const cy0 = (top + bottom) / 2 - baseY;
+        const rx = Math.min(areaW * 0.2, cardH * 0.85);
+        const ry = Math.min(areaH * 0.16, cardH * 0.32);
+        cards.forEach((card, i) => {
+            if (!isRest(i)) return;
+            const rnd = seeded(i * 17 + 3);
+            const c = clump[i];
+            const r = Math.sqrt(rnd());
+            const a = rnd() * Math.PI * 2;
+            c.x = cx0 + Math.cos(a) * rx * r;
+            c.y = cy0 + Math.sin(a) * ry * r;
+            c.s = gsap.utils.interpolate(0.42, 0.62, rnd());
+            c.rot = (rnd() - 0.5) * 28;
+            c.z = 10 + Math.round(rnd() * 60);
+            // 화면 밖 출발점: 덩어리 중심에서 바깥쪽으로 화면 대각선만큼
+            const far = Math.hypot(W, H) * 0.65;
+            c.fromX = cx0 + Math.cos(c.angle) * far;
+            c.fromY = cy0 + Math.sin(c.angle) * far;
+        });
 
         // 칸 배정: 큰 대표 작업은 한쪽에 몰리지 않게 대각선으로 흩어 놓고, 나머지는 빈 칸을 차례로 채운다
         const big = (i) => WORKS[i].featured && count > 6;
@@ -1127,13 +1171,49 @@ $(function () {
         setCounter(index + 1);
     }
 
+    // 덩어리 단계 설명: 나머지 작업 수와 회사별 수
+    function showRest() {
+        const rest = WORKS.filter((w) => !w.featured);
+        const by = (cat) => rest.filter((w) => w.cat === cat).length;
+        info.innerHTML = `<span class="info__badge">All works</span>
+            <h3 class="info__title">나머지 작업 ${rest.length}개</h3>
+            <p class="info__role">티앤제이비즈 ${by('tnj')} · 마이패스 ${by('mypass')}${by('team') ? ' · 팀 프로젝트 ' + by('team') : ''}</p>
+            <p class="info__hint">마우스를 움직여 보고, 스크롤하면 펼쳐집니다</p>`;
+        gsap.fromTo(info.children,
+            { opacity: 0, y: 16, filter: 'blur(8px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, stagger: 0.04, ease: 'power2.out', overwrite: true });
+        setCounter(n);
+    }
+
+    // 덩어리가 마우스를 따라간다: 카드마다 빠르기가 달라 출렁이며 따라온다
+    gsap.ticker.add(() => {
+        if (!clumpOn()) return;
+        let moving = false;
+        cards.forEach((card, i) => {
+            if (!isRest(i)) return;
+            const c = clump[i];
+            const dx = aim.x - c.fx;
+            const dy = aim.y - c.fy;
+            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) return;
+            c.fx += dx * c.lag;
+            c.fy += dy * c.lag;
+            moving = true;
+        });
+        if (moving) {
+            requestRender();
+            if (recheckCursor) recheckCursor();
+        }
+    });
+
     function render() {
         needsRender = false;
         const unit = stackUnit;
         const g = state.g;
 
+        const gather = state.k;
         cards.forEach((card, i) => {
-            const d = i - state.p; // 0: 맨 앞, 1: 바로 뒤, -1: 이미 넘어간 카드
+            // 대표 작업은 덩어리가 모이는 동안 마지막 장까지 넘어간다
+            const d = i - (isRest(i) ? state.p : state.p + gather); // 0: 맨 앞, 1: 바로 뒤, -1: 이미 넘어간 카드
             let x, y, z, rotationY, opacity;
             let rotation = 0;
 
@@ -1156,6 +1236,23 @@ $(function () {
             let scale = 1;
             let zIndex = 100 - Math.round(Math.abs(d) * 2);
 
+            // 덩어리로 모이기: 줄 서 있던 카드는 그 자리에서, 안 보이던 카드는 화면 밖에서 차례로 날아와 포개진다
+            if (isRest(i) && gather > 0) {
+                const c = clump[i];
+                const t = easeIn(clamp(0, 1, (gather - c.delay) / 0.55));
+                const hidden = opacity < 0.05;
+                const sx = hidden ? c.fromX : x;
+                const sy = hidden ? c.fromY : y;
+                x = lerp(sx, c.x + c.fx, t);
+                y = lerp(sy, c.y + c.fy, t);
+                z = lerp(hidden ? 0 : z, 0, t);
+                rotationY = lerp(hidden ? 0 : rotationY, 0, t);
+                rotation = c.rot * t;
+                scale = lerp(hidden ? c.s * 1.25 : 1, c.s, t); // 화면 밖에서 오는 카드는 처음부터 작게
+                opacity = hidden ? t : lerp(opacity, 1, t);
+                zIndex = t > 0.5 ? c.z : zIndex;
+            }
+
             // 콜라주로 펼치기: 앞 번호 카드부터 차례로 제자리에 들어간다
             if (g > 0) {
                 const t = easeMorph(clamp(0, 1, (g - (i / (n - 1)) * 0.5) / 0.5));
@@ -1164,9 +1261,9 @@ $(function () {
                 y = lerp(y, c.y + par.y * c.depth, t);
                 z = lerp(z, 0, t);
                 rotationY = lerp(rotationY, 0, t);
-                rotation = c.rot * t;
+                rotation = lerp(rotation, c.rot, t);
                 opacity = lerp(opacity, c.o, t);
-                scale = lerp(1, c.s, t);
+                scale = lerp(scale, c.s, t);
                 if (g > 0.95) zIndex = i === hovered ? 500 : (focus[i].k > 0.02 ? 400 : c.z);
 
                 // 마우스를 올린 카드와 그 주변
@@ -1212,9 +1309,9 @@ $(function () {
             });
         });
 
-        // 겹친 카드 단계: 맨 앞 카드 설명
-        const index = Math.round(clamp(0, n - 1, state.p));
-        if (index !== current) { current = index; showInfo(index); }
+        // 겹친 카드 단계: 맨 앞 카드 설명 / 덩어리 단계: 나머지 작업 안내 (-2)
+        const index = gather > 0.5 ? -2 : Math.round(clamp(0, featuredCount - 1, state.p));
+        if (index !== current) { current = index; index === -2 ? showRest() : showInfo(index); }
         gsap.set([info, '.js-counter'], { autoAlpha: 1 - clamp(0, 1, g * 4) });
         // 색인 탭은 콜라주가 거의 펼쳐졌을 때 아래에서 차례로 올라오고, 바로 가기 버튼은 사라진다
         const rise = clamp(0, 1, (g - 0.55) * 2.5);
@@ -1225,7 +1322,7 @@ $(function () {
         let ph;
         let prog;
         if (g > 0) { ph = 2; prog = g; }
-        else if (state.p > featuredCount - 1) { ph = 1; prog = (state.p - (featuredCount - 1)) / (n - featuredCount); }
+        else if (gather > 0) { ph = 1; prog = gather; }
         else { ph = 0; prog = state.p / (featuredCount - 1); }
         stepItems.forEach((el, k) => el.style.setProperty('--p', (k < ph ? 100 : k === ph ? prog * 100 : 0) + '%'));
         if (ph !== phase) {
@@ -1245,9 +1342,10 @@ $(function () {
         }
     }
 
-    // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 나머지는 0.09, 콜라주 펼치기 1.6, 멈춤 0.5
-    const SPEED = { featured: 0.55, rest: 0.09, grid: 1.6, hold: 0.5 };
-    const TOTAL = (featuredCount - 1) * SPEED.featured + (n - featuredCount) * SPEED.rest + SPEED.grid + SPEED.hold;
+    // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 덩어리로 모이기 1, 덩어리 머무름 0.7,
+    // 콜라주 펼치기 1.6, 멈춤 0.5
+    const SPEED = { featured: 0.55, clump: 1, clumpHold: 0.7, grid: 1.6, hold: 0.5 };
+    const TOTAL = (featuredCount - 1) * SPEED.featured + SPEED.clump + SPEED.clumpHold + SPEED.grid + SPEED.hold;
     const worksTl = gsap.timeline({
         onUpdate: requestRender,
         scrollTrigger: {
@@ -1262,7 +1360,8 @@ $(function () {
     });
     worksTl
         .to(state, { p: featuredCount - 1, duration: (featuredCount - 1) * SPEED.featured, ease: 'none' })
-        .to(state, { p: n - 1, duration: (n - featuredCount) * SPEED.rest, ease: 'none' })
+        .to(state, { k: 1, duration: SPEED.clump, ease: 'none' })
+        .to({}, { duration: SPEED.clumpHold })
         .addLabel('grid')
         .to(state, { g: 1, duration: SPEED.grid, ease: 'none' })
         .addLabel('gridDone')
@@ -1281,7 +1380,7 @@ $(function () {
         window.scrollTo({ top: top + 2, behavior: 'smooth' });
     });
 
-    // 마우스 커서: 유리 원은 천천히 따라오고(Scroll / View), 콜라주 카드 위에서는 십자선과 작업 이름
+    // 마우스 커서: 원은 천천히 따라오고(Scroll / View 물방울), 콜라주 카드 위에서는 돋보기와 작업 이름
     const cursor = document.querySelector('.js-cursor');
     const glass = document.querySelector('.js-cursor-glass');
     const pin = document.querySelector('.js-cursor-pin');
@@ -1328,6 +1427,7 @@ $(function () {
                 updateCursor();
             }
         }
+        recheckCursor = checkUnder;
         let scrollFrame = 0;
         $(window).on('scroll', () => {
             if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; checkUnder(); });
@@ -1336,6 +1436,8 @@ $(function () {
         $(section).on('mouseenter', (e) => {
             move(e, true);
         }).on('mouseleave', () => {
+            aim.x = 0;
+            aim.y = 0;
             cursor.classList.remove('is-on');
             mouse = null;
             overCard = -1;
@@ -1345,6 +1447,12 @@ $(function () {
             mouse = { x: e.clientX, y: e.clientY };
             move(e, false);
             checkUnder();
+            // 덩어리 단계: 덩어리 중심이 마우스 쪽으로 (무대 안에서만, 너무 멀리 가지 않게)
+            if (box) {
+                const r = section.getBoundingClientRect();
+                aim.x = clamp(-box.W * 0.28, box.W * 0.2, (e.clientX - r.left) - box.W * 0.54) * 0.7;
+                aim.y = clamp(-(box.bottom - box.top) * 0.3, (box.bottom - box.top) * 0.3, (e.clientY - r.top) - (box.top + box.bottom) / 2) * 0.6;
+            }
             // 콜라주에서는 마우스 반대쪽으로 카드들이 깊이에 따라 조금씩 밀린다
             if (gridOn) {
                 const box = section.getBoundingClientRect();
