@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
     <link rel="stylesheet" href="./css/works.css">
+    <link rel="stylesheet" href="./css/skills.css">
 </head>
 <body>
     <!-- 스크롤 안내 -->
@@ -26,6 +27,7 @@
     <header class="header">
         <a class="header__name" href="./works.html">육혜인<span>Web Publisher</span></a>
         <nav class="header__nav" aria-label="페이지 안 이동">
+            <a href="#skills">스킬</a>
             <a href="#works">작업</a>
             <a href="#contact">연락처</a>
         </nav>
@@ -118,7 +120,70 @@
             </div>
         </section>
 
-        <!-- 2. 작업 45개
+        <!-- 2. 스킬: 왼쪽은 숙련도별 기술, 오른쪽은 해 온 일 요약 (주황 구멍에서 그대로 이어진다) -->
+        <section class="skills js-skills" id="skills" aria-labelledby="skills-title">
+            <div class="skills__side">
+                <h2 class="skills__title" id="skills-title">Skills</h2>
+                <dl class="skills__tiers">
+                    <div class="skills__tier">
+                        <dt>실무에서 사용</dt>
+                        <dd>
+                            <ul class="skills__chips">
+                                <li>HTML5</li><li>CSS3</li><li>반응형 웹</li><li>웹 표준·접근성 마크업</li>
+                                <li>JavaScript</li><li>jQuery</li><li>AJAX</li><li>Tailwind CSS v4</li>
+                                <li>Swiper</li><li>Slick</li><li>AOS</li><li>fullPage.js</li>
+                                <li>Adobe XD</li><li>Photoshop</li><li>SVN</li>
+                            </ul>
+                        </dd>
+                    </div>
+                    <div class="skills__tier">
+                        <dt>프로젝트에서 사용</dt>
+                        <dd>
+                            <ul class="skills__chips">
+                                <li>Figma</li><li>Git</li>
+                            </ul>
+                        </dd>
+                    </div>
+                    <div class="skills__tier">
+                        <dt>학습</dt>
+                        <dd>
+                            <ul class="skills__chips">
+                                <li>GSAP ScrollTrigger</li><li>GitHub PR 협업</li>
+                            </ul>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <ol class="skills__list">
+                <li class="skills__item">
+                    <h3>반응형 퍼블리싱</h3>
+                    <p>1200px 고정 폭이던 교육 사이트에 반응형을 입히고, 교육 사이트 6곳을 PC와 모바일 모두 맞게 바꿨습니다.</p>
+                </li>
+                <li class="skills__item">
+                    <h3>시안부터 퍼블리싱까지</h3>
+                    <p>Adobe XD로 랜딩페이지와 회사 홈페이지 시안을 만들고, 확정된 시안을 직접 퍼블리싱했습니다.</p>
+                </li>
+                <li class="skills__item">
+                    <h3>인터랙션</h3>
+                    <p>영상 없이 CSS 트랜지션으로 만든 인트로, 스크롤을 따라오는 OMR, 슬라이더와 스크롤 모션을 페이지에 맞춰 넣었습니다.</p>
+                </li>
+                <li class="skills__item">
+                    <h3>운영과 유지보수</h3>
+                    <p>교육 사이트 6곳, 이후 사내 유일 개발자로 사이트 9곳을 맡아 기존 구조를 지키며 고쳐 왔습니다.</p>
+                </li>
+                <li class="skills__item">
+                    <h3>결제와 주문 화면</h3>
+                    <p>결제 대행사 교체, 환불 관리자, 교재 배송 내역처럼 돈과 주문이 오가는 화면을 다뤘습니다.</p>
+                </li>
+                <li class="skills__item">
+                    <h3>협업</h3>
+                    <p>사내 디자이너와 외주 디자인 시안을 받아 구현하고, SVN과 Git으로 코드를 주고받았습니다.</p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- 3. 작업 45개
              PC: 밝은 판이 둥근 카드처럼 올라와 화면을 채우고, 카드가 비스듬히 겹쳐 서 있다가 한 장씩 넘어온다.
                  끝까지 넘기면 45장이 크기와 기울기가 제각각인 콜라주로 흩어진다.
              모바일: 대표 작업 겹친 카드를 아래에서 위로 넘긴 뒤, 전체 목록은 카드마다 다른 방향에서 들어온다 -->
@@ -184,7 +249,7 @@
         <span class="cursor__pin js-cursor-pin"><span class="cursor__cross"></span><span class="cursor__label js-cursor-label"></span></span>
     </div>
 
-    <!-- 3. 연락처 -->
+    <!-- 4. 연락처 -->
     <footer class="contact" id="contact">
         <p class="contact__label">Contact</p>
         <a class="contact__mail" href="mailto:6hyein2013@gmail.com">6hyein2013@gmail.com</a>
@@ -198,5 +263,6 @@
     <script src="./js/works-data.js"></script>
     <script src="./js/works-status.js"></script>
     <script src="./js/works.js"></script>
+    <script src="./js/skills.js"></script>
 </body>
 </html>
