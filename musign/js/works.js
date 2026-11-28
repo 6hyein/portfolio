@@ -94,10 +94,18 @@ $(function () {
     $('.js-cards').html(cardsHtml);
     $('.js-total').text(pad(WORKS.length));
 
-    // 회사별 보기 버튼에 개수 (위첨자)
+    // 회사별 보기 버튼에 개수(위첨자)와 작업 기간 (작업마다 period 에 적힌 연도 중 처음 ~ 마지막)
+    function yearsOf(list) {
+        const years = list.flatMap((w) => (w.period.match(/\d{4}/g) || []).map(Number));
+        const from = Math.min(...years);
+        const to = Math.max(...years);
+        return from === to ? `${from}년` : `${from}~${to}년`;
+    }
     $('.filter').each(function () {
         const cat = $(this).data('filter');
-        $(this).find('.js-n').text(cat === 'all' ? WORKS.length : WORKS.filter((w) => w.cat === cat).length);
+        const list = cat === 'all' ? WORKS : WORKS.filter((w) => w.cat === cat);
+        $(this).find('.js-n').text(list.length);
+        $(this).find('.js-years').text(yearsOf(list));
     });
 
     // 이미지 파일이 없으면 제목 카드로 바꾼다
