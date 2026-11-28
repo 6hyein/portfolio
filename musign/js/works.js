@@ -155,6 +155,7 @@ $(function () {
     const $modal = $('.js-modal');
     const panel = document.querySelector('.js-panel');
     let lastCard = null;
+    let cardsLocked = false; // 덩어리 단계(PC): 카드를 눌러도 상세 창이 열리지 않는다 (3번 render 에서 바꿈)
 
     function fillModal(work) {
         const meta = [`<span>${work.company}</span>`, `<span>${work.period}</span>`];
@@ -231,7 +232,10 @@ $(function () {
         gsap.to(panel, { y: 40, opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: done });
     }
 
-    $('.js-cards').on('click', '.card', function () { openModal(this); });
+    $('.js-cards').on('click', '.card', function () {
+        if (cardsLocked) return; // 마우스 클릭도, 키보드 Enter / Space 도 여기로 들어온다
+        openModal(this);
+    });
     $modal.on('click', '.js-close', closeModal);
     $(document).on('keydown', (e) => {
         if ($modal.prop('hidden')) return;
@@ -1031,6 +1035,7 @@ $(function () {
     });
     const aim = { x: 0, y: 0 }; // 마우스가 가리키는 덩어리 중심 (무대 기준)
     const clumpOn = () => state.k > 0 && state.g < 1;
+    const swapping = new Set(); // 자리를 맞바꾸는 중인 카드 번호 (아래 커서 코드에서 섞음)
     let recheckCursor = null; // 마우스가 가만히 있어도 카드가 움직이면 커서 모양을 다시 정한다 (아래 커서 코드가 채움)
 
     gsap.set(cards, { xPercent: -50, yPercent: -50, transformPerspective: 1400 });
@@ -1085,6 +1090,8 @@ $(function () {
             if (!isRest(i)) return;
             const rnd = seeded(i * 17 + 3);
             const c = clump[i];
+            gsap.killTweensOf(c); // 섞이던 중이면 멈추고 처음 자리로
+            swapping.delete(i);
             const r = Math.sqrt(rnd());
             const a = rnd() * Math.PI * 2;
             c.x = cx0 + Math.cos(a) * rx * r;
@@ -1312,6 +1319,9 @@ $(function () {
         // 겹친 카드 단계: 맨 앞 카드 설명 / 덩어리 단계: 나머지 작업 안내 (-2)
         const index = gather > 0.5 ? -2 : Math.round(clamp(0, featuredCount - 1, state.p));
         if (index !== current) { current = index; index === -2 ? showRest() : showInfo(index); }
+        // 덩어리 단계에서는 카드를 열 수 없다: 마우스를 따라오는 움직임에 집중하고 스크롤로 넘어가게
+        const lock = gather > 0.5 && g <= 0.95;
+        if (lock !== cardsLocked) setLock(lock);
         gsap.set([info, '.js-counter'], { autoAlpha: 1 - clamp(0, 1, g * 4) });
         // 색인 탭은 콜라주가 거의 펼쳐졌을 때 아래에서 차례로 올라오고, 바로 가기 버튼은 사라진다
         const rise = clamp(0, 1, (g - 0.55) * 2.5);
@@ -1340,6 +1350,19 @@ $(function () {
             if (!on) setHovered(-1);
             updateCursor();
         }
+    }
+
+    // 카드 잠금: Tab 으로도 카드에 들어가지 않게 하고, 커서도 Scroll 로 둔다
+    function setLock(on) {
+        cardsLocked = on;
+        cards.forEach((card) => {
+            const off = on || card.classList.contains('is-off');
+            if (off) card.setAttribute('tabindex', '-1');
+            else card.removeAttribute('tabindex');
+            card.toggleAttribute('aria-disabled', on);
+        });
+        if (on && document.activeElement && document.activeElement.closest && document.activeElement.closest('.js-cards')) document.activeElement.blur();
+        updateCursor();
     }
 
     // 스크롤 길이(화면 높이 배수): 대표 작업은 장당 0.55, 덩어리로 모이기 1, 덩어리 머무름 0.7,
@@ -1391,12 +1414,13 @@ $(function () {
 
     function updateCursor() {
         const onCard = overCard > -1;
+        const view = onCard && !gridOn && !overButton && !cardsLocked; // 덩어리 단계는 카드 위에서도 Scroll
         $(cursor)
             .toggleClass('is-card', onCard && gridOn)
-            .toggleClass('is-view', onCard && !gridOn && !overButton)
+            .toggleClass('is-view', view)
             .toggleClass('is-hidden', overButton)
             .toggleClass('is-small', gridOn && !onCard && !overButton);
-        cursorText.textContent = gridOn ? '' : (onCard ? 'View' : 'Scroll');
+        cursorText.textContent = gridOn ? '' : (view ? 'View' : 'Scroll');
         if (onCard && gridOn) cursorLabel.textContent = WORKS[overCard].title;
     }
 
@@ -1520,7 +1544,7 @@ $(function () {
             const idx = cardEl ? Number(cardEl.dataset.index) : -1;
             const btn = !cardEl && !!(el && el.closest('button'));
             if (idx !== overCard || btn !== overButton) {
-                if (idx > -1 && idx !== overCard && !gridOn) ripple(cards[idx], mouse);
+                if (idx > -1 && idx !== overCard && !gridOn && !cardsLocked) ripple(cards[idx], mouse);
                 overCard = idx;
                 overButton = btn;
                 setHovered(gridOn ? idx : -1);
@@ -1529,6 +1553,49 @@ $(function () {
             }
         }
         recheckCursor = checkUnder;
+
+        // 덩어리 단계: 마우스를 움직이면 카드 두 장씩 자리를 맞바꾼다
+        // 움직인 거리를 모아 일정 거리마다 한 번 바꾸므로 빠르게 움직일수록 자주 바뀌고,
+        // 속도가 빠를수록 바꾸는 거리도 짧아지고 자리 옮기는 시간도 짧아진다
+        const restIds = cards.map((c, i) => i).filter(isRest);
+        let lastMouse = null;
+        let speed = 0;  // 한 프레임에 움직인 거리 (부드럽게 평균)
+        let travel = 0; // 다음 바꾸기까지 모은 거리
+        function swapPair(fast) {
+            const free = restIds.filter((i) => !swapping.has(i) && !cards[i].classList.contains('is-off'));
+            if (free.length < 2) return;
+            const a = free.splice(Math.floor(Math.random() * free.length), 1)[0];
+            const b = free[Math.floor(Math.random() * free.length)];
+            const ca = clump[a];
+            const cb = clump[b];
+            const duration = lerp(0.9, 0.35, fast);
+            const za = ca.z;
+            const zb = cb.z;
+            ca.z = 90; // 옮기는 동안은 맨 위로 (겹침 순서도 서로 바뀐다)
+            cb.z = 89;
+            swapping.add(a);
+            swapping.add(b);
+            gsap.to(ca, { x: cb.x, y: cb.y, rot: cb.rot, duration: duration, ease: 'power3.inOut', onUpdate: requestRender, onComplete: () => { ca.z = zb; swapping.delete(a); } });
+            gsap.to(cb, { x: ca.x, y: ca.y, rot: ca.rot, duration: duration, ease: 'power3.inOut', onUpdate: requestRender, onComplete: () => { cb.z = za; swapping.delete(b); } });
+        }
+        gsap.ticker.add(() => {
+            if (!mouse || !cardsLocked || state.g > 0.05) {
+                lastMouse = null;
+                speed = 0;
+                travel = 0;
+                return;
+            }
+            const v = lastMouse ? Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y) : 0;
+            lastMouse = mouse;
+            speed = lerp(speed, v, 0.25);
+            const fast = clamp(0, 1, speed / 40);       // 프레임당 40px 이상이면 가장 빠름
+            const step = lerp(110, 40, fast);           // 몇 px 움직일 때마다 한 쌍씩
+            travel = Math.min(travel + v, step * 3);    // 한 번에 너무 많이 바뀌지 않게
+            while (travel >= step) {
+                travel -= step;
+                swapPair(fast);
+            }
+        });
         let scrollFrame = 0;
         $(window).on('scroll', () => {
             if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; checkUnder(); });
