@@ -191,7 +191,7 @@ $(function () {
         if (state === 'live') {
             link = `<a href="${work.url}" target="_blank" rel="noopener">사이트 보기 <span aria-hidden="true">&rarr;</span></a>`;
         } else if (state === 'dead') {
-            link = '<span class="is-off">지금은 사이트가 바뀜어 링크를 걸지 않았습니다.</span>';
+            link = '<span class="is-off">지금은 사이트가 바뀌어 링크를 걸지 않았습니다.</span>';
         } else {
             link = `<span class="is-off">${work.note || '공개되지 않은 페이지'}라 링크 대신 작업 내용을 정리했습니다.</span>`;
         }
