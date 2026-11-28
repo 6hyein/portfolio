@@ -340,8 +340,9 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
     .info__hint { margin-top: 22px; font-size: 13px; color: var(--ink-2); }
     .info__hint::before { content: "\2192"; margin-right: 8px; color: var(--ink); }
 
-    /* 색인 탭: 화면 아래 가장자리. 콜라주 단계에서 아래에서 올라온다 */
-    .works__filters { position: absolute; left: 0; right: 0; bottom: 0; z-index: 120; height: 82px; margin: 0; overflow: hidden; }
+    /* 색인 탭: 화면 아래 가장자리. 콜라주 단계에서 아래에서 올라온다
+       (아래로 내려가 숨은 탭만 잘라 내고 위로 번지는 그림자는 보이게: overflow 대신 clip-path 로 아래쪽만 자른다) */
+    .works__filters { position: absolute; left: 0; right: 0; bottom: 0; z-index: 120; height: 82px; margin: 0; clip-path: inset(-80px 0 0 0); }
     .filter { font-size: 15px; padding: 15px 26px 18px; }
 
     /* 움직임 줄이기 사용자: 고정 무대 대신 평범한 격자 */
