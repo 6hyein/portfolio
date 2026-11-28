@@ -850,13 +850,18 @@ $(function () {
         });
 
     // 헤더 글자색: 주황 구멍이 화면을 덮기 시작할 때부터 밝은 작업 판이 헤더 밑을 지나갈 때까지는 어둡게
+    // 작업 판이 헤더 밑에 있는 동안에는 헤더 바탕도 판 색으로 깔아, 지나가는 카드와 글자가 겹치지 않게 한다 (is-on-works)
     // lightEnd: 작업 판 아래쪽 끝이 헤더에 닿는 스크롤 위치
     function setupHeader(lightEnd) {
         const cover = coverTl.scrollTrigger;
+        const worksStart = ScrollTrigger.create({ trigger: section, start: () => 'top top+=' + $('.header').outerHeight() });
         const update = () => {
             const y = window.scrollY;
             const from = cover.start + (cover.end - cover.start) * 0.35;
-            $('.header').toggleClass('is-light', y >= from && y < lightEnd());
+            const end = lightEnd();
+            $('.header')
+                .toggleClass('is-light', y >= from && y < end)
+                .toggleClass('is-on-works', y >= worksStart.start && y < end);
         };
         ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update, onRefresh: update });
         update();
