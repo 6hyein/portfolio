@@ -160,6 +160,8 @@ html.is-locked, html.is-locked body { overflow: hidden; overscroll-behavior: non
 .header { transition: color .3s, background .3s; }
 .header.is-light { color: var(--bg); background: transparent; }
 .header.is-light .header__name span { color: rgba(18, 17, 16, .6); }
+/* 작업 판 위: 판과 같은 색 바탕을 깔아 아래로 지나가는 카드와 겹쳐 보이지 않게 */
+.header.is-on-works { background: linear-gradient(var(--paper) 70%, rgba(239, 235, 228, 0)); }
 
 /* 2. 작업 44개: 밝은 종이 위에 작업을 펼쳐 놓은 느낌 */
 .works {
