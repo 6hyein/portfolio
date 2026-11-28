@@ -94,10 +94,18 @@ $(function () {
     $('.js-cards').html(cardsHtml);
     $('.js-total').text(pad(WORKS.length));
 
-    // 회사별 보기 버튼에 개수 (위첨자)
+    // 회사별 보기 버튼에 개수(위첨자)와 작업 기간 (작업마다 period 에 적힌 연도 중 처음 ~ 마지막)
+    function yearsOf(list) {
+        const years = list.flatMap((w) => (w.period.match(/\d{4}/g) || []).map(Number));
+        const from = Math.min(...years);
+        const to = Math.max(...years);
+        return from === to ? `${from}년` : `${from}~${to}년`;
+    }
     $('.filter').each(function () {
         const cat = $(this).data('filter');
-        $(this).find('.js-n').text(cat === 'all' ? WORKS.length : WORKS.filter((w) => w.cat === cat).length);
+        const list = cat === 'all' ? WORKS : WORKS.filter((w) => w.cat === cat);
+        $(this).find('.js-n').text(list.length);
+        $(this).find('.js-years').text(yearsOf(list));
     });
 
     // 이미지 파일이 없으면 제목 카드로 바꾼다
@@ -183,7 +191,7 @@ $(function () {
         if (state === 'live') {
             link = `<a href="${work.url}" target="_blank" rel="noopener">사이트 보기 <span aria-hidden="true">&rarr;</span></a>`;
         } else if (state === 'dead') {
-            link = '<span class="is-off">지금은 사이트가 바뀌어 링크를 걸지 않았습니다.</span>';
+            link = '<span class="is-off">지금은 사이트가 바뀜어 링크를 걸지 않았습니다.</span>';
         } else {
             link = `<span class="is-off">${work.note || '공개되지 않은 페이지'}라 링크 대신 작업 내용을 정리했습니다.</span>`;
         }
